@@ -80,7 +80,7 @@
 		<column name="siteId"              type="long"    db-name="site_id"/>
 		<column name="code" type="String" db-name="code" />
 		<column name="concessionnaireCode" type="String"  db-name="concessionnaire_code"/>
-		<column name="active"              type="boolean"/>
+		<column name="active"              type="boolean" db-name="active"/>
 		<column name="createdAt"           type="Date"    db-name="created_at"/>
 		<column name="updatedAt"           type="Date"    db-name="updated_at"/>
 

@@ -194,6 +194,9 @@ public interface ConcessionnaireProduitLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ConcessionnaireProduit fetchConcessionnaireProduit(long id);
 
+	public List<ConcessionnaireProduit> findByConcessionnaireId(
+		long concessionnaireId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 

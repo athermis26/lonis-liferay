@@ -5,11 +5,14 @@
 
 package com.df.lonis.ventesservice.service.impl;
 
+import com.df.lonis.ventesservice.model.Operation;
 import com.df.lonis.ventesservice.service.base.OperationLocalServiceBaseImpl;
 
 import com.liferay.portal.aop.AopService;
 
 import org.osgi.service.component.annotations.Component;
+
+import java.util.List;
 
 /**
  * @author Brian Wing Shun Chan
@@ -19,4 +22,11 @@ import org.osgi.service.component.annotations.Component;
 	service = AopService.class
 )
 public class OperationLocalServiceImpl extends OperationLocalServiceBaseImpl {
+	public int countByTerminalId(long terminalId) {
+		return operationPersistence.countByTerminalId(terminalId);
+	}
+
+	public List<Operation> findByTerminalId(long terminalId) {
+		return operationPersistence.findByTerminalId(terminalId);
+	}
 }

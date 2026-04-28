@@ -62,7 +62,7 @@ public class ConcessionnaireProduitModelImpl
 		{"id", Types.BIGINT}, {"concessionnaire_id", Types.BIGINT},
 		{"produit_id", Types.BIGINT}, {"site_id", Types.BIGINT},
 		{"code", Types.VARCHAR}, {"concessionnaire_code", Types.VARCHAR},
-		{"active_", Types.BOOLEAN}, {"created_at", Types.TIMESTAMP},
+		{"active", Types.BOOLEAN}, {"created_at", Types.TIMESTAMP},
 		{"updated_at", Types.TIMESTAMP}
 	};
 
@@ -76,13 +76,13 @@ public class ConcessionnaireProduitModelImpl
 		TABLE_COLUMNS_MAP.put("site_id", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("code", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("concessionnaire_code", Types.VARCHAR);
-		TABLE_COLUMNS_MAP.put("active_", Types.BOOLEAN);
+		TABLE_COLUMNS_MAP.put("active", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("created_at", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("updated_at", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table concessionnaire_produit (id LONG not null primary key IDENTITY,concessionnaire_id LONG,produit_id LONG,site_id LONG,code VARCHAR(75) null,concessionnaire_code VARCHAR(75) null,active_ BOOLEAN,created_at DATE null,updated_at DATE null)";
+		"create table concessionnaire_produit (id LONG not null primary key IDENTITY,concessionnaire_id LONG,produit_id LONG,site_id LONG,code VARCHAR(75) null,concessionnaire_code VARCHAR(75) null,active BOOLEAN,created_at DATE null,updated_at DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table concessionnaire_produit";
@@ -563,7 +563,7 @@ public class ConcessionnaireProduitModelImpl
 		concessionnaireProduitImpl.setConcessionnaireCode(
 			this.<String>getColumnOriginalValue("concessionnaire_code"));
 		concessionnaireProduitImpl.setActive(
-			this.<Boolean>getColumnOriginalValue("active_"));
+			this.<Boolean>getColumnOriginalValue("active"));
 		concessionnaireProduitImpl.setCreatedAt(
 			this.<Date>getColumnOriginalValue("created_at"));
 		concessionnaireProduitImpl.setUpdatedAt(
@@ -802,7 +802,7 @@ public class ConcessionnaireProduitModelImpl
 		_columnOriginalValues.put("site_id", _siteId);
 		_columnOriginalValues.put("code", _code);
 		_columnOriginalValues.put("concessionnaire_code", _concessionnaireCode);
-		_columnOriginalValues.put("active_", _active);
+		_columnOriginalValues.put("active", _active);
 		_columnOriginalValues.put("created_at", _createdAt);
 		_columnOriginalValues.put("updated_at", _updatedAt);
 	}
@@ -816,7 +816,6 @@ public class ConcessionnaireProduitModelImpl
 		attributeNames.put("produit_id", "produitId");
 		attributeNames.put("site_id", "siteId");
 		attributeNames.put("concessionnaire_code", "concessionnaireCode");
-		attributeNames.put("active_", "active");
 		attributeNames.put("created_at", "createdAt");
 		attributeNames.put("updated_at", "updatedAt");
 
@@ -846,7 +845,7 @@ public class ConcessionnaireProduitModelImpl
 
 		columnBitmasks.put("concessionnaire_code", 32L);
 
-		columnBitmasks.put("active_", 64L);
+		columnBitmasks.put("active", 64L);
 
 		columnBitmasks.put("created_at", 128L);
 

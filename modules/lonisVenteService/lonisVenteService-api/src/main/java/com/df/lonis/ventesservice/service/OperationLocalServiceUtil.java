@@ -52,6 +52,10 @@ public class OperationLocalServiceUtil {
 		return getService().addOperation(operation);
 	}
 
+	public static int countByTerminalId(long terminalId) {
+		return getService().countByTerminalId(terminalId);
+	}
+
 	/**
 	 * Creates a new operation with the primary key. Does not add the operation to the database.
 	 *
@@ -198,6 +202,10 @@ public class OperationLocalServiceUtil {
 
 	public static Operation fetchOperation(long id) {
 		return getService().fetchOperation(id);
+	}
+
+	public static List<Operation> findByTerminalId(long terminalId) {
+		return getService().findByTerminalId(terminalId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery

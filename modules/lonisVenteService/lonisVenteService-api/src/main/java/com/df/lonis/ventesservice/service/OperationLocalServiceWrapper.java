@@ -45,6 +45,11 @@ public class OperationLocalServiceWrapper
 		return _operationLocalService.addOperation(operation);
 	}
 
+	@Override
+	public int countByTerminalId(long terminalId) {
+		return _operationLocalService.countByTerminalId(terminalId);
+	}
+
 	/**
 	 * Creates a new operation with the primary key. Does not add the operation to the database.
 	 *
@@ -218,6 +223,13 @@ public class OperationLocalServiceWrapper
 	@Override
 	public com.df.lonis.ventesservice.model.Operation fetchOperation(long id) {
 		return _operationLocalService.fetchOperation(id);
+	}
+
+	@Override
+	public java.util.List<com.df.lonis.ventesservice.model.Operation>
+		findByTerminalId(long terminalId) {
+
+		return _operationLocalService.findByTerminalId(terminalId);
 	}
 
 	@Override

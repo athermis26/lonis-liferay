@@ -5,11 +5,14 @@
 
 package com.df.lonis.ventesservice.service.impl;
 
+import com.df.lonis.ventesservice.model.ChiffreAffaires;
 import com.df.lonis.ventesservice.service.base.ChiffreAffairesLocalServiceBaseImpl;
 
 import com.liferay.portal.aop.AopService;
 
 import org.osgi.service.component.annotations.Component;
+
+import java.util.List;
 
 /**
  * @author Brian Wing Shun Chan
@@ -20,4 +23,7 @@ import org.osgi.service.component.annotations.Component;
 )
 public class ChiffreAffairesLocalServiceImpl
 	extends ChiffreAffairesLocalServiceBaseImpl {
+	public List<ChiffreAffaires> findByTerminalId(long terminalId) {
+		return chiffreAffairesPersistence.findByTerminalId(terminalId);
+	}
 }

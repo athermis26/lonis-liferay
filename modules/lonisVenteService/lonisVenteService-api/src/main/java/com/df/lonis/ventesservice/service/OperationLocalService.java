@@ -67,6 +67,8 @@ public interface OperationLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Operation addOperation(Operation operation);
 
+	public int countByTerminalId(long terminalId);
+
 	/**
 	 * Creates a new operation with the primary key. Does not add the operation to the database.
 	 *
@@ -190,6 +192,8 @@ public interface OperationLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Operation fetchOperation(long id);
+
+	public List<Operation> findByTerminalId(long terminalId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

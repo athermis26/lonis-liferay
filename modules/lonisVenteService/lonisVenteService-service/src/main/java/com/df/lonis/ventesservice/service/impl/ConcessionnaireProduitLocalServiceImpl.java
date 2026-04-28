@@ -5,11 +5,14 @@
 
 package com.df.lonis.ventesservice.service.impl;
 
+import com.df.lonis.ventesservice.model.ConcessionnaireProduit;
 import com.df.lonis.ventesservice.service.base.ConcessionnaireProduitLocalServiceBaseImpl;
 
 import com.liferay.portal.aop.AopService;
 
 import org.osgi.service.component.annotations.Component;
+
+import java.util.List;
 
 /**
  * @author Brian Wing Shun Chan
@@ -20,4 +23,7 @@ import org.osgi.service.component.annotations.Component;
 )
 public class ConcessionnaireProduitLocalServiceImpl
 	extends ConcessionnaireProduitLocalServiceBaseImpl {
+	public List<ConcessionnaireProduit> findByConcessionnaireId(long concessionnaireId) {
+		return concessionnaireProduitPersistence.findByConcessionnaireId(concessionnaireId);
+	}
 }

@@ -1,10 +1,14 @@
 package com.df.lonis.ventesrest.client.resource.v1_0;
 
 import com.df.lonis.ventesrest.client.dto.v1_0.Concessionnaire;
+import com.df.lonis.ventesrest.client.dto.v1_0.ConcessionnaireDetail;
+import com.df.lonis.ventesrest.client.dto.v1_0.ConcessionnaireProduit;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
 import com.df.lonis.ventesrest.client.problem.Problem;
+import com.df.lonis.ventesrest.client.serdes.v1_0.ConcessionnaireDetailSerDes;
+import com.df.lonis.ventesrest.client.serdes.v1_0.ConcessionnaireProduitSerDes;
 import com.df.lonis.ventesrest.client.serdes.v1_0.ConcessionnaireSerDes;
 
 import java.util.LinkedHashMap;
@@ -34,6 +38,20 @@ public interface ConcessionnaireResource {
 	public HttpInvoker.HttpResponse getConcessionnairesPageHttpResponse(
 			String search, String filterString, Pagination pagination,
 			String sortString)
+		throws Exception;
+
+	public ConcessionnaireDetail getConcessionnaireByUid(String uid)
+		throws Exception;
+
+	public HttpInvoker.HttpResponse getConcessionnaireByUidHttpResponse(
+			String uid)
+		throws Exception;
+
+	public Page<ConcessionnaireProduit> getConcessionnaireProduits(String uid)
+		throws Exception;
+
+	public HttpInvoker.HttpResponse getConcessionnaireProduitsHttpResponse(
+			String uid)
 		throws Exception;
 
 	public static class Builder {
@@ -202,6 +220,169 @@ public interface ConcessionnaireResource {
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port + "/o/lonisVenteRest/v1.0/concessionnaires");
+
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
+
+			return httpInvoker.invoke();
+		}
+
+		public ConcessionnaireDetail getConcessionnaireByUid(String uid)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse =
+				getConcessionnaireByUidHttpResponse(uid);
+
+			String content = httpResponse.getContent();
+
+			if ((httpResponse.getStatusCode() / 100) != 2) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response content: " + content);
+				_logger.log(
+					Level.WARNING,
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.log(
+					Level.WARNING,
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+			else {
+				_logger.fine("HTTP response content: " + content);
+				_logger.fine(
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.fine(
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+			}
+
+			try {
+				return ConcessionnaireDetailSerDes.toDTO(content);
+			}
+			catch (Exception e) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response: " + content, e);
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+		}
+
+		public HttpInvoker.HttpResponse getConcessionnaireByUidHttpResponse(
+				String uid)
+			throws Exception {
+
+			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
+
+			if (_builder._locale != null) {
+				httpInvoker.header(
+					"Accept-Language", _builder._locale.toLanguageTag());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._headers.entrySet()) {
+
+				httpInvoker.header(entry.getKey(), entry.getValue());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._parameters.entrySet()) {
+
+				httpInvoker.parameter(entry.getKey(), entry.getValue());
+			}
+
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			httpInvoker.path(
+				_builder._scheme + "://" + _builder._host + ":" +
+					_builder._port +
+						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}");
+
+			httpInvoker.path("uid", uid);
+
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
+
+			return httpInvoker.invoke();
+		}
+
+		public Page<ConcessionnaireProduit> getConcessionnaireProduits(
+				String uid)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse =
+				getConcessionnaireProduitsHttpResponse(uid);
+
+			String content = httpResponse.getContent();
+
+			if ((httpResponse.getStatusCode() / 100) != 2) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response content: " + content);
+				_logger.log(
+					Level.WARNING,
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.log(
+					Level.WARNING,
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+			else {
+				_logger.fine("HTTP response content: " + content);
+				_logger.fine(
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.fine(
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+			}
+
+			try {
+				return Page.of(content, ConcessionnaireProduitSerDes::toDTO);
+			}
+			catch (Exception e) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response: " + content, e);
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+		}
+
+		public HttpInvoker.HttpResponse getConcessionnaireProduitsHttpResponse(
+				String uid)
+			throws Exception {
+
+			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
+
+			if (_builder._locale != null) {
+				httpInvoker.header(
+					"Accept-Language", _builder._locale.toLanguageTag());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._headers.entrySet()) {
+
+				httpInvoker.header(entry.getKey(), entry.getValue());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._parameters.entrySet()) {
+
+				httpInvoker.parameter(entry.getKey(), entry.getValue());
+			}
+
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			httpInvoker.path(
+				_builder._scheme + "://" + _builder._host + ":" +
+					_builder._port +
+						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/produits");
+
+			httpInvoker.path("uid", uid);
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);

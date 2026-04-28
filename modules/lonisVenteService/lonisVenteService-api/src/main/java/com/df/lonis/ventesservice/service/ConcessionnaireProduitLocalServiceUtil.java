@@ -207,6 +207,12 @@ public class ConcessionnaireProduitLocalServiceUtil {
 		return getService().fetchConcessionnaireProduit(id);
 	}
 
+	public static List<ConcessionnaireProduit> findByConcessionnaireId(
+		long concessionnaireId) {
+
+		return getService().findByConcessionnaireId(concessionnaireId);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 

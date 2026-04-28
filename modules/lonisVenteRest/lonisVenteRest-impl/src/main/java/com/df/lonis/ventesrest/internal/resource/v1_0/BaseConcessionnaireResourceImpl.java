@@ -1,6 +1,8 @@
 package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Concessionnaire;
+import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireDetail;
+import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireProduit;
 import com.df.lonis.ventesrest.dto.v1_0.Operation;
 import com.df.lonis.ventesrest.resource.v1_0.ConcessionnaireResource;
 
@@ -102,6 +104,74 @@ public abstract class BaseConcessionnaireResourceImpl
 			@javax.ws.rs.core.Context Filter filter,
 			@javax.ws.rs.core.Context Pagination pagination,
 			@javax.ws.rs.core.Context Sort[] sorts)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}'  -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Vue 360 d un concessionnaire"
+	)
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+				name = "uid"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {
+			@io.swagger.v3.oas.annotations.tags.Tag(name = "Concessionnaire")
+		}
+	)
+	@javax.ws.rs.GET
+	@javax.ws.rs.Path("/concessionnaires/{uid}")
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@Override
+	public ConcessionnaireDetail getConcessionnaireByUid(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("uid")
+			String uid)
+		throws Exception {
+
+		return new ConcessionnaireDetail();
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}/produits'  -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Liste des produits d un concessionnaire"
+	)
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+				name = "uid"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {
+			@io.swagger.v3.oas.annotations.tags.Tag(name = "Concessionnaire")
+		}
+	)
+	@javax.ws.rs.GET
+	@javax.ws.rs.Path("/concessionnaires/{uid}/produits")
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@Override
+	public Page<ConcessionnaireProduit> getConcessionnaireProduits(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("uid")
+			String uid)
 		throws Exception {
 
 		return Page.of(Collections.emptyList());

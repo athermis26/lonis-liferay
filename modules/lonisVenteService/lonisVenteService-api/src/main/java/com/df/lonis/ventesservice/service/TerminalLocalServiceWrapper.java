@@ -45,6 +45,12 @@ public class TerminalLocalServiceWrapper
 		return _terminalLocalService.addTerminal(terminal);
 	}
 
+	@Override
+	public int countByConcessionnaireId(long concessionnaireId) {
+		return _terminalLocalService.countByConcessionnaireId(
+			concessionnaireId);
+	}
+
 	/**
 	 * @throws PortalException
 	 */
@@ -218,6 +224,13 @@ public class TerminalLocalServiceWrapper
 	@Override
 	public com.df.lonis.ventesservice.model.Terminal fetchTerminal(long id) {
 		return _terminalLocalService.fetchTerminal(id);
+	}
+
+	@Override
+	public java.util.List<com.df.lonis.ventesservice.model.Terminal>
+		findByConcessionnaireId(long concessionnaireId) {
+
+		return _terminalLocalService.findByConcessionnaireId(concessionnaireId);
 	}
 
 	@Override

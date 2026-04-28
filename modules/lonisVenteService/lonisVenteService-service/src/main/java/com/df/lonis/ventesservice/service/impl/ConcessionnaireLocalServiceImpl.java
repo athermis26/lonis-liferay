@@ -5,6 +5,7 @@
 
 package com.df.lonis.ventesservice.service.impl;
 
+import com.df.lonis.ventesservice.model.Concessionnaire;
 import com.df.lonis.ventesservice.service.base.ConcessionnaireLocalServiceBaseImpl;
 
 import com.liferay.portal.aop.AopService;
@@ -20,4 +21,8 @@ import org.osgi.service.component.annotations.Component;
 )
 public class ConcessionnaireLocalServiceImpl
 	extends ConcessionnaireLocalServiceBaseImpl {
+
+	public Concessionnaire fetchByUid(String uid) {
+		return concessionnairePersistence.fetchByUid(uid);
+	}
 }

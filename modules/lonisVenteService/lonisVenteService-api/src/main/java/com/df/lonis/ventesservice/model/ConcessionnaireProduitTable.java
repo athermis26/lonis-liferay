@@ -44,7 +44,7 @@ public class ConcessionnaireProduitTable
 			Column.FLAG_DEFAULT);
 	public final Column<ConcessionnaireProduitTable, Boolean> active =
 		createColumn(
-			"active_", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
+			"active", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
 	public final Column<ConcessionnaireProduitTable, Date> createdAt =
 		createColumn(
 			"created_at", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);

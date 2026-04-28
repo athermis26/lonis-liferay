@@ -206,6 +206,10 @@ public class ChiffreAffairesLocalServiceUtil {
 		return getService().fetchChiffreAffaires(id);
 	}
 
+	public static List<ChiffreAffaires> findByTerminalId(long terminalId) {
+		return getService().findByTerminalId(terminalId);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 

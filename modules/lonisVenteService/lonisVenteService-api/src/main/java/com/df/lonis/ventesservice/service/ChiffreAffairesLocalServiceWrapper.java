@@ -231,6 +231,13 @@ public class ChiffreAffairesLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.df.lonis.ventesservice.model.ChiffreAffaires>
+		findByTerminalId(long terminalId) {
+
+		return _chiffreAffairesLocalService.findByTerminalId(terminalId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 

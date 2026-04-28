@@ -241,6 +241,15 @@ public class ConcessionnaireProduitLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List
+		<com.df.lonis.ventesservice.model.ConcessionnaireProduit>
+			findByConcessionnaireId(long concessionnaireId) {
+
+		return _concessionnaireProduitLocalService.findByConcessionnaireId(
+			concessionnaireId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery
 		getActionableDynamicQuery() {
 

@@ -224,6 +224,13 @@ public class ConcessionnaireLocalServiceWrapper
 	}
 
 	@Override
+	public com.df.lonis.ventesservice.model.Concessionnaire fetchByUid(
+		String uid) {
+
+		return _concessionnaireLocalService.fetchByUid(uid);
+	}
+
+	@Override
 	public com.df.lonis.ventesservice.model.Concessionnaire
 		fetchConcessionnaire(long id) {
 

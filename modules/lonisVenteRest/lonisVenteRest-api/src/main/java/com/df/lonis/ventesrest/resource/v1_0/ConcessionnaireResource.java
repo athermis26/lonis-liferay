@@ -1,6 +1,8 @@
 package com.df.lonis.ventesrest.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Concessionnaire;
+import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireDetail;
+import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireProduit;
 
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
@@ -46,6 +48,12 @@ public interface ConcessionnaireResource {
 
 	public Page<Concessionnaire> getConcessionnairesPage(
 			String search, Filter filter, Pagination pagination, Sort[] sorts)
+		throws Exception;
+
+	public ConcessionnaireDetail getConcessionnaireByUid(String uid)
+		throws Exception;
+
+	public Page<ConcessionnaireProduit> getConcessionnaireProduits(String uid)
 		throws Exception;
 
 	public default void setContextAcceptLanguage(

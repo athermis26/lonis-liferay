@@ -1299,7 +1299,6 @@ public class ConcessionnaireProduitPersistenceImpl
 		dbColumnNames.put("produitId", "produit_id");
 		dbColumnNames.put("siteId", "site_id");
 		dbColumnNames.put("concessionnaireCode", "concessionnaire_code");
-		dbColumnNames.put("active", "active_");
 		dbColumnNames.put("createdAt", "created_at");
 		dbColumnNames.put("updatedAt", "updated_at");
 
@@ -1982,7 +1981,7 @@ public class ConcessionnaireProduitPersistenceImpl
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(
 		new String[] {
 			"concessionnaireId", "produitId", "siteId", "concessionnaireCode",
-			"active", "createdAt", "updatedAt"
+			"createdAt", "updatedAt"
 		});
 
 	@Override

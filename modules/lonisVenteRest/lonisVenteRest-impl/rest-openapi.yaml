@@ -76,6 +76,55 @@ paths:
                                 type: array
                     description: "Liste paginée"
 
+    /concessionnaires/{uid}:
+        get:
+            operationId: getConcessionnaireByUid
+            tags: [ "Concessionnaire" ]
+            description: "Vue 360 d un concessionnaire"
+            parameters:
+                - in: path
+                  name: uid
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ConcessionnaireDetail"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/ConcessionnaireDetail"
+                    description: "Detail du concessionnaire"
+
+    /concessionnaires/{uid}/produits:
+        get:
+            operationId: getConcessionnaireProduits
+            tags: ["Concessionnaire"]
+            description: "Liste des produits d un concessionnaire"
+            parameters:
+                - in: path
+                  name: uid
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/ConcessionnaireProduit"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/ConcessionnaireProduit"
+                                    type: array
+                    description: "Liste des produits d un concessionnaire"
+
+
     # ─────────────────────────────────────────────
     # Produits
     # ─────────────────────────────────────────────
@@ -310,6 +359,75 @@ components:
                     type: string
                 email:
                     type: string
+
+        ConcessionnaireDetail:
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                uid:
+                    type: string
+                nom:
+                    type: string
+                prenoms:
+                    type: string
+                telephone:
+                    type: string
+                email:
+                    type: string
+                stats:
+                    $ref: "#/components/schemas/ConcessionnaireStats"
+                concessionnaireProduits:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ConcessionnaireProduit"
+                soldeTotal:
+                    type: integer
+                    format: int64
+
+        ConcessionnaireStats:
+            properties:
+                totalProduits:
+                    type: integer
+                totalTerminaux:
+                    type: integer
+                totalOperations:
+                    type: integer
+                    format: int64
+                totalPaiements:
+                    type: integer
+                    format: int64
+                chiffreAffaires:
+                    type: integer
+                    format: int64
+
+        ConcessionnaireProduit:
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                concessionnaireId:
+                    type: integer
+                    format: int64
+                produitId:
+                    type: integer
+                    format: int64
+                siteId:
+                    type: integer
+                    format: int64
+                code:
+                    type: string
+                concessionnaireCode:
+                    type: string
+                active:
+                    type: boolean
+                produit:
+                    $ref: "#/components/schemas/Produit"
+                site:
+                    $ref: "#/components/schemas/Site"
+                chiffreAffaires:
+                    type: integer
+                    format: int64
 
         Produit:
             properties:

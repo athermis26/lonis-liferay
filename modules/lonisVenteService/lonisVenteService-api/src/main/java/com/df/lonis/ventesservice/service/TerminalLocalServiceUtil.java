@@ -52,6 +52,10 @@ public class TerminalLocalServiceUtil {
 		return getService().addTerminal(terminal);
 	}
 
+	public static int countByConcessionnaireId(long concessionnaireId) {
+		return getService().countByConcessionnaireId(concessionnaireId);
+	}
+
 	/**
 	 * @throws PortalException
 	 */
@@ -198,6 +202,12 @@ public class TerminalLocalServiceUtil {
 
 	public static Terminal fetchTerminal(long id) {
 		return getService().fetchTerminal(id);
+	}
+
+	public static List<Terminal> findByConcessionnaireId(
+		long concessionnaireId) {
+
+		return getService().findByConcessionnaireId(concessionnaireId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery

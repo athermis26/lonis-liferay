@@ -5,11 +5,14 @@
 
 package com.df.lonis.ventesservice.service.impl;
 
+import com.df.lonis.ventesservice.model.Terminal;
 import com.df.lonis.ventesservice.service.base.TerminalLocalServiceBaseImpl;
 
 import com.liferay.portal.aop.AopService;
 
 import org.osgi.service.component.annotations.Component;
+
+import java.util.List;
 
 /**
  * @author Brian Wing Shun Chan
@@ -19,4 +22,11 @@ import org.osgi.service.component.annotations.Component;
 	service = AopService.class
 )
 public class TerminalLocalServiceImpl extends TerminalLocalServiceBaseImpl {
+	public List<Terminal> findByConcessionnaireId(long concessionnaireId) {
+		return terminalPersistence.findByConcessionnaireId(concessionnaireId);
+	}
+
+	public int countByConcessionnaireId(long concessionnaireId) {
+		return terminalPersistence.countByConcessionnaireId(concessionnaireId);
+	}
 }

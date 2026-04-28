@@ -67,6 +67,8 @@ public interface TerminalLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public Terminal addTerminal(Terminal terminal);
 
+	public int countByConcessionnaireId(long concessionnaireId);
+
 	/**
 	 * @throws PortalException
 	 */
@@ -190,6 +192,8 @@ public interface TerminalLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Terminal fetchTerminal(long id);
+
+	public List<Terminal> findByConcessionnaireId(long concessionnaireId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

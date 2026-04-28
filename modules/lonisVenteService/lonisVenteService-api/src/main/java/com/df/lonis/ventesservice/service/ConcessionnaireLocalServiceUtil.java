@@ -202,6 +202,10 @@ public class ConcessionnaireLocalServiceUtil {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
 	}
 
+	public static Concessionnaire fetchByUid(String uid) {
+		return getService().fetchByUid(uid);
+	}
+
 	public static Concessionnaire fetchConcessionnaire(long id) {
 		return getService().fetchConcessionnaire(id);
 	}

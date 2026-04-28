@@ -1,6 +1,7 @@
 package com.df.lonis.ventesrest.resource.v1_0.test;
 
 import com.df.lonis.ventesrest.client.dto.v1_0.Concessionnaire;
+import com.df.lonis.ventesrest.client.dto.v1_0.ConcessionnaireDetail;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
@@ -466,8 +467,99 @@ public abstract class BaseConcessionnaireResourceTestCase {
 			"This method needs to be implemented");
 	}
 
+	@Test
+	public void testGetConcessionnaireProduits() throws Exception {
+		String uid = testGetConcessionnaireProduits_getUid();
+		String irrelevantUid =
+			testGetConcessionnaireProduits_getIrrelevantUid();
+
+		Page<Concessionnaire> page =
+			concessionnaireResource.getConcessionnaireProduits(uid);
+
+		Assert.assertEquals(0, page.getTotalCount());
+
+		if (irrelevantUid != null) {
+			Concessionnaire irrelevantConcessionnaire =
+				testGetConcessionnaireProduits_addConcessionnaire(
+					irrelevantUid, randomIrrelevantConcessionnaire());
+
+			page = concessionnaireResource.getConcessionnaireProduits(
+				irrelevantUid);
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantConcessionnaire),
+				(List<Concessionnaire>)page.getItems());
+			assertValid(page);
+		}
+
+		Concessionnaire concessionnaire1 =
+			testGetConcessionnaireProduits_addConcessionnaire(
+				uid, randomConcessionnaire());
+
+		Concessionnaire concessionnaire2 =
+			testGetConcessionnaireProduits_addConcessionnaire(
+				uid, randomConcessionnaire());
+
+		page = concessionnaireResource.getConcessionnaireProduits(uid);
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(concessionnaire1, concessionnaire2),
+			(List<Concessionnaire>)page.getItems());
+		assertValid(page);
+	}
+
+	protected Concessionnaire testGetConcessionnaireProduits_addConcessionnaire(
+			String uid, Concessionnaire concessionnaire)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected String testGetConcessionnaireProduits_getUid() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected String testGetConcessionnaireProduits_getIrrelevantUid()
+		throws Exception {
+
+		return null;
+	}
+
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
+
+	@Test
+	public void testGetConcessionnaireByUid() throws Exception {
+		Concessionnaire postConcessionnaire =
+			testGetConcessionnaire_addConcessionnaire();
+
+		ConcessionnaireDetail postConcessionnaireDetail =
+			testGetConcessionnaireByUid_addConcessionnaireDetail(
+				postConcessionnaire.getId(), randomConcessionnaireDetail());
+
+		ConcessionnaireDetail getConcessionnaireDetail =
+			concessionnaireResource.getConcessionnaireByUid(
+				postConcessionnaire.getId());
+
+		assertEquals(postConcessionnaireDetail, getConcessionnaireDetail);
+		assertValid(getConcessionnaireDetail);
+	}
+
+	protected ConcessionnaireDetail
+			testGetConcessionnaireByUid_addConcessionnaireDetail(
+				long concessionnaireId,
+				ConcessionnaireDetail concessionnaireDetail)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
 
 	protected Concessionnaire testGraphQLConcessionnaire_addConcessionnaire()
 		throws Exception {
@@ -523,6 +615,16 @@ public abstract class BaseConcessionnaireResourceTestCase {
 
 			assertEquals(concessionnaire1, concessionnaire2);
 		}
+	}
+
+	protected void assertEquals(
+		ConcessionnaireDetail concessionnaireDetail1,
+		ConcessionnaireDetail concessionnaireDetail2) {
+
+		Assert.assertTrue(
+			concessionnaireDetail1 + " does not equal " +
+				concessionnaireDetail2,
+			equals(concessionnaireDetail1, concessionnaireDetail2));
 	}
 
 	protected void assertEqualsIgnoringOrder(
@@ -626,7 +728,97 @@ public abstract class BaseConcessionnaireResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected void assertValid(ConcessionnaireDetail concessionnaireDetail) {
+		boolean valid = true;
+
+		if (concessionnaireDetail.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalConcessionnaireDetailAssertFieldNames()) {
+
+			if (Objects.equals(
+					"concessionnaireProduits", additionalAssertFieldName)) {
+
+				if (concessionnaireDetail.getConcessionnaireProduits() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("email", additionalAssertFieldName)) {
+				if (concessionnaireDetail.getEmail() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("nom", additionalAssertFieldName)) {
+				if (concessionnaireDetail.getNom() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("prenoms", additionalAssertFieldName)) {
+				if (concessionnaireDetail.getPrenoms() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("soldeTotal", additionalAssertFieldName)) {
+				if (concessionnaireDetail.getSoldeTotal() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("stats", additionalAssertFieldName)) {
+				if (concessionnaireDetail.getStats() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("telephone", additionalAssertFieldName)) {
+				if (concessionnaireDetail.getTelephone() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("uid", additionalAssertFieldName)) {
+				if (concessionnaireDetail.getUid() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
+	}
+
 	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
+	protected String[] getAdditionalConcessionnaireDetailAssertFieldNames() {
 		return new String[0];
 	}
 
@@ -788,6 +980,126 @@ public abstract class BaseConcessionnaireResourceTestCase {
 		}
 
 		return false;
+	}
+
+	protected boolean equals(
+		ConcessionnaireDetail concessionnaireDetail1,
+		ConcessionnaireDetail concessionnaireDetail2) {
+
+		if (concessionnaireDetail1 == concessionnaireDetail2) {
+			return true;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalConcessionnaireDetailAssertFieldNames()) {
+
+			if (Objects.equals(
+					"concessionnaireProduits", additionalAssertFieldName)) {
+
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getConcessionnaireProduits(),
+						concessionnaireDetail2.getConcessionnaireProduits())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("email", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getEmail(),
+						concessionnaireDetail2.getEmail())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getId(),
+						concessionnaireDetail2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("nom", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getNom(),
+						concessionnaireDetail2.getNom())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("prenoms", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getPrenoms(),
+						concessionnaireDetail2.getPrenoms())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("soldeTotal", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getSoldeTotal(),
+						concessionnaireDetail2.getSoldeTotal())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("stats", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getStats(),
+						concessionnaireDetail2.getStats())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("telephone", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getTelephone(),
+						concessionnaireDetail2.getTelephone())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("uid", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getUid(),
+						concessionnaireDetail2.getUid())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected java.lang.reflect.Field[] getDeclaredFields(Class clazz)
@@ -967,6 +1279,22 @@ public abstract class BaseConcessionnaireResourceTestCase {
 
 	protected Concessionnaire randomPatchConcessionnaire() throws Exception {
 		return randomConcessionnaire();
+	}
+
+	protected ConcessionnaireDetail randomConcessionnaireDetail()
+		throws Exception {
+
+		return new ConcessionnaireDetail() {
+			{
+				email = RandomTestUtil.randomString();
+				id = RandomTestUtil.randomLong();
+				nom = RandomTestUtil.randomString();
+				prenoms = RandomTestUtil.randomString();
+				soldeTotal = RandomTestUtil.randomLong();
+				telephone = RandomTestUtil.randomString();
+				uid = RandomTestUtil.randomString();
+			}
+		};
 	}
 
 	protected ConcessionnaireResource concessionnaireResource;

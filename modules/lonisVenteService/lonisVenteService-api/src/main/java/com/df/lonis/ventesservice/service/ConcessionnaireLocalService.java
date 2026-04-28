@@ -191,6 +191,9 @@ public interface ConcessionnaireLocalService
 		DynamicQuery dynamicQuery, Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Concessionnaire fetchByUid(String uid);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Concessionnaire fetchConcessionnaire(long id);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

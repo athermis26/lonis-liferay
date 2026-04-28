@@ -193,6 +193,8 @@ public interface ChiffreAffairesLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ChiffreAffaires fetchChiffreAffaires(long id);
 
+	public List<ChiffreAffaires> findByTerminalId(long terminalId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
