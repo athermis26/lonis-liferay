@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.df.lonis.ventesservice.model.ChiffreAffaires">
+		<field name="id" type="long" />
+		<field name="terminalId" type="long" />
+		<field name="brut" type="long" />
+		<field name="paiement" type="long" />
+		<field name="annulation" type="long" />
+		<field name="remboursement" type="long" />
+		<field name="ventes" type="long" />
+		<field name="balance" type="long" />
+		<field name="deposit" type="long" />
+		<field name="date" type="Date" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Commission">
+		<field name="id" type="long" />
+		<field name="code" type="String" />
+		<field name="terminalId" type="long" />
+		<field name="nombreTerminal" type="int" />
+		<field name="paye" type="boolean" />
+		<field name="libelle" type="String" />
+		<field name="status" type="String" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Concessionnaire">
+		<field name="id" type="long" />
+		<field name="uid" type="String" />
+		<field name="nom" type="String" />
+		<field name="prenoms" type="String" />
+		<field name="telephone" type="String" />
+		<field name="email" type="String" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.ConcessionnaireProduit">
+		<field name="id" type="long" />
+		<field name="concessionnaireId" type="long" />
+		<field name="produitId" type="long" />
+		<field name="siteId" type="long" />
+		<field name="code" type="String" />
+		<field name="concessionnaireCode" type="String" />
+		<field name="active" type="boolean" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Operation">
+		<field name="id" type="long" />
+		<field name="code" type="String" />
+		<field name="libelle" type="String" />
+		<field name="reference" type="String" />
+		<field name="montant" type="long" />
+		<field name="montantReel" type="long" />
+		<field name="statut" type="String" />
+		<field name="terminalId" type="long" />
+		<field name="guichet" type="String" />
+		<field name="dateOperation" type="Date" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Produit">
+		<field name="id" type="long" />
+		<field name="code" type="String" />
+		<field name="libelle" type="String" />
+		<field name="abreviation" type="String" />
+		<field name="active" type="boolean" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Site">
+		<field name="id" type="long" />
+		<field name="libelle" type="String" />
+		<field name="type" type="int" />
+		<field name="parentId" type="long" />
+		<field name="code" type="String" />
+		<field name="codeProvinov" type="String" />
+		<field name="status" type="boolean" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Terminal">
+		<field name="id" type="long" />
+		<field name="codeTerminal" type="String" />
+		<field name="concessionnaireId" type="long" />
+		<field name="concessionnaireCode" type="String" />
+		<field name="produitId" type="long" />
+		<field name="concessionnaireProduitCode" type="String" />
+		<field name="siteId" type="long" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+</model-hints>

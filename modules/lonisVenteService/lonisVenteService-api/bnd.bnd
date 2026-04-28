@@ -1,0 +1,10 @@
+Bundle-Name: lonisVenteService-api
+Bundle-SymbolicName: com.df.lonis.ventesservice.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.df.lonis.ventesservice.exception,\
+	com.df.lonis.ventesservice.model,\
+	com.df.lonis.ventesservice.service,\
+	com.df.lonis.ventesservice.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../lonisVenteService-service/service.xml

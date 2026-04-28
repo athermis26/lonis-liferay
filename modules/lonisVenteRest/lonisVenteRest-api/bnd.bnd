@@ -1,0 +1,6 @@
+Bundle-Name: lonisVenteRest-api
+Bundle-SymbolicName: com.df.lonis.ventesrest.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.df.lonis.ventesrest.dto.v1_0,\
+	com.df.lonis.ventesrest.resource.v1_0

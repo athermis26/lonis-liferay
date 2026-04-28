@@ -1,0 +1,5 @@
+Bundle-Name: lonisVenteRest-test
+Bundle-SymbolicName: com.df.lonis.ventesrest.test
+Bundle-Version: 1.0.0
+-includeresource: com.df.lonis.ventesrest.client.jar=../lonisVenteRest-client/build/libs/com.df.lonis.ventesrest.client-1.0.0.jar;lib:=true
+-provider-policy: ${replacestring;${range;[==,==]};.*,(.*)];$1}

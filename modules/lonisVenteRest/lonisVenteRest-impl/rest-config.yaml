@@ -1,0 +1,10 @@
+apiDir: "../lonisVenteRest-api/src/main/java"
+apiPackagePath: "com.df.lonis.ventesrest"
+application:
+    baseURI: "/lonisVenteRest"
+    className: "LonisVenteRestApplication"
+    name: "LonisVenteRest"
+author: "HP"
+clientDir: "../lonisVenteRest-client/src/main/java"
+testDir: "../lonisVenteRest-test/src/testIntegration/java"
+generateGraphQL: false

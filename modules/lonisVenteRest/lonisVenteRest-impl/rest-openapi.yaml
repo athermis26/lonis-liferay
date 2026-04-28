@@ -1,0 +1,448 @@
+info:
+    description: "LonisVenteRest REST API"
+    license:
+        name: "Apache 2.0"
+        url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    title: "LonisVenteRest"
+    version: v1.0
+openapi: 3.0.1
+
+paths:
+    # ─────────────────────────────────────────────
+    # DASHBOARD
+    # ─────────────────────────────────────────────
+    /dashboard/kpis:
+        get:
+            operationId: getDashboardKpis
+            tags: [ "Dashboard" ]
+            description: "KPIs globaux"
+            parameters:
+                - in: query
+                  name: periode
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/DashboardKpis"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/DashboardKpis"
+                    description: "KPIs globaux"
+
+    # ─────────────────────────────────────────────
+    # CONCESSIONNAIRES
+    # ─────────────────────────────────────────────
+    /concessionnaires:
+        get:
+            operationId: getConcessionnairesPage
+            tags: [ "Concessionnaire" ]
+            description: "Liste paginée des concessionnaires"
+            parameters:
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Concessionnaire"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Concessionnaire"
+                                type: array
+                    description: "Liste paginée"
+
+    # ─────────────────────────────────────────────
+    # Produits
+    # ─────────────────────────────────────────────
+    /produits:
+        get:
+            operationId: getAllProduits
+            tags: [ "Produit" ]
+            description: "Liste des produits"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Produit"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Produit"
+                                type: array
+                    description: 'Liste non paginée'
+
+    # ─────────────────────────────────────────────
+    # Terminaux
+    # ─────────────────────────────────────────────
+    /terminaux:
+        get:
+            operationId: getTerminauxPage
+            tags: [ "Terminal" ]
+            description: "Liste des terminaux (Points de ventes"
+            parameters:
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Terminal"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Terminal"
+                                type: array
+                    description: "Liste paginée"
+
+    # ─────────────────────────────────────────────
+    # Sites
+    # ─────────────────────────────────────────────
+    /sites:
+        get:
+            operationId: getSitesPage
+            tags: [ "Site" ]
+            description: "Liste des sites avec pagination"
+            parameters:
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Site"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Site"
+                                type: array
+                    description: "Liste paginée"
+
+    /sites-all:
+        get:
+            operationId: getAllSites
+            tags: [ "Site" ]
+            description: "Liste des sites sans pagination"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Site"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Site"
+                                type: array
+                    description: "Liste non paginée"
+
+    # ─────────────────────────────────────────────
+    # Opérations
+    # ─────────────────────────────────────────────
+    /operations:
+        get:
+            operationId: getOperationsPage
+            tags: [ "Operation" ]
+            description: "Historique global des operations"
+            parameters:
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: siteId
+                  schema:
+                      type: integer
+                      format: int64
+                - in: query
+                  name: periode
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                      default: 1
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                      default: 10
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Operation"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Operation"
+                    description: "Liste paginee des operations"
+
+    /operations/{operationId}:
+        get:
+            operationId: getOperation
+            tags: [ "Operation" ]
+            description: "Detail d une operation"
+            parameters:
+                - in: path
+                  name: operationId
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/OperationDetail"
+                        application/xml:
+                            schema:
+                                $ref: "#/components/schemas/OperationDetail"
+                    description: "Detail operation"
+
+
+components:
+    schemas:
+
+        DashboardKpis:
+            properties:
+                totalConcessionnaires:
+                    type: integer
+                    format: int64
+                totalPointsDeVente:
+                    type: integer
+                    format: int64
+                chiffreAffairesTotal:
+                    type: integer
+                    format: int64
+                paiementsTotal:
+                    type: integer
+                    format: int64
+
+        Concessionnaire:
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                uid:
+                    type: string
+                nom:
+                    type: string
+                prenoms:
+                    type: string
+                telephone:
+                    type: string
+                email:
+                    type: string
+
+        Produit:
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                code:
+                    type: string
+                libelle:
+                    type: string
+                abreviation:
+                    type: string
+                active:
+                    type: boolean
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+
+        Site:
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                libelle:
+                    type: string
+                type:
+                    type: integer
+                parentId:
+                    type: integer
+                    format: int64
+                code:
+                    type: string
+                codeProvince:
+                    type: string
+                status:
+                    type: boolean
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+
+        Terminal:
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                codeTerminal:
+                    type: string
+                concessionnaireId:
+                    type: integer
+                    format: int64
+                concessionnaireCode:
+                    type: string
+                produitId:
+                    type: integer
+                    format: int64
+                concessionnaireProduitCode:
+                    type: string
+                siteId:
+                    type: integer
+                    format: int64
+                produit:
+                    $ref: "#/components/schemas/Produit"
+                site:
+                    $ref: "#/components/schemas/Site"
+                solde:
+                    type: integer
+                    format: int64
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+
+        Operation:
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                code:
+                    type: string
+                reference:
+                    type: string
+                montant:
+                    type: integer
+                    format: int64
+                montantReel:
+                    type: integer
+                    format: int64
+                statut:
+                    type: string
+                terminalId:
+                    type: integer
+                    format: int64
+                codeTerminal:
+                    type: string
+                guichet:
+                    type: string
+                dateOperation:
+                    type: string
+                    format: date-time
+                libelle:
+                    type: string
+
+        OperationDetail:
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                codeOperation:
+                    type: string
+                codeTerminal:
+                    type: string
+                reference:
+                    type: string
+                dateHeure:
+                    type: string
+                    format: date-time
+                libelle:
+                    type: string
+                montant:
+                    type: integer
+                    format: int64
+                montantReel:
+                    type: integer
+                    format: int64
+                statut:
+                    type: string
+                guichet:
+                    type: string

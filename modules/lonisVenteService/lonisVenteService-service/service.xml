@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.4.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_4_0.dtd">
+
+<service-builder dependency-injector="ds" package-path="com.df.lonis.ventesservice">
+	<namespace>LONIS</namespace>
+	<!--	Concessionnaires-->
+	<entity local-service="true" name="Concessionnaire" remote-service="false" table="concessionnaires">
+		<column name="id" type="long" primary="true" id-type="identity" db-name="id"/>
+		<column name="uid"        type="String"/>
+		<column name="nom"        type="String"/>
+		<column name="prenoms"    type="String"/>
+		<column name="telephone"  type="String"/>
+		<column name="email"      type="String"/>
+		<order by="asc">
+			<order-column name="nom"/>
+		</order>
+
+		<finder name="Uid" return-type="Concessionnaire" unique="true">
+			<finder-column name="uid"/>
+		</finder>
+		<finder name="Nom" return-type="Collection">
+			<finder-column name="nom"/>
+		</finder>
+	</entity>
+
+	<!--	Produits-->
+	<entity name="Produit" table="produits" local-service="true" remote-service="false">
+		<column name="id" type="long" primary="true" id-type="identity" db-name="id"/>
+		<column name="code" type="String" db-name="code" />
+		<column name="libelle" type="String"/>
+		<column name="abreviation" type="String"/>
+		<column name="active" type="boolean" db-name="active"/>
+		<column name="createdAt" type="Date" db-name="created_at"/>
+		<column name="updatedAt" type="Date" db-name="updated_at"/>
+
+		<order by="asc">
+			<order-column name="libelle"/>
+		</order>
+
+		<finder name="Code" return-type="Produit" unique="true">
+			<finder-column name="code"/>
+		</finder>
+	</entity>
+
+	<!--	Terminals-->
+	<entity local-service="true" name="Terminal" remote-service="false" table="terminals">
+		<column name="id" primary="true" type="long" id-type="identity" db-name="id"/>
+		<!-- Java: codeTerminal | DB: code_terminal -->
+		<column name="codeTerminal" type="String" db-name="code_terminal"/>
+		<column name="concessionnaireId" type="long" db-name="concessionnaire_id"/>
+		<column name="concessionnaireCode" type="String" db-name="concessionnaire_code"/>
+		<column name="produitId" type="long" db-name="produit_id"/>
+		<column name="concessionnaireProduitCode" type="String" db-name="concessionnaire_produit_code"/>
+		<column name="siteId" type="long" db-name="site_id"/>
+		<column name="createdAt" type="Date" db-name="created_at"/>
+		<column name="updatedAt" type="Date" db-name="updated_at"/>
+		<finder name="ConcessionnaireId" return-type="Collection">
+			<finder-column name="concessionnaireId"/>
+		</finder>
+	</entity>
+
+	<!--	Sites-->
+	<entity name="Site" table="sites" local-service="true" remote-service="false">
+		<column name="id" primary="true" type="long" id-type="identity" db-name="id"/>
+		<column name="libelle"      type="String"/>
+		<column name="type"   type="int"     db-name="type"/>
+		<column name="parentId"     type="long"   db-name="parent_id"/>
+		<column name="code" type="String" db-name="code" />
+		<column name="codeProvinov" type="String" db-name="code_provinov"/>
+		<column name="status" type="boolean" db-name="status"/>
+		<column name="createdAt"    type="Date"   db-name="created_at"/>
+		<column name="updatedAt"    type="Date"   db-name="updated_at"/>
+	</entity>
+
+	<!--	ConcessionnaireProduit (table de liaison)-->
+	<entity local-service="true" name="ConcessionnaireProduit" remote-service="false" table="concessionnaire_produit">
+		<column name="id" primary="true" type="long" id-type="identity" db-name="id"/>
+		<column name="concessionnaireId"   type="long"    db-name="concessionnaire_id"/>
+		<column name="produitId"           type="long"    db-name="produit_id"/>
+		<column name="siteId"              type="long"    db-name="site_id"/>
+		<column name="code" type="String" db-name="code" />
+		<column name="concessionnaireCode" type="String"  db-name="concessionnaire_code"/>
+		<column name="active"              type="boolean"/>
+		<column name="createdAt"           type="Date"    db-name="created_at"/>
+		<column name="updatedAt"           type="Date"    db-name="updated_at"/>
+
+		<finder name="ConcessionnaireId" return-type="Collection">
+			<finder-column name="concessionnaireId"/>
+		</finder>
+		<finder name="ProduitId" return-type="Collection">
+			<finder-column name="produitId"/>
+		</finder>
+		<finder name="C_P" return-type="ConcessionnaireProduit" unique="true">
+			<finder-column name="concessionnaireId"/>
+			<finder-column name="produitId"/>
+		</finder>
+	</entity>
+
+	<!--	Chiffre d'Affaires-->
+	<entity local-service="true" name="ChiffreAffaires" remote-service="false" table="chiffre_affaires">
+		<column name="id" primary="true" type="long" id-type="identity" db-name="id"/>
+		<column name="terminalId"    type="long" db-name="terminal_id"/>
+		<column name="brut"          type="long"/>
+		<column name="paiement"      type="long"/>
+		<column name="annulation"    type="long"/>
+		<column name="remboursement" type="long"/>
+		<column name="ventes"        type="long"/>
+		<column name="balance"       type="long"/>
+		<column name="deposit"       type="long"/>
+		<column name="date" type="Date" db-name="date"/>
+		<column name="createdAt"     type="Date" db-name="created_at"/>
+		<column name="updatedAt"     type="Date" db-name="updated_at"/>
+
+		<order by="desc">
+			<order-column name="date"/>
+		</order>
+
+		<finder name="TerminalId" return-type="Collection">
+			<finder-column name="terminalId"/>
+		</finder>
+		<finder name="T_D" return-type="Collection">
+			<finder-column name="terminalId"/>
+			<finder-column name="date" comparator="&gt;="/>
+		</finder>
+	</entity>
+
+	<!--	Commission-->
+	<entity local-service="true" name="Commission" remote-service="false" table="commissions">
+		<column name="id" primary="true" type="long" id-type="identity" db-name="id"/>
+		<column name="code" type="String" db-name="code" />
+		<column name="terminalId"     type="long"    db-name="terminal_id"/>
+		<column name="nombreTerminal" type="int"     db-name="nombre_terminal"/>
+		<column name="paye"           type="boolean"/>
+		<column name="libelle"        type="String"/>
+		<column name="status" type="String" db-name="status"/>
+		<column name="createdAt"      type="Date"    db-name="created_at"/>
+		<column name="updatedAt"      type="Date"    db-name="updated_at"/>
+
+		<order by="desc">
+			<order-column name="createdAt"/>
+		</order>
+
+		<finder name="TerminalId" return-type="Collection">
+			<finder-column name="terminalId"/>
+		</finder>
+		<finder name="Status" return-type="Collection">
+			<finder-column name="status"/>
+		</finder>
+	</entity>
+
+	<!--	Opérations-->
+	<entity local-service="true" name="Operation" remote-service="false" table="operations">
+		<column name="id" primary="true" type="long" id-type="identity" db-name="id"/>
+		<column name="code" type="String" db-name="code" />
+		<column name="libelle"       type="String"/>
+		<column name="reference"     type="String"/>
+		<column name="montant"       type="long"/>
+		<column name="montantReel"   type="long"   db-name="montant_reel"/>
+		<column name="statut"        type="String"/>
+		<column name="terminalId"    type="long"   db-name="terminal_id"/>
+		<column name="guichet"       type="String"/>
+		<column name="dateOperation" type="Date"   db-name="date_operation"/>
+		<column name="createdAt"     type="Date"   db-name="created_at"/>
+		<column name="updatedAt"     type="Date"   db-name="updated_at"/>
+
+		<order by="desc">
+			<order-column name="dateOperation"/>
+		</order>
+
+		<finder name="TerminalId" return-type="Collection">
+			<finder-column name="terminalId"/>
+		</finder>
+		<finder name="Reference" return-type="Operation" unique="true">
+			<finder-column name="reference"/>
+		</finder>
+		<finder name="Statut" return-type="Collection">
+			<finder-column name="statut"/>
+		</finder>
+	</entity>
+</service-builder>
