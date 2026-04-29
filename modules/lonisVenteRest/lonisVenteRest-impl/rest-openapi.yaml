@@ -608,6 +608,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ConcessionnaireProduit"
+        concessionnaireTerminals:
+          type: array
+          items:
+            $ref: "#/components/schemas/Terminal"
         soldeTotal:
           type: integer
           format: int64
@@ -711,6 +715,12 @@ components:
         concessionnaireId:
           type: integer
           format: int64
+        concessionnaireNomPrenom:
+          type: string
+        produitType:
+          type: string
+        siteLibelle:
+          type: string
         concessionnaireCode:
           type: string
         produitId:

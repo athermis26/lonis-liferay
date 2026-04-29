@@ -146,7 +146,7 @@ public abstract class BaseCommissionResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}/commissions'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{id}/commissions'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Liste des commissions d un concessionnaire"
@@ -155,7 +155,7 @@ public abstract class BaseCommissionResourceImpl
 		value = {
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
-				name = "uid"
+				name = "id"
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
@@ -179,13 +179,13 @@ public abstract class BaseCommissionResourceImpl
 		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Commission")}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/concessionnaires/{uid}/commissions")
+	@javax.ws.rs.Path("/concessionnaires/{id}/commissions")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
 	public Commission getConcessionnaireCommissions(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("uid")
-			String uid,
+			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("id")
+			Long id,
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.ws.rs.QueryParam("concessionnaireProduitCode")
 			String concessionnaireProduitCode,

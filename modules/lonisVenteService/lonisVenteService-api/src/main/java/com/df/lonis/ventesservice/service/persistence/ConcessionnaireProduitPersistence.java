@@ -34,6 +34,51 @@ public interface ConcessionnaireProduitPersistence
 	 */
 
 	/**
+	 * Returns the concessionnaire produit where code = &#63; or throws a <code>NoSuchConcessionnaireProduitException</code> if it could not be found.
+	 *
+	 * @param code the code
+	 * @return the matching concessionnaire produit
+	 * @throws NoSuchConcessionnaireProduitException if a matching concessionnaire produit could not be found
+	 */
+	public ConcessionnaireProduit findByCode(String code)
+		throws NoSuchConcessionnaireProduitException;
+
+	/**
+	 * Returns the concessionnaire produit where code = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param code the code
+	 * @return the matching concessionnaire produit, or <code>null</code> if a matching concessionnaire produit could not be found
+	 */
+	public ConcessionnaireProduit fetchByCode(String code);
+
+	/**
+	 * Returns the concessionnaire produit where code = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param code the code
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching concessionnaire produit, or <code>null</code> if a matching concessionnaire produit could not be found
+	 */
+	public ConcessionnaireProduit fetchByCode(
+		String code, boolean useFinderCache);
+
+	/**
+	 * Removes the concessionnaire produit where code = &#63; from the database.
+	 *
+	 * @param code the code
+	 * @return the concessionnaire produit that was removed
+	 */
+	public ConcessionnaireProduit removeByCode(String code)
+		throws NoSuchConcessionnaireProduitException;
+
+	/**
+	 * Returns the number of concessionnaire produits where code = &#63;.
+	 *
+	 * @param code the code
+	 * @return the number of matching concessionnaire produits
+	 */
+	public int countByCode(String code);
+
+	/**
 	 * Returns all the concessionnaire produits where concessionnaireId = &#63;.
 	 *
 	 * @param concessionnaireId the concessionnaire ID

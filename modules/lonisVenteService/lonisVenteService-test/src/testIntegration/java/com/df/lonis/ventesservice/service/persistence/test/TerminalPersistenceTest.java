@@ -161,6 +161,15 @@ public class TerminalPersistenceTest {
 	}
 
 	@Test
+	public void testCountByConcessionnaireProduitCode() throws Exception {
+		_persistence.countByConcessionnaireProduitCode("");
+
+		_persistence.countByConcessionnaireProduitCode("null");
+
+		_persistence.countByConcessionnaireProduitCode((String)null);
+	}
+
+	@Test
 	public void testCountByConcessionnaireId() throws Exception {
 		_persistence.countByConcessionnaireId(RandomTestUtil.nextLong());
 

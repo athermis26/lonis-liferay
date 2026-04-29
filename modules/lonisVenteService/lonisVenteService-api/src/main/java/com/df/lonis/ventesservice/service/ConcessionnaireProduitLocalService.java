@@ -194,6 +194,8 @@ public interface ConcessionnaireProduitLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ConcessionnaireProduit fetchConcessionnaireProduit(long id);
 
+	public ConcessionnaireProduit findByCode(String code);
+
 	public List<ConcessionnaireProduit> findByConcessionnaireId(
 		long concessionnaireId);
 

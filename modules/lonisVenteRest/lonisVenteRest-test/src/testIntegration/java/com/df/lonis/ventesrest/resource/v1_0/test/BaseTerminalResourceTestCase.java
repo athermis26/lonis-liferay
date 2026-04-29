@@ -176,7 +176,10 @@ public abstract class BaseTerminalResourceTestCase {
 
 		terminal.setCodeTerminal(regex);
 		terminal.setConcessionnaireCode(regex);
+		terminal.setConcessionnaireNomPrenom(regex);
 		terminal.setConcessionnaireProduitCode(regex);
+		terminal.setProduitType(regex);
+		terminal.setSiteLibelle(regex);
 
 		String json = TerminalSerDes.toJSON(terminal);
 
@@ -186,7 +189,10 @@ public abstract class BaseTerminalResourceTestCase {
 
 		Assert.assertEquals(regex, terminal.getCodeTerminal());
 		Assert.assertEquals(regex, terminal.getConcessionnaireCode());
+		Assert.assertEquals(regex, terminal.getConcessionnaireNomPrenom());
 		Assert.assertEquals(regex, terminal.getConcessionnaireProduitCode());
+		Assert.assertEquals(regex, terminal.getProduitType());
+		Assert.assertEquals(regex, terminal.getSiteLibelle());
 	}
 
 	@Test
@@ -447,23 +453,22 @@ public abstract class BaseTerminalResourceTestCase {
 	}
 
 	@Test
-	public void testGetConcessionnairesUidTerminauxPage() throws Exception {
+	public void testGetConcessionnaireTerminaux() throws Exception {
 		Terminal postTerminal = testGetTerminal_addTerminal();
 
 		TerminauxConcessionnaire postTerminauxConcessionnaire =
-			testGetConcessionnairesUidTerminauxPage_addTerminauxConcessionnaire(
+			testGetConcessionnaireTerminaux_addTerminauxConcessionnaire(
 				postTerminal.getId(), randomTerminauxConcessionnaire());
 
 		TerminauxConcessionnaire getTerminauxConcessionnaire =
-			terminalResource.getConcessionnairesUidTerminauxPage(
-				postTerminal.getId());
+			terminalResource.getConcessionnaireTerminaux(postTerminal.getId());
 
 		assertEquals(postTerminauxConcessionnaire, getTerminauxConcessionnaire);
 		assertValid(getTerminauxConcessionnaire);
 	}
 
 	protected TerminauxConcessionnaire
-			testGetConcessionnairesUidTerminauxPage_addTerminauxConcessionnaire(
+			testGetConcessionnaireTerminaux_addTerminauxConcessionnaire(
 				long terminalId,
 				TerminauxConcessionnaire terminauxConcessionnaire)
 		throws Exception {
@@ -601,6 +606,16 @@ public abstract class BaseTerminalResourceTestCase {
 			}
 
 			if (Objects.equals(
+					"concessionnaireNomPrenom", additionalAssertFieldName)) {
+
+				if (terminal.getConcessionnaireNomPrenom() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
 					"concessionnaireProduitCode", additionalAssertFieldName)) {
 
 				if (terminal.getConcessionnaireProduitCode() == null) {
@@ -634,8 +649,24 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("produitType", additionalAssertFieldName)) {
+				if (terminal.getProduitType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("site", additionalAssertFieldName)) {
 				if (terminal.getSite() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("siteLibelle", additionalAssertFieldName)) {
+				if (terminal.getSiteLibelle() == null) {
 					valid = false;
 				}
 
@@ -902,6 +933,19 @@ public abstract class BaseTerminalResourceTestCase {
 			}
 
 			if (Objects.equals(
+					"concessionnaireNomPrenom", additionalAssertFieldName)) {
+
+				if (!Objects.deepEquals(
+						terminal1.getConcessionnaireNomPrenom(),
+						terminal2.getConcessionnaireNomPrenom())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
 					"concessionnaireProduitCode", additionalAssertFieldName)) {
 
 				if (!Objects.deepEquals(
@@ -952,9 +996,31 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("produitType", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						terminal1.getProduitType(),
+						terminal2.getProduitType())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("site", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
 						terminal1.getSite(), terminal2.getSite())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("siteLibelle", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						terminal1.getSiteLibelle(),
+						terminal2.getSiteLibelle())) {
 
 					return false;
 				}
@@ -1236,6 +1302,14 @@ public abstract class BaseTerminalResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("concessionnaireNomPrenom")) {
+			sb.append("'");
+			sb.append(String.valueOf(terminal.getConcessionnaireNomPrenom()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
 		if (entityFieldName.equals("concessionnaireProduitCode")) {
 			sb.append("'");
 			sb.append(String.valueOf(terminal.getConcessionnaireProduitCode()));
@@ -1290,6 +1364,14 @@ public abstract class BaseTerminalResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("produitType")) {
+			sb.append("'");
+			sb.append(String.valueOf(terminal.getProduitType()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
 		if (entityFieldName.equals("site")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1298,6 +1380,14 @@ public abstract class BaseTerminalResourceTestCase {
 		if (entityFieldName.equals("siteId")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("siteLibelle")) {
+			sb.append("'");
+			sb.append(String.valueOf(terminal.getSiteLibelle()));
+			sb.append("'");
+
+			return sb.toString();
 		}
 
 		if (entityFieldName.equals("solde")) {
@@ -1385,12 +1475,18 @@ public abstract class BaseTerminalResourceTestCase {
 				concessionnaireCode = StringUtil.toLowerCase(
 					RandomTestUtil.randomString());
 				concessionnaireId = RandomTestUtil.randomLong();
+				concessionnaireNomPrenom = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
 				concessionnaireProduitCode = StringUtil.toLowerCase(
 					RandomTestUtil.randomString());
 				createdAt = RandomTestUtil.nextDate();
 				id = RandomTestUtil.randomLong();
 				produitId = RandomTestUtil.randomLong();
+				produitType = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
 				siteId = testGroup.getGroupId();
+				siteLibelle = StringUtil.toLowerCase(
+					RandomTestUtil.randomString());
 				solde = RandomTestUtil.randomLong();
 				updatedAt = RandomTestUtil.nextDate();
 			}

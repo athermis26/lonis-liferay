@@ -41,6 +41,7 @@ import java.lang.reflect.InvocationHandler;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -82,6 +83,188 @@ public class ConcessionnaireProduitPersistenceImpl
 	private FinderPath _finderPathWithPaginationFindAll;
 	private FinderPath _finderPathWithoutPaginationFindAll;
 	private FinderPath _finderPathCountAll;
+	private FinderPath _finderPathFetchByCode;
+
+	/**
+	 * Returns the concessionnaire produit where code = &#63; or throws a <code>NoSuchConcessionnaireProduitException</code> if it could not be found.
+	 *
+	 * @param code the code
+	 * @return the matching concessionnaire produit
+	 * @throws NoSuchConcessionnaireProduitException if a matching concessionnaire produit could not be found
+	 */
+	@Override
+	public ConcessionnaireProduit findByCode(String code)
+		throws NoSuchConcessionnaireProduitException {
+
+		ConcessionnaireProduit concessionnaireProduit = fetchByCode(code);
+
+		if (concessionnaireProduit == null) {
+			StringBundler sb = new StringBundler(4);
+
+			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			sb.append("code=");
+			sb.append(code);
+
+			sb.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(sb.toString());
+			}
+
+			throw new NoSuchConcessionnaireProduitException(sb.toString());
+		}
+
+		return concessionnaireProduit;
+	}
+
+	/**
+	 * Returns the concessionnaire produit where code = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param code the code
+	 * @return the matching concessionnaire produit, or <code>null</code> if a matching concessionnaire produit could not be found
+	 */
+	@Override
+	public ConcessionnaireProduit fetchByCode(String code) {
+		return fetchByCode(code, true);
+	}
+
+	/**
+	 * Returns the concessionnaire produit where code = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param code the code
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching concessionnaire produit, or <code>null</code> if a matching concessionnaire produit could not be found
+	 */
+	@Override
+	public ConcessionnaireProduit fetchByCode(
+		String code, boolean useFinderCache) {
+
+		code = Objects.toString(code, "");
+
+		Object[] finderArgs = null;
+
+		if (useFinderCache) {
+			finderArgs = new Object[] {code};
+		}
+
+		Object result = null;
+
+		if (useFinderCache) {
+			result = finderCache.getResult(
+				_finderPathFetchByCode, finderArgs, this);
+		}
+
+		if (result instanceof ConcessionnaireProduit) {
+			ConcessionnaireProduit concessionnaireProduit =
+				(ConcessionnaireProduit)result;
+
+			if (!Objects.equals(code, concessionnaireProduit.getCode())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler sb = new StringBundler(3);
+
+			sb.append(_SQL_SELECT_CONCESSIONNAIREPRODUIT_WHERE);
+
+			boolean bindCode = false;
+
+			if (code.isEmpty()) {
+				sb.append(_FINDER_COLUMN_CODE_CODE_3);
+			}
+			else {
+				bindCode = true;
+
+				sb.append(_FINDER_COLUMN_CODE_CODE_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindCode) {
+					queryPos.add(code);
+				}
+
+				List<ConcessionnaireProduit> list = query.list();
+
+				if (list.isEmpty()) {
+					if (useFinderCache) {
+						finderCache.putResult(
+							_finderPathFetchByCode, finderArgs, list);
+					}
+				}
+				else {
+					ConcessionnaireProduit concessionnaireProduit = list.get(0);
+
+					result = concessionnaireProduit;
+
+					cacheResult(concessionnaireProduit);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (ConcessionnaireProduit)result;
+		}
+	}
+
+	/**
+	 * Removes the concessionnaire produit where code = &#63; from the database.
+	 *
+	 * @param code the code
+	 * @return the concessionnaire produit that was removed
+	 */
+	@Override
+	public ConcessionnaireProduit removeByCode(String code)
+		throws NoSuchConcessionnaireProduitException {
+
+		ConcessionnaireProduit concessionnaireProduit = findByCode(code);
+
+		return remove(concessionnaireProduit);
+	}
+
+	/**
+	 * Returns the number of concessionnaire produits where code = &#63;.
+	 *
+	 * @param code the code
+	 * @return the number of matching concessionnaire produits
+	 */
+	@Override
+	public int countByCode(String code) {
+		ConcessionnaireProduit concessionnaireProduit = fetchByCode(code);
+
+		if (concessionnaireProduit == null) {
+			return 0;
+		}
+
+		return 1;
+	}
+
+	private static final String _FINDER_COLUMN_CODE_CODE_2 =
+		"concessionnaireProduit.code = ?";
+
+	private static final String _FINDER_COLUMN_CODE_CODE_3 =
+		"(concessionnaireProduit.code IS NULL OR concessionnaireProduit.code = '')";
+
 	private FinderPath _finderPathWithPaginationFindByConcessionnaireId;
 	private FinderPath _finderPathWithoutPaginationFindByConcessionnaireId;
 	private FinderPath _finderPathCountByConcessionnaireId;
@@ -1324,6 +1507,11 @@ public class ConcessionnaireProduitPersistenceImpl
 			concessionnaireProduit.getPrimaryKey(), concessionnaireProduit);
 
 		finderCache.putResult(
+			_finderPathFetchByCode,
+			new Object[] {concessionnaireProduit.getCode()},
+			concessionnaireProduit);
+
+		finderCache.putResult(
 			_finderPathFetchByC_P,
 			new Object[] {
 				concessionnaireProduit.getConcessionnaireId(),
@@ -1416,6 +1604,13 @@ public class ConcessionnaireProduitPersistenceImpl
 		ConcessionnaireProduitModelImpl concessionnaireProduitModelImpl) {
 
 		Object[] args = new Object[] {
+			concessionnaireProduitModelImpl.getCode()
+		};
+
+		finderCache.putResult(
+			_finderPathFetchByCode, args, concessionnaireProduitModelImpl);
+
+		args = new Object[] {
 			concessionnaireProduitModelImpl.getConcessionnaireId(),
 			concessionnaireProduitModelImpl.getProduitId()
 		};
@@ -1870,6 +2065,10 @@ public class ConcessionnaireProduitPersistenceImpl
 		_finderPathCountAll = new FinderPath(
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll",
 			new String[0], new String[0], false);
+
+		_finderPathFetchByCode = new FinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchByCode",
+			new String[] {String.class.getName()}, new String[] {"code"}, true);
 
 		_finderPathWithPaginationFindByConcessionnaireId = new FinderPath(
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByConcessionnaireId",

@@ -292,6 +292,34 @@ public class Commission implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Long terminalId;
 
+	@Schema
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	@JsonIgnore
+	public void setUpdatedAt(
+		UnsafeSupplier<Date, Exception> updatedAtUnsafeSupplier) {
+
+		try {
+			updatedAt = updatedAtUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date updatedAt;
+
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -430,6 +458,20 @@ public class Commission implements Serializable {
 			sb.append("\"terminalId\": ");
 
 			sb.append(terminalId);
+		}
+
+		if (updatedAt != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"updatedAt\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(updatedAt));
+
+			sb.append("\"");
 		}
 
 		sb.append("}");

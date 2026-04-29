@@ -52,7 +52,7 @@ public interface CommissionResource {
 	public CommissionDetail getCommission(Long id) throws Exception;
 
 	public Commission getConcessionnaireCommissions(
-			String uid, String concessionnaireProduitCode, String periode,
+			Long id, String concessionnaireProduitCode, String periode,
 			Pagination pagination)
 		throws Exception;
 

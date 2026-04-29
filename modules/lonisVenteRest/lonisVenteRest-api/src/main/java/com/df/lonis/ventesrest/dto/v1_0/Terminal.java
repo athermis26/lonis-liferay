@@ -133,6 +133,36 @@ public class Terminal implements Serializable {
 	protected Long concessionnaireId;
 
 	@Schema
+	public String getConcessionnaireNomPrenom() {
+		return concessionnaireNomPrenom;
+	}
+
+	public void setConcessionnaireNomPrenom(String concessionnaireNomPrenom) {
+		this.concessionnaireNomPrenom = concessionnaireNomPrenom;
+	}
+
+	@JsonIgnore
+	public void setConcessionnaireNomPrenom(
+		UnsafeSupplier<String, Exception>
+			concessionnaireNomPrenomUnsafeSupplier) {
+
+		try {
+			concessionnaireNomPrenom =
+				concessionnaireNomPrenomUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String concessionnaireNomPrenom;
+
+	@Schema
 	public String getConcessionnaireProduitCode() {
 		return concessionnaireProduitCode;
 	}
@@ -276,6 +306,34 @@ public class Terminal implements Serializable {
 	protected Long produitId;
 
 	@Schema
+	public String getProduitType() {
+		return produitType;
+	}
+
+	public void setProduitType(String produitType) {
+		this.produitType = produitType;
+	}
+
+	@JsonIgnore
+	public void setProduitType(
+		UnsafeSupplier<String, Exception> produitTypeUnsafeSupplier) {
+
+		try {
+			produitType = produitTypeUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String produitType;
+
+	@Schema
 	@Valid
 	public Site getSite() {
 		return site;
@@ -329,6 +387,34 @@ public class Terminal implements Serializable {
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Long siteId;
+
+	@Schema
+	public String getSiteLibelle() {
+		return siteLibelle;
+	}
+
+	public void setSiteLibelle(String siteLibelle) {
+		this.siteLibelle = siteLibelle;
+	}
+
+	@JsonIgnore
+	public void setSiteLibelle(
+		UnsafeSupplier<String, Exception> siteLibelleUnsafeSupplier) {
+
+		try {
+			siteLibelle = siteLibelleUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String siteLibelle;
 
 	@Schema
 	public Long getSolde() {
@@ -452,6 +538,20 @@ public class Terminal implements Serializable {
 			sb.append(concessionnaireId);
 		}
 
+		if (concessionnaireNomPrenom != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"concessionnaireNomPrenom\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(concessionnaireNomPrenom));
+
+			sb.append("\"");
+		}
+
 		if (concessionnaireProduitCode != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -510,6 +610,20 @@ public class Terminal implements Serializable {
 			sb.append(produitId);
 		}
 
+		if (produitType != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"produitType\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(produitType));
+
+			sb.append("\"");
+		}
+
 		if (site != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -528,6 +642,20 @@ public class Terminal implements Serializable {
 			sb.append("\"siteId\": ");
 
 			sb.append(siteId);
+		}
+
+		if (siteLibelle != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"siteLibelle\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(siteLibelle));
+
+			sb.append("\"");
 		}
 
 		if (solde != null) {

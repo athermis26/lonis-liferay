@@ -2,6 +2,7 @@ package com.df.lonis.ventesrest.client.serdes.v1_0;
 
 import com.df.lonis.ventesrest.client.dto.v1_0.ConcessionnaireDetail;
 import com.df.lonis.ventesrest.client.dto.v1_0.ConcessionnaireProduit;
+import com.df.lonis.ventesrest.client.dto.v1_0.Terminal;
 import com.df.lonis.ventesrest.client.json.BaseJSONParser;
 
 import java.util.Iterator;
@@ -63,6 +64,34 @@ public class ConcessionnaireDetailSerDes {
 				if ((i + 1) <
 						concessionnaireDetail.
 							getConcessionnaireProduits().length) {
+
+					sb.append(", ");
+				}
+			}
+
+			sb.append("]");
+		}
+
+		if (concessionnaireDetail.getConcessionnaireTerminals() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"concessionnaireTerminals\": ");
+
+			sb.append("[");
+
+			for (int i = 0;
+				 i < concessionnaireDetail.getConcessionnaireTerminals().length;
+				 i++) {
+
+				sb.append(
+					String.valueOf(
+						concessionnaireDetail.getConcessionnaireTerminals()
+							[i]));
+
+				if ((i + 1) < concessionnaireDetail.
+						getConcessionnaireTerminals().length) {
 
 					sb.append(", ");
 				}
@@ -202,6 +231,16 @@ public class ConcessionnaireDetailSerDes {
 					concessionnaireDetail.getConcessionnaireProduits()));
 		}
 
+		if (concessionnaireDetail.getConcessionnaireTerminals() == null) {
+			map.put("concessionnaireTerminals", null);
+		}
+		else {
+			map.put(
+				"concessionnaireTerminals",
+				String.valueOf(
+					concessionnaireDetail.getConcessionnaireTerminals()));
+		}
+
 		if (concessionnaireDetail.getEmail() == null) {
 			map.put("email", null);
 		}
@@ -296,6 +335,20 @@ public class ConcessionnaireDetailSerDes {
 								(String)object)
 						).toArray(
 							size -> new ConcessionnaireProduit[size]
+						));
+				}
+			}
+			else if (Objects.equals(
+						jsonParserFieldName, "concessionnaireTerminals")) {
+
+				if (jsonParserFieldValue != null) {
+					concessionnaireDetail.setConcessionnaireTerminals(
+						Stream.of(
+							toStrings((Object[])jsonParserFieldValue)
+						).map(
+							object -> TerminalSerDes.toDTO((String)object)
+						).toArray(
+							size -> new Terminal[size]
 						));
 				}
 			}

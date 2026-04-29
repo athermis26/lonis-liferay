@@ -79,6 +79,39 @@ public class ConcessionnaireDetail implements Serializable {
 	protected ConcessionnaireProduit[] concessionnaireProduits;
 
 	@Schema
+	@Valid
+	public Terminal[] getConcessionnaireTerminals() {
+		return concessionnaireTerminals;
+	}
+
+	public void setConcessionnaireTerminals(
+		Terminal[] concessionnaireTerminals) {
+
+		this.concessionnaireTerminals = concessionnaireTerminals;
+	}
+
+	@JsonIgnore
+	public void setConcessionnaireTerminals(
+		UnsafeSupplier<Terminal[], Exception>
+			concessionnaireTerminalsUnsafeSupplier) {
+
+		try {
+			concessionnaireTerminals =
+				concessionnaireTerminalsUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Terminal[] concessionnaireTerminals;
+
+	@Schema
 	public String getEmail() {
 		return email;
 	}
@@ -338,6 +371,26 @@ public class ConcessionnaireDetail implements Serializable {
 				sb.append(String.valueOf(concessionnaireProduits[i]));
 
 				if ((i + 1) < concessionnaireProduits.length) {
+					sb.append(", ");
+				}
+			}
+
+			sb.append("]");
+		}
+
+		if (concessionnaireTerminals != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"concessionnaireTerminals\": ");
+
+			sb.append("[");
+
+			for (int i = 0; i < concessionnaireTerminals.length; i++) {
+				sb.append(String.valueOf(concessionnaireTerminals[i]));
+
+				if ((i + 1) < concessionnaireTerminals.length) {
 					sb.append(", ");
 				}
 			}

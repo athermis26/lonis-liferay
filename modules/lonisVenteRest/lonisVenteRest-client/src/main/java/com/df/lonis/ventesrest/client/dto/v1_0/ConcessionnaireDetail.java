@@ -45,6 +45,31 @@ public class ConcessionnaireDetail implements Cloneable, Serializable {
 
 	protected ConcessionnaireProduit[] concessionnaireProduits;
 
+	public Terminal[] getConcessionnaireTerminals() {
+		return concessionnaireTerminals;
+	}
+
+	public void setConcessionnaireTerminals(
+		Terminal[] concessionnaireTerminals) {
+
+		this.concessionnaireTerminals = concessionnaireTerminals;
+	}
+
+	public void setConcessionnaireTerminals(
+		UnsafeSupplier<Terminal[], Exception>
+			concessionnaireTerminalsUnsafeSupplier) {
+
+		try {
+			concessionnaireTerminals =
+				concessionnaireTerminalsUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Terminal[] concessionnaireTerminals;
+
 	public String getEmail() {
 		return email;
 	}

@@ -89,6 +89,10 @@
 		<column name="createdAt"           type="Date"    db-name="created_at"/>
 		<column name="updatedAt"           type="Date"    db-name="updated_at"/>
 
+		<finder name="Code" return-type="ConcessionnaireProduit" unique="true">
+			<finder-column name="code"/>
+		</finder>
+
 		<finder name="ConcessionnaireId" return-type="Collection">
 			<finder-column name="concessionnaireId"/>
 		</finder>

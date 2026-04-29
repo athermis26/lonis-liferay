@@ -40,26 +40,25 @@ public interface ConcessionnaireResource {
 			String sortString)
 		throws Exception;
 
-	public ConcessionnaireDetail getConcessionnaireByUid(String uid)
+	public ConcessionnaireDetail getConcessionnaireById(Long id)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse getConcessionnaireByUidHttpResponse(
-			String uid)
+	public HttpInvoker.HttpResponse getConcessionnaireByIdHttpResponse(Long id)
 		throws Exception;
 
-	public Page<ConcessionnaireProduit> getConcessionnaireProduits(String uid)
+	public Page<ConcessionnaireProduit> getConcessionnaireProduits(Long id)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse getConcessionnaireProduitsHttpResponse(
-			String uid)
+			Long id)
 		throws Exception;
 
 	public void deleteConcessionnaireProduit(
-			String uid, Long concessionnaireProduitId)
+			Long id, Long concessionnaireProduitId)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse deleteConcessionnaireProduitHttpResponse(
-			String uid, Long concessionnaireProduitId)
+			Long id, Long concessionnaireProduitId)
 		throws Exception;
 
 	public static class Builder {
@@ -235,11 +234,11 @@ public interface ConcessionnaireResource {
 			return httpInvoker.invoke();
 		}
 
-		public ConcessionnaireDetail getConcessionnaireByUid(String uid)
+		public ConcessionnaireDetail getConcessionnaireById(Long id)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getConcessionnaireByUidHttpResponse(uid);
+				getConcessionnaireByIdHttpResponse(id);
 
 			String content = httpResponse.getContent();
 
@@ -278,8 +277,8 @@ public interface ConcessionnaireResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getConcessionnaireByUidHttpResponse(
-				String uid)
+		public HttpInvoker.HttpResponse getConcessionnaireByIdHttpResponse(
+				Long id)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -306,9 +305,9 @@ public interface ConcessionnaireResource {
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port +
-						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}");
+						"/o/lonisVenteRest/v1.0/concessionnaires/{id}");
 
-			httpInvoker.path("uid", uid);
+			httpInvoker.path("id", id);
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -316,12 +315,11 @@ public interface ConcessionnaireResource {
 			return httpInvoker.invoke();
 		}
 
-		public Page<ConcessionnaireProduit> getConcessionnaireProduits(
-				String uid)
+		public Page<ConcessionnaireProduit> getConcessionnaireProduits(Long id)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getConcessionnaireProduitsHttpResponse(uid);
+				getConcessionnaireProduitsHttpResponse(id);
 
 			String content = httpResponse.getContent();
 
@@ -361,7 +359,7 @@ public interface ConcessionnaireResource {
 		}
 
 		public HttpInvoker.HttpResponse getConcessionnaireProduitsHttpResponse(
-				String uid)
+				Long id)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -388,9 +386,9 @@ public interface ConcessionnaireResource {
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port +
-						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/produits");
+						"/o/lonisVenteRest/v1.0/concessionnaires/{id}/produits");
 
-			httpInvoker.path("uid", uid);
+			httpInvoker.path("id", id);
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -399,12 +397,12 @@ public interface ConcessionnaireResource {
 		}
 
 		public void deleteConcessionnaireProduit(
-				String uid, Long concessionnaireProduitId)
+				Long id, Long concessionnaireProduitId)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
 				deleteConcessionnaireProduitHttpResponse(
-					uid, concessionnaireProduitId);
+					id, concessionnaireProduitId);
 
 			String content = httpResponse.getContent();
 
@@ -434,7 +432,7 @@ public interface ConcessionnaireResource {
 
 		public HttpInvoker.HttpResponse
 				deleteConcessionnaireProduitHttpResponse(
-					String uid, Long concessionnaireProduitId)
+					Long id, Long concessionnaireProduitId)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -461,9 +459,9 @@ public interface ConcessionnaireResource {
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port +
-						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/produits/{concessionnaireProduitId}");
+						"/o/lonisVenteRest/v1.0/concessionnaires/{id}/produits/{concessionnaireProduitId}");
 
-			httpInvoker.path("uid", uid);
+			httpInvoker.path("id", id);
 			httpInvoker.path(
 				"concessionnaireProduitId", concessionnaireProduitId);
 

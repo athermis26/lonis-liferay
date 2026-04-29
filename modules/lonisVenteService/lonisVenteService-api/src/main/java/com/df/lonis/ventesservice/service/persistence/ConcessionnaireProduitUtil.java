@@ -117,6 +117,66 @@ public class ConcessionnaireProduitUtil {
 	}
 
 	/**
+	 * Returns the concessionnaire produit where code = &#63; or throws a <code>NoSuchConcessionnaireProduitException</code> if it could not be found.
+	 *
+	 * @param code the code
+	 * @return the matching concessionnaire produit
+	 * @throws NoSuchConcessionnaireProduitException if a matching concessionnaire produit could not be found
+	 */
+	public static ConcessionnaireProduit findByCode(String code)
+		throws com.df.lonis.ventesservice.exception.
+			NoSuchConcessionnaireProduitException {
+
+		return getPersistence().findByCode(code);
+	}
+
+	/**
+	 * Returns the concessionnaire produit where code = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param code the code
+	 * @return the matching concessionnaire produit, or <code>null</code> if a matching concessionnaire produit could not be found
+	 */
+	public static ConcessionnaireProduit fetchByCode(String code) {
+		return getPersistence().fetchByCode(code);
+	}
+
+	/**
+	 * Returns the concessionnaire produit where code = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param code the code
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the matching concessionnaire produit, or <code>null</code> if a matching concessionnaire produit could not be found
+	 */
+	public static ConcessionnaireProduit fetchByCode(
+		String code, boolean useFinderCache) {
+
+		return getPersistence().fetchByCode(code, useFinderCache);
+	}
+
+	/**
+	 * Removes the concessionnaire produit where code = &#63; from the database.
+	 *
+	 * @param code the code
+	 * @return the concessionnaire produit that was removed
+	 */
+	public static ConcessionnaireProduit removeByCode(String code)
+		throws com.df.lonis.ventesservice.exception.
+			NoSuchConcessionnaireProduitException {
+
+		return getPersistence().removeByCode(code);
+	}
+
+	/**
+	 * Returns the number of concessionnaire produits where code = &#63;.
+	 *
+	 * @param code the code
+	 * @return the number of matching concessionnaire produits
+	 */
+	public static int countByCode(String code) {
+		return getPersistence().countByCode(code);
+	}
+
+	/**
 	 * Returns all the concessionnaire produits where concessionnaireId = &#63;.
 	 *
 	 * @param concessionnaireId the concessionnaire ID

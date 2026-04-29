@@ -2,9 +2,8 @@ package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Terminal;
 import com.df.lonis.ventesrest.resource.v1_0.TerminalResource;
-
-import com.df.lonis.ventesservice.service.TerminalLocalService;
-import com.df.lonis.ventesservice.service.TerminalLocalServiceUtil;
+import com.df.lonis.ventesservice.model.*;
+import com.df.lonis.ventesservice.service.*;
 import com.liferay.petra.function.UnsafeBiConsumer;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.search.Sort;
@@ -47,15 +46,54 @@ public class TerminalResourceImpl extends BaseTerminalResourceImpl {
 		dto.setCodeTerminal(entry.getCodeTerminal());
 		dto.setConcessionnaireCode(entry.getConcessionnaireCode());
 		dto.setConcessionnaireId(entry.getConcessionnaireId());
-		dto.setProduitId(entry.getProduitId());
-		dto.setConcessionnaireProduitCode(entry.getConcessionnaireProduitCode());
-		dto.setSiteId(entry.getSiteId());
+//		dto.setProduitId(entry.getProduitId());
+//		dto.setConcessionnaireProduitCode(entry.getConcessionnaireProduitCode());
+//		dto.setSiteId(entry.getSiteId());
 		dto.setCreatedAt(entry.getCreatedAt());
 		dto.setUpdatedAt(entry.getUpdatedAt());
+
+		long soldeTotal = 0L;
+
+		List<ChiffreAffaires> cas = _chiffreAffairesLocalService.findByTerminalId(entry.getId());
+
+		Concessionnaire c = _concessionnaireLocalService.fetchConcessionnaire(entry.getConcessionnaireId());
+
+		ConcessionnaireProduit cp = _concessionnaireProduitLocalService.findByCode(entry.getConcessionnaireProduitCode());
+
+		Produit p = _produitLocalService.fetchProduit(cp.getProduitId());
+
+		Site s = _siteLocalService.fetchSite(entry.getSiteId());
+
+		for (ChiffreAffaires ca : cas) {
+			soldeTotal += ca.getBalance();
+		}
+
+		dto.setConcessionnaireNomPrenom(c.getNom() + " " + c.getPrenoms());
+
+		dto.setProduitType(p.getLibelle());
+
+		dto.setSiteLibelle(s.getLibelle());
+
+		dto.setSolde(soldeTotal);
 
 		return dto;
 	}
 
 	@Reference
 	private TerminalLocalService _terminalLocalService;
+
+	@Reference
+	private ChiffreAffairesLocalService _chiffreAffairesLocalService;
+
+	@Reference
+	private ConcessionnaireProduitLocalService _concessionnaireProduitLocalService;
+
+	@Reference
+	private ConcessionnaireLocalService _concessionnaireLocalService;
+
+	@Reference
+	private ProduitLocalService _produitLocalService;
+
+	@Reference
+	private SiteLocalService _siteLocalService;
 }

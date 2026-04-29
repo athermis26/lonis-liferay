@@ -204,6 +204,27 @@ public class Commission implements Cloneable, Serializable {
 
 	protected Long terminalId;
 
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public void setUpdatedAt(
+		UnsafeSupplier<Date, Exception> updatedAtUnsafeSupplier) {
+
+		try {
+			updatedAt = updatedAtUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Date updatedAt;
+
 	@Override
 	public Commission clone() throws CloneNotSupportedException {
 		return (Commission)super.clone();

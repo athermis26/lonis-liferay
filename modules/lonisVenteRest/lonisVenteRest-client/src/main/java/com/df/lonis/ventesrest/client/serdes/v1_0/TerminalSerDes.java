@@ -83,6 +83,20 @@ public class TerminalSerDes {
 			sb.append(terminal.getConcessionnaireId());
 		}
 
+		if (terminal.getConcessionnaireNomPrenom() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"concessionnaireNomPrenom\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(terminal.getConcessionnaireNomPrenom()));
+
+			sb.append("\"");
+		}
+
 		if (terminal.getConcessionnaireProduitCode() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -141,6 +155,20 @@ public class TerminalSerDes {
 			sb.append(terminal.getProduitId());
 		}
 
+		if (terminal.getProduitType() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"produitType\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(terminal.getProduitType()));
+
+			sb.append("\"");
+		}
+
 		if (terminal.getSite() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -159,6 +187,20 @@ public class TerminalSerDes {
 			sb.append("\"siteId\": ");
 
 			sb.append(terminal.getSiteId());
+		}
+
+		if (terminal.getSiteLibelle() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"siteLibelle\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(terminal.getSiteLibelle()));
+
+			sb.append("\"");
 		}
 
 		if (terminal.getSolde() != null) {
@@ -231,6 +273,15 @@ public class TerminalSerDes {
 				String.valueOf(terminal.getConcessionnaireId()));
 		}
 
+		if (terminal.getConcessionnaireNomPrenom() == null) {
+			map.put("concessionnaireNomPrenom", null);
+		}
+		else {
+			map.put(
+				"concessionnaireNomPrenom",
+				String.valueOf(terminal.getConcessionnaireNomPrenom()));
+		}
+
 		if (terminal.getConcessionnaireProduitCode() == null) {
 			map.put("concessionnaireProduitCode", null);
 		}
@@ -270,6 +321,13 @@ public class TerminalSerDes {
 			map.put("produitId", String.valueOf(terminal.getProduitId()));
 		}
 
+		if (terminal.getProduitType() == null) {
+			map.put("produitType", null);
+		}
+		else {
+			map.put("produitType", String.valueOf(terminal.getProduitType()));
+		}
+
 		if (terminal.getSite() == null) {
 			map.put("site", null);
 		}
@@ -282,6 +340,13 @@ public class TerminalSerDes {
 		}
 		else {
 			map.put("siteId", String.valueOf(terminal.getSiteId()));
+		}
+
+		if (terminal.getSiteLibelle() == null) {
+			map.put("siteLibelle", null);
+		}
+		else {
+			map.put("siteLibelle", String.valueOf(terminal.getSiteLibelle()));
 		}
 
 		if (terminal.getSolde() == null) {
@@ -340,6 +405,14 @@ public class TerminalSerDes {
 				}
 			}
 			else if (Objects.equals(
+						jsonParserFieldName, "concessionnaireNomPrenom")) {
+
+				if (jsonParserFieldValue != null) {
+					terminal.setConcessionnaireNomPrenom(
+						(String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(
 						jsonParserFieldName, "concessionnaireProduitCode")) {
 
 				if (jsonParserFieldValue != null) {
@@ -369,6 +442,11 @@ public class TerminalSerDes {
 						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
+			else if (Objects.equals(jsonParserFieldName, "produitType")) {
+				if (jsonParserFieldValue != null) {
+					terminal.setProduitType((String)jsonParserFieldValue);
+				}
+			}
 			else if (Objects.equals(jsonParserFieldName, "site")) {
 				if (jsonParserFieldValue != null) {
 					terminal.setSite(
@@ -379,6 +457,11 @@ public class TerminalSerDes {
 				if (jsonParserFieldValue != null) {
 					terminal.setSiteId(
 						Long.valueOf((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteLibelle")) {
+				if (jsonParserFieldValue != null) {
+					terminal.setSiteLibelle((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "solde")) {

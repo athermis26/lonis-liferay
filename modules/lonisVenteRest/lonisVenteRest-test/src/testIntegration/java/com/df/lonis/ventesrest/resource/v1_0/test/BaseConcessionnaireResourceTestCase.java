@@ -469,22 +469,21 @@ public abstract class BaseConcessionnaireResourceTestCase {
 
 	@Test
 	public void testGetConcessionnaireProduits() throws Exception {
-		String uid = testGetConcessionnaireProduits_getUid();
-		String irrelevantUid =
-			testGetConcessionnaireProduits_getIrrelevantUid();
+		Long id = testGetConcessionnaireProduits_getId();
+		Long irrelevantId = testGetConcessionnaireProduits_getIrrelevantId();
 
 		Page<Concessionnaire> page =
-			concessionnaireResource.getConcessionnaireProduits(uid);
+			concessionnaireResource.getConcessionnaireProduits(id);
 
 		Assert.assertEquals(0, page.getTotalCount());
 
-		if (irrelevantUid != null) {
+		if (irrelevantId != null) {
 			Concessionnaire irrelevantConcessionnaire =
 				testGetConcessionnaireProduits_addConcessionnaire(
-					irrelevantUid, randomIrrelevantConcessionnaire());
+					irrelevantId, randomIrrelevantConcessionnaire());
 
 			page = concessionnaireResource.getConcessionnaireProduits(
-				irrelevantUid);
+				irrelevantId);
 
 			Assert.assertEquals(1, page.getTotalCount());
 
@@ -496,13 +495,13 @@ public abstract class BaseConcessionnaireResourceTestCase {
 
 		Concessionnaire concessionnaire1 =
 			testGetConcessionnaireProduits_addConcessionnaire(
-				uid, randomConcessionnaire());
+				id, randomConcessionnaire());
 
 		Concessionnaire concessionnaire2 =
 			testGetConcessionnaireProduits_addConcessionnaire(
-				uid, randomConcessionnaire());
+				id, randomConcessionnaire());
 
-		page = concessionnaireResource.getConcessionnaireProduits(uid);
+		page = concessionnaireResource.getConcessionnaireProduits(id);
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -513,19 +512,19 @@ public abstract class BaseConcessionnaireResourceTestCase {
 	}
 
 	protected Concessionnaire testGetConcessionnaireProduits_addConcessionnaire(
-			String uid, Concessionnaire concessionnaire)
+			Long id, Concessionnaire concessionnaire)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected String testGetConcessionnaireProduits_getUid() throws Exception {
+	protected Long testGetConcessionnaireProduits_getId() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected String testGetConcessionnaireProduits_getIrrelevantUid()
+	protected Long testGetConcessionnaireProduits_getIrrelevantId()
 		throws Exception {
 
 		return null;
@@ -540,7 +539,7 @@ public abstract class BaseConcessionnaireResourceTestCase {
 		assertHttpResponseStatusCode(
 			204,
 			concessionnaireResource.deleteConcessionnaireProduitHttpResponse(
-				concessionnaire.getUid(), null));
+				concessionnaire.getId(), null));
 	}
 
 	protected Concessionnaire
@@ -555,16 +554,16 @@ public abstract class BaseConcessionnaireResourceTestCase {
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
 	@Test
-	public void testGetConcessionnaireByUid() throws Exception {
+	public void testGetConcessionnaireById() throws Exception {
 		Concessionnaire postConcessionnaire =
 			testGetConcessionnaire_addConcessionnaire();
 
 		ConcessionnaireDetail postConcessionnaireDetail =
-			testGetConcessionnaireByUid_addConcessionnaireDetail(
+			testGetConcessionnaireById_addConcessionnaireDetail(
 				postConcessionnaire.getId(), randomConcessionnaireDetail());
 
 		ConcessionnaireDetail getConcessionnaireDetail =
-			concessionnaireResource.getConcessionnaireByUid(
+			concessionnaireResource.getConcessionnaireById(
 				postConcessionnaire.getId());
 
 		assertEquals(postConcessionnaireDetail, getConcessionnaireDetail);
@@ -572,7 +571,7 @@ public abstract class BaseConcessionnaireResourceTestCase {
 	}
 
 	protected ConcessionnaireDetail
-			testGetConcessionnaireByUid_addConcessionnaireDetail(
+			testGetConcessionnaireById_addConcessionnaireDetail(
 				long concessionnaireId,
 				ConcessionnaireDetail concessionnaireDetail)
 		throws Exception {
@@ -762,6 +761,18 @@ public abstract class BaseConcessionnaireResourceTestCase {
 					"concessionnaireProduits", additionalAssertFieldName)) {
 
 				if (concessionnaireDetail.getConcessionnaireProduits() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"concessionnaireTerminals", additionalAssertFieldName)) {
+
+				if (concessionnaireDetail.getConcessionnaireTerminals() ==
 						null) {
 
 					valid = false;
@@ -1019,6 +1030,19 @@ public abstract class BaseConcessionnaireResourceTestCase {
 				if (!Objects.deepEquals(
 						concessionnaireDetail1.getConcessionnaireProduits(),
 						concessionnaireDetail2.getConcessionnaireProduits())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"concessionnaireTerminals", additionalAssertFieldName)) {
+
+				if (!Objects.deepEquals(
+						concessionnaireDetail1.getConcessionnaireTerminals(),
+						concessionnaireDetail2.getConcessionnaireTerminals())) {
 
 					return false;
 				}

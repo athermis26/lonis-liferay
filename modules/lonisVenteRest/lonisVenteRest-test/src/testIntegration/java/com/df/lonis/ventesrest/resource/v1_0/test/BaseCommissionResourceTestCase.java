@@ -265,7 +265,7 @@ public abstract class BaseCommissionResourceTestCase {
 
 		Commission getCommission =
 			commissionResource.getConcessionnaireCommissions(
-				null, null, null, Pagination.of(1, 2));
+				postCommission.getId(), null, null, Pagination.of(1, 2));
 
 		assertEquals(postCommission, getCommission);
 		assertValid(getCommission);
@@ -483,6 +483,14 @@ public abstract class BaseCommissionResourceTestCase {
 
 			if (Objects.equals("terminalId", additionalAssertFieldName)) {
 				if (commission.getTerminalId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("updatedAt", additionalAssertFieldName)) {
+				if (commission.getUpdatedAt() == null) {
 					valid = false;
 				}
 
@@ -802,6 +810,17 @@ public abstract class BaseCommissionResourceTestCase {
 				if (!Objects.deepEquals(
 						commission1.getTerminalId(),
 						commission2.getTerminalId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("updatedAt", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						commission1.getUpdatedAt(),
+						commission2.getUpdatedAt())) {
 
 					return false;
 				}
@@ -1168,6 +1187,37 @@ public abstract class BaseCommissionResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("updatedAt")) {
+			if (operator.equals("between")) {
+				sb = new StringBundler();
+
+				sb.append("(");
+				sb.append(entityFieldName);
+				sb.append(" gt ");
+				sb.append(
+					_dateFormat.format(
+						DateUtils.addSeconds(commission.getUpdatedAt(), -2)));
+				sb.append(" and ");
+				sb.append(entityFieldName);
+				sb.append(" lt ");
+				sb.append(
+					_dateFormat.format(
+						DateUtils.addSeconds(commission.getUpdatedAt(), 2)));
+				sb.append(")");
+			}
+			else {
+				sb.append(entityFieldName);
+
+				sb.append(" ");
+				sb.append(operator);
+				sb.append(" ");
+
+				sb.append(_dateFormat.format(commission.getUpdatedAt()));
+			}
+
+			return sb.toString();
+		}
+
 		throw new IllegalArgumentException(
 			"Invalid entity field " + entityFieldName);
 	}
@@ -1222,6 +1272,7 @@ public abstract class BaseCommissionResourceTestCase {
 				paye = RandomTestUtil.randomBoolean();
 				status = StringUtil.toLowerCase(RandomTestUtil.randomString());
 				terminalId = RandomTestUtil.randomLong();
+				updatedAt = RandomTestUtil.nextDate();
 			}
 		};
 	}

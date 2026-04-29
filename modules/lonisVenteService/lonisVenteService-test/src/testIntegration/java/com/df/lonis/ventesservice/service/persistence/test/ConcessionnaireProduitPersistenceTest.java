@@ -177,6 +177,15 @@ public class ConcessionnaireProduitPersistenceTest {
 	}
 
 	@Test
+	public void testCountByCode() throws Exception {
+		_persistence.countByCode("");
+
+		_persistence.countByCode("null");
+
+		_persistence.countByCode((String)null);
+	}
+
+	@Test
 	public void testCountByConcessionnaireId() throws Exception {
 		_persistence.countByConcessionnaireId(RandomTestUtil.nextLong());
 
@@ -514,6 +523,12 @@ public class ConcessionnaireProduitPersistenceTest {
 
 	private void _assertOriginalValues(
 		ConcessionnaireProduit concessionnaireProduit) {
+
+		Assert.assertEquals(
+			concessionnaireProduit.getCode(),
+			ReflectionTestUtil.invoke(
+				concessionnaireProduit, "getColumnOriginalValue",
+				new Class<?>[] {String.class}, "code"));
 
 		Assert.assertEquals(
 			Long.valueOf(concessionnaireProduit.getConcessionnaireId()),

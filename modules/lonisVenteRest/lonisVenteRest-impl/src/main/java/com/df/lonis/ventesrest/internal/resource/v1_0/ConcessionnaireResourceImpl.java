@@ -8,6 +8,7 @@ import com.df.lonis.ventesrest.dto.v1_0.Produit;
 import com.df.lonis.ventesrest.dto.v1_0.Site;
 import com.df.lonis.ventesrest.resource.v1_0.ConcessionnaireResource;
 
+import com.df.lonis.ventesservice.model.Terminal;
 import com.df.lonis.ventesservice.service.ChiffreAffairesLocalService;
 import com.df.lonis.ventesservice.service.ConcessionnaireLocalService;
 import com.df.lonis.ventesservice.service.ConcessionnaireProduitLocalService;
@@ -60,31 +61,34 @@ public class ConcessionnaireResourceImpl extends BaseConcessionnaireResourceImpl
 	}
 
 	@Override
-	public ConcessionnaireDetail getConcessionnaireByUid(String uid)
-			throws Exception {
+	public ConcessionnaireDetail getConcessionnaireById(Long id) {
 
-		com.df.lonis.ventesservice.model.Concessionnaire entry = _concessionnaireLocalService.fetchByUid(uid);
+		com.df.lonis.ventesservice.model.Concessionnaire entry = _concessionnaireLocalService.fetchConcessionnaire(id);
 
 		if (entry == null) {
-			throw new NotFoundException("Concessionnaire introuvable: " + uid);
+			throw new NotFoundException("Concessionnaire introuvable: " + id);
 		}
 
 		List<com.df.lonis.ventesservice.model.ConcessionnaireProduit> cps =
 				_concessionnaireProduitLocalService.findByConcessionnaireId(
 						entry.getId());
 
+		List<Terminal> terminaux = _terminalLocalService.findByConcessionnaireId(entry.getId());
+
 		ConcessionnaireProduit[] cpDtos = cps.stream()
 				.map(this::_toDtoProduit)
 				.toArray(ConcessionnaireProduit[]::new);
 
-		return _toDtoDetail(entry, cps, cpDtos);
+		com.df.lonis.ventesrest.dto.v1_0.Terminal[] terminauxDtos = terminaux.stream().map(this::_toDtoTerminal).toArray(com.df.lonis.ventesrest.dto.v1_0.Terminal[]::new);
+
+		return _toDtoDetail(entry, cps, cpDtos, terminauxDtos);
 	}
 
 	@Override
-	public Page<ConcessionnaireProduit> getConcessionnaireProduits(String uid)
+	public Page<ConcessionnaireProduit> getConcessionnaireProduits(Long uid)
 			throws Exception {
 
-		com.df.lonis.ventesservice.model.Concessionnaire entry = _concessionnaireLocalService.fetchByUid(uid);
+		com.df.lonis.ventesservice.model.Concessionnaire entry = _concessionnaireLocalService.fetchConcessionnaire(uid);
 
 		if (entry == null) {
 			throw new NotFoundException("Concessionnaire introuvable: " + uid);
@@ -123,7 +127,7 @@ public class ConcessionnaireResourceImpl extends BaseConcessionnaireResourceImpl
 	private ConcessionnaireDetail _toDtoDetail(
 			com.df.lonis.ventesservice.model.Concessionnaire entry,
 			List<com.df.lonis.ventesservice.model.ConcessionnaireProduit> cps,
-			ConcessionnaireProduit[] cpDtos) {
+			ConcessionnaireProduit[] cpDtos, com.df.lonis.ventesrest.dto.v1_0.Terminal[] terminalDtos) {
 
 		ConcessionnaireDetail dto = new ConcessionnaireDetail();
 		dto.setId(entry.getId());
@@ -133,24 +137,25 @@ public class ConcessionnaireResourceImpl extends BaseConcessionnaireResourceImpl
 		dto.setTelephone(entry.getTelephone());
 		dto.setEmail(entry.getEmail());
 		dto.setConcessionnaireProduits(cpDtos);
+		dto.setConcessionnaireTerminals(terminalDtos);
 
 		// Agrégats sur tous les terminaux du concessionnaire
-		List<com.df.lonis.ventesservice.model.Terminal> terminaux =
-				_terminalLocalService.findByConcessionnaireId(entry.getId());
+		List<com.df.lonis.ventesservice.model.Terminal> terminaux = _terminalLocalService.findByConcessionnaireId(entry.getId());
 
 		long totalOperations = 0L;
 		long chiffreAffaires = 0L;
 		long soldeTotal = 0L;
+		long totalPaiements = 0L;
 
 		for (com.df.lonis.ventesservice.model.Terminal t : terminaux) {
 			totalOperations += _operationLocalService.countByTerminalId(t.getId());
 
-			List<com.df.lonis.ventesservice.model.ChiffreAffaires> cas =
-					_chiffreAffairesLocalService.findByTerminalId(t.getId());
+			List<com.df.lonis.ventesservice.model.ChiffreAffaires> cas = _chiffreAffairesLocalService.findByTerminalId(t.getId());
 
 			for (com.df.lonis.ventesservice.model.ChiffreAffaires ca : cas) {
 				chiffreAffaires += ca.getVentes();
 				soldeTotal += ca.getBalance();
+				totalPaiements += ca.getPaiement();
 			}
 		}
 
@@ -158,7 +163,7 @@ public class ConcessionnaireResourceImpl extends BaseConcessionnaireResourceImpl
 		stats.setTotalProduits(cps.size());
 		stats.setTotalTerminaux(terminaux.size());
 		stats.setTotalOperations(totalOperations);
-		stats.setTotalPaiements(0L);
+		stats.setTotalPaiements(totalPaiements);
 		stats.setChiffreAffaires(chiffreAffaires);
 
 		dto.setStats(stats);
@@ -211,6 +216,18 @@ public class ConcessionnaireResourceImpl extends BaseConcessionnaireResourceImpl
 			sd.setUpdatedAt(s.getUpdatedAt());
 			dto.setSite(sd);
 		}
+
+		return dto;
+	}
+
+	private com.df.lonis.ventesrest.dto.v1_0.Terminal _toDtoTerminal(
+			com.df.lonis.ventesservice.model.Terminal entry) {
+		com.df.lonis.ventesrest.dto.v1_0.Terminal dto = new com.df.lonis.ventesrest.dto.v1_0.Terminal();
+
+		dto.setId(entry.getId());
+		dto.setConcessionnaireId(entry.getConcessionnaireId());
+		dto.setCreatedAt(entry.getCreatedAt());
+		dto.setUpdatedAt(entry.getUpdatedAt());
 
 		return dto;
 	}

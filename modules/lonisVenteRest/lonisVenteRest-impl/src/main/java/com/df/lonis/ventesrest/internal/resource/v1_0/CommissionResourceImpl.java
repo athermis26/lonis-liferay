@@ -56,16 +56,16 @@ public class CommissionResourceImpl extends BaseCommissionResourceImpl {
 	}
 
 	@Override
-	public Commission getConcessionnaireCommissions(String uid, String concessionnaireProduitCode, String periode, Pagination pagination) throws Exception {
-		Concessionnaire concessionnaire = _concessionnaireLocalService.fetchByUid(uid);
+	public Commission getConcessionnaireCommissions(Long id, String concessionnaireProduitCode, String periode, Pagination pagination) throws Exception {
+		Concessionnaire concessionnaire = _concessionnaireLocalService.fetchConcessionnaire(id);
 
 		if (concessionnaire == null) {
-			throw new NotFoundException("Concessionnaire introuvable: " + uid);
+			throw new NotFoundException("Concessionnaire introuvable: " + id);
 		}
 
 //		List<com.df.lonis.ventesservice.model.Commission> commissions = _commissionLocalService.
 
-		return super.getConcessionnaireCommissions(uid, concessionnaireProduitCode, periode, pagination);
+		return super.getConcessionnaireCommissions(id, concessionnaireProduitCode, periode, pagination);
 	}
 
 	@Override

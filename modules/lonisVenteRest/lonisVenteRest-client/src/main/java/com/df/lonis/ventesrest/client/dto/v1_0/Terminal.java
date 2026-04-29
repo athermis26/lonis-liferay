@@ -84,6 +84,29 @@ public class Terminal implements Cloneable, Serializable {
 
 	protected Long concessionnaireId;
 
+	public String getConcessionnaireNomPrenom() {
+		return concessionnaireNomPrenom;
+	}
+
+	public void setConcessionnaireNomPrenom(String concessionnaireNomPrenom) {
+		this.concessionnaireNomPrenom = concessionnaireNomPrenom;
+	}
+
+	public void setConcessionnaireNomPrenom(
+		UnsafeSupplier<String, Exception>
+			concessionnaireNomPrenomUnsafeSupplier) {
+
+		try {
+			concessionnaireNomPrenom =
+				concessionnaireNomPrenomUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String concessionnaireNomPrenom;
+
 	public String getConcessionnaireProduitCode() {
 		return concessionnaireProduitCode;
 	}
@@ -191,6 +214,27 @@ public class Terminal implements Cloneable, Serializable {
 
 	protected Long produitId;
 
+	public String getProduitType() {
+		return produitType;
+	}
+
+	public void setProduitType(String produitType) {
+		this.produitType = produitType;
+	}
+
+	public void setProduitType(
+		UnsafeSupplier<String, Exception> produitTypeUnsafeSupplier) {
+
+		try {
+			produitType = produitTypeUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String produitType;
+
 	public Site getSite() {
 		return site;
 	}
@@ -230,6 +274,27 @@ public class Terminal implements Cloneable, Serializable {
 	}
 
 	protected Long siteId;
+
+	public String getSiteLibelle() {
+		return siteLibelle;
+	}
+
+	public void setSiteLibelle(String siteLibelle) {
+		this.siteLibelle = siteLibelle;
+	}
+
+	public void setSiteLibelle(
+		UnsafeSupplier<String, Exception> siteLibelleUnsafeSupplier) {
+
+		try {
+			siteLibelle = siteLibelleUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String siteLibelle;
 
 	public Long getSolde() {
 		return solde;

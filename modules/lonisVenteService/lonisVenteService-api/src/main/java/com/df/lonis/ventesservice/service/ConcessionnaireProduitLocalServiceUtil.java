@@ -207,6 +207,10 @@ public class ConcessionnaireProduitLocalServiceUtil {
 		return getService().fetchConcessionnaireProduit(id);
 	}
 
+	public static ConcessionnaireProduit findByCode(String code) {
+		return getService().findByCode(code);
+	}
+
 	public static List<ConcessionnaireProduit> findByConcessionnaireId(
 		long concessionnaireId) {
 

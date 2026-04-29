@@ -46,15 +46,14 @@ public interface TerminalResource {
 			String format)
 		throws Exception;
 
-	public TerminauxConcessionnaire getConcessionnairesUidTerminauxPage(
-			String uid, String concessionnaireProduitCode, String dateDebut,
+	public TerminauxConcessionnaire getConcessionnaireTerminaux(
+			Long id, String concessionnaireProduitCode, String dateDebut,
 			String dateFin)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse
-			getConcessionnairesUidTerminauxPageHttpResponse(
-				String uid, String concessionnaireProduitCode, String dateDebut,
-				String dateFin)
+	public HttpInvoker.HttpResponse getConcessionnaireTerminauxHttpResponse(
+			Long id, String concessionnaireProduitCode, String dateDebut,
+			String dateFin)
 		throws Exception;
 
 	public static class Builder {
@@ -311,14 +310,14 @@ public interface TerminalResource {
 			return httpInvoker.invoke();
 		}
 
-		public TerminauxConcessionnaire getConcessionnairesUidTerminauxPage(
-				String uid, String concessionnaireProduitCode, String dateDebut,
+		public TerminauxConcessionnaire getConcessionnaireTerminaux(
+				Long id, String concessionnaireProduitCode, String dateDebut,
 				String dateFin)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getConcessionnairesUidTerminauxPageHttpResponse(
-					uid, concessionnaireProduitCode, dateDebut, dateFin);
+				getConcessionnaireTerminauxHttpResponse(
+					id, concessionnaireProduitCode, dateDebut, dateFin);
 
 			String content = httpResponse.getContent();
 
@@ -357,10 +356,9 @@ public interface TerminalResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse
-				getConcessionnairesUidTerminauxPageHttpResponse(
-					String uid, String concessionnaireProduitCode,
-					String dateDebut, String dateFin)
+		public HttpInvoker.HttpResponse getConcessionnaireTerminauxHttpResponse(
+				Long id, String concessionnaireProduitCode, String dateDebut,
+				String dateFin)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -401,9 +399,9 @@ public interface TerminalResource {
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port +
-						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/terminaux");
+						"/o/lonisVenteRest/v1.0/concessionnaires/{id}/terminaux");
 
-			httpInvoker.path("uid", uid);
+			httpInvoker.path("id", id);
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);

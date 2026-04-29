@@ -112,6 +112,189 @@ public class TerminalUtil {
 	}
 
 	/**
+	 * Returns all the terminals where concessionnaireProduitCode = &#63;.
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @return the matching terminals
+	 */
+	public static List<Terminal> findByConcessionnaireProduitCode(
+		String concessionnaireProduitCode) {
+
+		return getPersistence().findByConcessionnaireProduitCode(
+			concessionnaireProduitCode);
+	}
+
+	/**
+	 * Returns a range of all the terminals where concessionnaireProduitCode = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @return the range of matching terminals
+	 */
+	public static List<Terminal> findByConcessionnaireProduitCode(
+		String concessionnaireProduitCode, int start, int end) {
+
+		return getPersistence().findByConcessionnaireProduitCode(
+			concessionnaireProduitCode, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where concessionnaireProduitCode = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching terminals
+	 */
+	public static List<Terminal> findByConcessionnaireProduitCode(
+		String concessionnaireProduitCode, int start, int end,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().findByConcessionnaireProduitCode(
+			concessionnaireProduitCode, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where concessionnaireProduitCode = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching terminals
+	 */
+	public static List<Terminal> findByConcessionnaireProduitCode(
+		String concessionnaireProduitCode, int start, int end,
+		OrderByComparator<Terminal> orderByComparator, boolean useFinderCache) {
+
+		return getPersistence().findByConcessionnaireProduitCode(
+			concessionnaireProduitCode, start, end, orderByComparator,
+			useFinderCache);
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where concessionnaireProduitCode = &#63;.
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public static Terminal findByConcessionnaireProduitCode_First(
+			String concessionnaireProduitCode,
+			OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findByConcessionnaireProduitCode_First(
+			concessionnaireProduitCode, orderByComparator);
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where concessionnaireProduitCode = &#63;.
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public static Terminal fetchByConcessionnaireProduitCode_First(
+		String concessionnaireProduitCode,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().fetchByConcessionnaireProduitCode_First(
+			concessionnaireProduitCode, orderByComparator);
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where concessionnaireProduitCode = &#63;.
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public static Terminal findByConcessionnaireProduitCode_Last(
+			String concessionnaireProduitCode,
+			OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findByConcessionnaireProduitCode_Last(
+			concessionnaireProduitCode, orderByComparator);
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where concessionnaireProduitCode = &#63;.
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public static Terminal fetchByConcessionnaireProduitCode_Last(
+		String concessionnaireProduitCode,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().fetchByConcessionnaireProduitCode_Last(
+			concessionnaireProduitCode, orderByComparator);
+	}
+
+	/**
+	 * Returns the terminals before and after the current terminal in the ordered set where concessionnaireProduitCode = &#63;.
+	 *
+	 * @param id the primary key of the current terminal
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next terminal
+	 * @throws NoSuchTerminalException if a terminal with the primary key could not be found
+	 */
+	public static Terminal[] findByConcessionnaireProduitCode_PrevAndNext(
+			long id, String concessionnaireProduitCode,
+			OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findByConcessionnaireProduitCode_PrevAndNext(
+			id, concessionnaireProduitCode, orderByComparator);
+	}
+
+	/**
+	 * Removes all the terminals where concessionnaireProduitCode = &#63; from the database.
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 */
+	public static void removeByConcessionnaireProduitCode(
+		String concessionnaireProduitCode) {
+
+		getPersistence().removeByConcessionnaireProduitCode(
+			concessionnaireProduitCode);
+	}
+
+	/**
+	 * Returns the number of terminals where concessionnaireProduitCode = &#63;.
+	 *
+	 * @param concessionnaireProduitCode the concessionnaire produit code
+	 * @return the number of matching terminals
+	 */
+	public static int countByConcessionnaireProduitCode(
+		String concessionnaireProduitCode) {
+
+		return getPersistence().countByConcessionnaireProduitCode(
+			concessionnaireProduitCode);
+	}
+
+	/**
 	 * Returns all the terminals where concessionnaireId = &#63;.
 	 *
 	 * @param concessionnaireId the concessionnaire ID

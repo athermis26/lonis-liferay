@@ -44,12 +44,12 @@ public interface CommissionResource {
 		throws Exception;
 
 	public Commission getConcessionnaireCommissions(
-			String uid, String concessionnaireProduitCode, String periode,
+			Long id, String concessionnaireProduitCode, String periode,
 			Pagination pagination)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse getConcessionnaireCommissionsHttpResponse(
-			String uid, String concessionnaireProduitCode, String periode,
+			Long id, String concessionnaireProduitCode, String periode,
 			Pagination pagination)
 		throws Exception;
 
@@ -311,13 +311,13 @@ public interface CommissionResource {
 		}
 
 		public Commission getConcessionnaireCommissions(
-				String uid, String concessionnaireProduitCode, String periode,
+				Long id, String concessionnaireProduitCode, String periode,
 				Pagination pagination)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
 				getConcessionnaireCommissionsHttpResponse(
-					uid, concessionnaireProduitCode, periode, pagination);
+					id, concessionnaireProduitCode, periode, pagination);
 
 			String content = httpResponse.getContent();
 
@@ -358,8 +358,8 @@ public interface CommissionResource {
 
 		public HttpInvoker.HttpResponse
 				getConcessionnaireCommissionsHttpResponse(
-					String uid, String concessionnaireProduitCode,
-					String periode, Pagination pagination)
+					Long id, String concessionnaireProduitCode, String periode,
+					Pagination pagination)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -403,9 +403,9 @@ public interface CommissionResource {
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port +
-						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/commissions");
+						"/o/lonisVenteRest/v1.0/concessionnaires/{id}/commissions");
 
-			httpInvoker.path("uid", uid);
+			httpInvoker.path("id", id);
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);

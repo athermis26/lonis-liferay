@@ -113,7 +113,7 @@ public abstract class BaseConcessionnaireResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{id}'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Vue 360 d un concessionnaire"
@@ -122,7 +122,7 @@ public abstract class BaseConcessionnaireResourceImpl
 		value = {
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
-				name = "uid"
+				name = "id"
 			)
 		}
 	)
@@ -132,13 +132,13 @@ public abstract class BaseConcessionnaireResourceImpl
 		}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/concessionnaires/{uid}")
+	@javax.ws.rs.Path("/concessionnaires/{id}")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public ConcessionnaireDetail getConcessionnaireByUid(
+	public ConcessionnaireDetail getConcessionnaireById(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("uid")
-			String uid)
+			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("id")
+			Long id)
 		throws Exception {
 
 		return new ConcessionnaireDetail();
@@ -147,7 +147,7 @@ public abstract class BaseConcessionnaireResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}/produits'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{id}/produits'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Liste des produits d un concessionnaire"
@@ -156,7 +156,7 @@ public abstract class BaseConcessionnaireResourceImpl
 		value = {
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
-				name = "uid"
+				name = "id"
 			)
 		}
 	)
@@ -166,13 +166,13 @@ public abstract class BaseConcessionnaireResourceImpl
 		}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/concessionnaires/{uid}/produits")
+	@javax.ws.rs.Path("/concessionnaires/{id}/produits")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
 	public Page<ConcessionnaireProduit> getConcessionnaireProduits(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("uid")
-			String uid)
+			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("id")
+			Long id)
 		throws Exception {
 
 		return Page.of(Collections.emptyList());
@@ -181,7 +181,7 @@ public abstract class BaseConcessionnaireResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'DELETE' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}/produits/{concessionnaireProduitId}'  -u 'test@liferay.com:test'
+	 * curl -X 'DELETE' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{id}/produits/{concessionnaireProduitId}'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Delier un produit d un concessionnaire"
@@ -190,7 +190,7 @@ public abstract class BaseConcessionnaireResourceImpl
 		value = {
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
-				name = "uid"
+				name = "id"
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
@@ -205,13 +205,13 @@ public abstract class BaseConcessionnaireResourceImpl
 	)
 	@javax.ws.rs.DELETE
 	@javax.ws.rs.Path(
-		"/concessionnaires/{uid}/produits/{concessionnaireProduitId}"
+		"/concessionnaires/{id}/produits/{concessionnaireProduitId}"
 	)
 	@Override
 	public Response deleteConcessionnaireProduit(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("uid")
-			String uid,
+			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("id")
+			Long id,
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull
 			@javax.ws.rs.PathParam("concessionnaireProduitId")

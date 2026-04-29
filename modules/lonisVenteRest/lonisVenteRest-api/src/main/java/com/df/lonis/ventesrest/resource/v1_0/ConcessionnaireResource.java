@@ -51,14 +51,14 @@ public interface ConcessionnaireResource {
 			String search, Filter filter, Pagination pagination, Sort[] sorts)
 		throws Exception;
 
-	public ConcessionnaireDetail getConcessionnaireByUid(String uid)
+	public ConcessionnaireDetail getConcessionnaireById(Long id)
 		throws Exception;
 
-	public Page<ConcessionnaireProduit> getConcessionnaireProduits(String uid)
+	public Page<ConcessionnaireProduit> getConcessionnaireProduits(Long id)
 		throws Exception;
 
 	public Response deleteConcessionnaireProduit(
-			String uid, Long concessionnaireProduitId)
+			Long id, Long concessionnaireProduitId)
 		throws Exception;
 
 	public default void setContextAcceptLanguage(

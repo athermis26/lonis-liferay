@@ -241,6 +241,13 @@ public class ConcessionnaireProduitLocalServiceWrapper
 	}
 
 	@Override
+	public com.df.lonis.ventesservice.model.ConcessionnaireProduit findByCode(
+		String code) {
+
+		return _concessionnaireProduitLocalService.findByCode(code);
+	}
+
+	@Override
 	public java.util.List
 		<com.df.lonis.ventesservice.model.ConcessionnaireProduit>
 			findByConcessionnaireId(long concessionnaireId) {

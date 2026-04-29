@@ -143,7 +143,7 @@ public abstract class BaseTerminalResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}/terminaux'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{id}/terminaux'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Terminaux d un concessionnaire pour un code produit et une periode"
@@ -152,7 +152,7 @@ public abstract class BaseTerminalResourceImpl
 		value = {
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
-				name = "uid"
+				name = "id"
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
@@ -172,13 +172,13 @@ public abstract class BaseTerminalResourceImpl
 		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Terminal")}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/concessionnaires/{uid}/terminaux")
+	@javax.ws.rs.Path("/concessionnaires/{id}/terminaux")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public TerminauxConcessionnaire getConcessionnairesUidTerminauxPage(
+	public TerminauxConcessionnaire getConcessionnaireTerminaux(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("uid")
-			String uid,
+			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("id")
+			Long id,
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.ws.rs.QueryParam("concessionnaireProduitCode")
 			String concessionnaireProduitCode,

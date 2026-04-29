@@ -52,8 +52,8 @@ public interface TerminalResource {
 
 	public ExportResponse getTerminauxExport(String format) throws Exception;
 
-	public TerminauxConcessionnaire getConcessionnairesUidTerminauxPage(
-			String uid, String concessionnaireProduitCode, String dateDebut,
+	public TerminauxConcessionnaire getConcessionnaireTerminaux(
+			Long id, String concessionnaireProduitCode, String dateDebut,
 			String dateFin)
 		throws Exception;
 

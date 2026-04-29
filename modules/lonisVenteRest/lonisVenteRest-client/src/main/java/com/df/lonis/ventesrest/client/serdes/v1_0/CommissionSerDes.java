@@ -156,6 +156,21 @@ public class CommissionSerDes {
 			sb.append(commission.getTerminalId());
 		}
 
+		if (commission.getUpdatedAt() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"updatedAt\": ");
+
+			sb.append("\"");
+
+			sb.append(
+				liferayToJSONDateFormat.format(commission.getUpdatedAt()));
+
+			sb.append("\"");
+		}
+
 		sb.append("}");
 
 		return sb.toString();
@@ -245,6 +260,15 @@ public class CommissionSerDes {
 			map.put("terminalId", String.valueOf(commission.getTerminalId()));
 		}
 
+		if (commission.getUpdatedAt() == null) {
+			map.put("updatedAt", null);
+		}
+		else {
+			map.put(
+				"updatedAt",
+				liferayToJSONDateFormat.format(commission.getUpdatedAt()));
+		}
+
 		return map;
 	}
 
@@ -313,6 +337,12 @@ public class CommissionSerDes {
 				if (jsonParserFieldValue != null) {
 					commission.setTerminalId(
 						Long.valueOf((String)jsonParserFieldValue));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "updatedAt")) {
+				if (jsonParserFieldValue != null) {
+					commission.setUpdatedAt(
+						toDate((String)jsonParserFieldValue));
 				}
 			}
 		}
