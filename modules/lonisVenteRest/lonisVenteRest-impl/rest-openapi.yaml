@@ -1,566 +1,903 @@
 info:
-    description: "LonisVenteRest REST API"
-    license:
-        name: "Apache 2.0"
-        url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-    title: "LonisVenteRest"
-    version: v1.0
+  description: "LonisVenteRest REST API"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  title: "LonisVenteRest"
+  version: v1.0
 openapi: 3.0.1
 
 paths:
-    # ─────────────────────────────────────────────
-    # DASHBOARD
-    # ─────────────────────────────────────────────
-    /dashboard/kpis:
-        get:
-            operationId: getDashboardKpis
-            tags: [ "Dashboard" ]
-            description: "KPIs globaux"
-            parameters:
-                - in: query
-                  name: periode
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/DashboardKpis"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/DashboardKpis"
-                    description: "KPIs globaux"
+  # ─────────────────────────────────────────────
+  # DASHBOARD
+  # ─────────────────────────────────────────────
+  /dashboard/kpis:
+    get:
+      operationId: getDashboardKpis
+      tags: [ "Dashboard" ]
+      description: "KPIs globaux"
+      parameters:
+        - in: query
+          name: periode
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardKpis"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/DashboardKpis"
+          description: "KPIs globaux"
 
-    # ─────────────────────────────────────────────
-    # CONCESSIONNAIRES
-    # ─────────────────────────────────────────────
-    /concessionnaires:
-        get:
-            operationId: getConcessionnairesPage
-            tags: [ "Concessionnaire" ]
-            description: "Liste paginée des concessionnaires"
-            parameters:
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Concessionnaire"
-                                type: array
-                        application/xml:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Concessionnaire"
-                                type: array
-                    description: "Liste paginée"
+  # ─────────────────────────────────────────────
+  # CONCESSIONNAIRES
+  # ─────────────────────────────────────────────
+  /concessionnaires:
+    get:
+      operationId: getConcessionnairesPage
+      tags: [ "Concessionnaire" ]
+      description: "Liste paginée des concessionnaires"
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Concessionnaire"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Concessionnaire"
+                type: array
+          description: "Liste paginée"
 
-    /concessionnaires/{uid}:
-        get:
-            operationId: getConcessionnaireByUid
-            tags: [ "Concessionnaire" ]
-            description: "Vue 360 d un concessionnaire"
-            parameters:
-                - in: path
-                  name: uid
-                  required: true
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/ConcessionnaireDetail"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/ConcessionnaireDetail"
-                    description: "Detail du concessionnaire"
+  /concessionnaires/{id}:
+    get:
+      operationId: getConcessionnaireById
+      tags: [ "Concessionnaire" ]
+      description: "Vue 360 d un concessionnaire"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConcessionnaireDetail"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ConcessionnaireDetail"
+          description: "Detail du concessionnaire"
 
-    /concessionnaires/{uid}/produits:
-        get:
-            operationId: getConcessionnaireProduits
-            tags: ["Concessionnaire"]
-            description: "Liste des produits d un concessionnaire"
-            parameters:
-                - in: path
-                  name: uid
-                  required: true
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/ConcessionnaireProduit"
-                                type: array
-                        application/xml:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/ConcessionnaireProduit"
-                                    type: array
-                    description: "Liste des produits d un concessionnaire"
+  /concessionnaires/{id}/produits:
+    get:
+      operationId: getConcessionnaireProduits
+      tags: [ "Concessionnaire" ]
+      description: "Liste des produits d un concessionnaire"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/ConcessionnaireProduit"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/ConcessionnaireProduit"
+                type: array
+          description: "Liste des produits d un concessionnaire"
 
+  /concessionnaires/{id}/produits/{concessionnaireProduitId}:
+    delete:
+      operationId: deleteConcessionnaireProduit
+      tags: [ "Concessionnaire" ]
+      description: "Delier un produit d un concessionnaire"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: path
+          name: concessionnaireProduitId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: "Association supprimee"
 
-    # ─────────────────────────────────────────────
-    # Produits
-    # ─────────────────────────────────────────────
-    /produits:
-        get:
-            operationId: getAllProduits
-            tags: [ "Produit" ]
-            description: "Liste des produits"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Produit"
-                                type: array
-                        application/xml:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Produit"
-                                type: array
-                    description: 'Liste non paginée'
+  # ─────────────────────────────────────────────
+  # Produits
+  # ─────────────────────────────────────────────
+  /produits:
+    get:
+      operationId: getAllProduits
+      tags: [ "Produit" ]
+      description: "Liste des produits"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Produit"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Produit"
+                type: array
+          description: 'Liste non paginée'
 
-    # ─────────────────────────────────────────────
-    # Terminaux
-    # ─────────────────────────────────────────────
-    /terminaux:
-        get:
-            operationId: getTerminauxPage
-            tags: [ "Terminal" ]
-            description: "Liste des terminaux (Points de ventes"
-            parameters:
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Terminal"
-                                type: array
-                        application/xml:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Terminal"
-                                type: array
-                    description: "Liste paginée"
+  # ─────────────────────────────────────────────
+  # COMMISSIONS
+  # ─────────────────────────────────────────────
+  /commissions:
+    get:
+      operationId: getCommissionsPage
+      tags: [ "Commission" ]
+      description: "Historique global des commissions"
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: siteId
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: periode
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Commission"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Commission"
+                type: array
+          description: "Liste paginee des commissions"
 
-    # ─────────────────────────────────────────────
-    # Sites
-    # ─────────────────────────────────────────────
-    /sites:
-        get:
-            operationId: getSitesPage
-            tags: [ "Site" ]
-            description: "Liste des sites avec pagination"
-            parameters:
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Site"
-                                type: array
-                        application/xml:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Site"
-                                type: array
-                    description: "Liste paginée"
+  /commissions/{id}:
+    get:
+      operationId: getCommission
+      tags: [ "Commission" ]
+      description: "Detail d une commission"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommissionDetail"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/CommissionDetail"
+          description: "Detail d une commission"
 
-    /sites-all:
-        get:
-            operationId: getAllSites
-            tags: [ "Site" ]
-            description: "Liste des sites sans pagination"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Site"
-                                type: array
-                        application/xml:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Site"
-                                type: array
-                    description: "Liste non paginée"
+  /concessionnaires/{id}/commissions:
+    get:
+      operationId: getConcessionnaireCommissions
+      tags: [ "Commission" ]
+      description: "Liste des commissions d un concessionnaire"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: concessionnaireProduitCode
+          schema:
+            type: string
+        - in: query
+          name: periode
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Commission"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Commission"
+          description: "Liste des commissions d un concessionnaire"
 
-    # ─────────────────────────────────────────────
-    # Opérations
-    # ─────────────────────────────────────────────
-    /operations:
-        get:
-            operationId: getOperationsPage
-            tags: [ "Operation" ]
-            description: "Historique global des operations"
-            parameters:
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: siteId
-                  schema:
-                      type: integer
-                      format: int64
-                - in: query
-                  name: periode
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                      default: 1
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                      default: 10
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Operation"
-                                type: array
-                        application/xml:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Operation"
-                    description: "Liste paginee des operations"
+  /commissions/export:
+    get:
+      operationId: getCommissionsExport
+      tags: [ "Commission" ]
+      description: "Export inventaire commissions - retourne une URL de telechargement"
+      parameters:
+        - in: query
+          name: format
+          required: true
+          schema:
+            type: string
+            enum: [ xlsx, pdf ]
+        - in: query
+          name: siteId
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: periode
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ExportResponse"
+          description: "URL du fichier exporte"
 
-    /operations/{operationId}:
-        get:
-            operationId: getOperation
-            tags: [ "Operation" ]
-            description: "Detail d une operation"
-            parameters:
-                - in: path
-                  name: operationId
-                  required: true
-                  schema:
-                      type: integer
-                      format: int64
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/OperationDetail"
-                        application/xml:
-                            schema:
-                                $ref: "#/components/schemas/OperationDetail"
-                    description: "Detail operation"
+  # ─────────────────────────────────────────────
+  # CHIFFRES D AFFAIRES
+  # ─────────────────────────────────────────────
 
+  # ─────────────────────────────────────────────
+  # Terminaux
+  # ─────────────────────────────────────────────
+  /terminaux:
+    get:
+      operationId: getTerminauxPage
+      tags: [ "Terminal" ]
+      description: "Liste des terminaux (Points de ventes"
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
+          description: "Liste paginée"
+
+  /terminaux/export:
+    get:
+      operationId: getTerminauxExport
+      tags: [ "Terminal" ]
+      description: "Export inventaire terminaux - retourne une URL de telechargement"
+      parameters:
+        - in: query
+          name: format
+          required: true
+          schema:
+            type: string
+            enum: [ xlsx, pdf ]
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ExportResponse"
+          description: "URL du fichier exporté"
+
+  /concessionnaires/{id}/terminaux:
+    get:
+      operationId: getConcessionnaireTerminaux
+      tags: [ "Terminal" ]
+      description: "Terminaux d un concessionnaire pour un code produit et une periode"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: concessionnaireProduitCode
+          schema:
+            type: string
+        - in: query
+          name: dateDebut
+          schema:
+            type: string
+        - in: query
+          name: dateFin
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TerminauxConcessionnaire"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/TerminauxConcessionnaire"
+          description: "Terminaux du concessionnaire avec solde total"
+
+  # ─────────────────────────────────────────────
+  # Sites
+  # ─────────────────────────────────────────────
+  /sites:
+    get:
+      operationId: getSitesPage
+      tags: [ "Site" ]
+      description: "Liste des sites avec pagination"
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Site"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Site"
+                type: array
+          description: "Liste paginée"
+
+  /sites-all:
+    get:
+      operationId: getAllSites
+      tags: [ "Site" ]
+      description: "Liste des sites sans pagination"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Site"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Site"
+                type: array
+          description: "Liste non paginée"
+
+  # ─────────────────────────────────────────────
+  # Opérations
+  # ─────────────────────────────────────────────
+  /operations:
+    get:
+      operationId: getOperationsPage
+      tags: [ "Operation" ]
+      description: "Historique global des operations"
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: siteId
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: periode
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Operation"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Operation"
+          description: "Liste paginee des operations"
+
+  /operations/{operationId}:
+    get:
+      operationId: getOperation
+      tags: [ "Operation" ]
+      description: "Detail d une operation"
+      parameters:
+        - in: path
+          name: operationId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OperationDetail"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/OperationDetail"
+          description: "Detail operation"
 
 components:
-    schemas:
+  schemas:
 
-        DashboardKpis:
-            properties:
-                totalConcessionnaires:
-                    type: integer
-                    format: int64
-                totalPointsDeVente:
-                    type: integer
-                    format: int64
-                chiffreAffairesTotal:
-                    type: integer
-                    format: int64
-                paiementsTotal:
-                    type: integer
-                    format: int64
+    DashboardKpis:
+      properties:
+        totalConcessionnaires:
+          type: integer
+          format: int64
+        totalPointsDeVente:
+          type: integer
+          format: int64
+        chiffreAffairesTotal:
+          type: integer
+          format: int64
+        paiementsTotal:
+          type: integer
+          format: int64
 
-        Concessionnaire:
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                uid:
-                    type: string
-                nom:
-                    type: string
-                prenoms:
-                    type: string
-                telephone:
-                    type: string
-                email:
-                    type: string
+    Concessionnaire:
+      properties:
+        id:
+          type: integer
+          format: int64
+        uid:
+          type: string
+        nom:
+          type: string
+        prenoms:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
 
-        ConcessionnaireDetail:
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                uid:
-                    type: string
-                nom:
-                    type: string
-                prenoms:
-                    type: string
-                telephone:
-                    type: string
-                email:
-                    type: string
-                stats:
-                    $ref: "#/components/schemas/ConcessionnaireStats"
-                concessionnaireProduits:
-                    type: array
-                    items:
-                        $ref: "#/components/schemas/ConcessionnaireProduit"
-                soldeTotal:
-                    type: integer
-                    format: int64
+    ConcessionnaireDetail:
+      properties:
+        id:
+          type: integer
+          format: int64
+        uid:
+          type: string
+        nom:
+          type: string
+        prenoms:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        stats:
+          $ref: "#/components/schemas/ConcessionnaireStats"
+        concessionnaireProduits:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConcessionnaireProduit"
+        soldeTotal:
+          type: integer
+          format: int64
 
-        ConcessionnaireStats:
-            properties:
-                totalProduits:
-                    type: integer
-                totalTerminaux:
-                    type: integer
-                totalOperations:
-                    type: integer
-                    format: int64
-                totalPaiements:
-                    type: integer
-                    format: int64
-                chiffreAffaires:
-                    type: integer
-                    format: int64
+    ConcessionnaireStats:
+      properties:
+        totalProduits:
+          type: integer
+        totalTerminaux:
+          type: integer
+        totalOperations:
+          type: integer
+          format: int64
+        totalPaiements:
+          type: integer
+          format: int64
+        chiffreAffaires:
+          type: integer
+          format: int64
 
-        ConcessionnaireProduit:
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                concessionnaireId:
-                    type: integer
-                    format: int64
-                produitId:
-                    type: integer
-                    format: int64
-                siteId:
-                    type: integer
-                    format: int64
-                code:
-                    type: string
-                concessionnaireCode:
-                    type: string
-                active:
-                    type: boolean
-                produit:
-                    $ref: "#/components/schemas/Produit"
-                site:
-                    $ref: "#/components/schemas/Site"
-                chiffreAffaires:
-                    type: integer
-                    format: int64
+    ConcessionnaireProduit:
+      properties:
+        id:
+          type: integer
+          format: int64
+        concessionnaireId:
+          type: integer
+          format: int64
+        produitId:
+          type: integer
+          format: int64
+        siteId:
+          type: integer
+          format: int64
+        code:
+          type: string
+        concessionnaireCode:
+          type: string
+        active:
+          type: boolean
+        produit:
+          $ref: "#/components/schemas/Produit"
+        site:
+          $ref: "#/components/schemas/Site"
+        chiffreAffaires:
+          type: integer
+          format: int64
 
-        Produit:
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                code:
-                    type: string
-                libelle:
-                    type: string
-                abreviation:
-                    type: string
-                active:
-                    type: boolean
-                createdAt:
-                    type: string
-                    format: date-time
-                updatedAt:
-                    type: string
-                    format: date-time
+    Produit:
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        libelle:
+          type: string
+        abreviation:
+          type: string
+        active:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
-        Site:
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                libelle:
-                    type: string
-                type:
-                    type: integer
-                parentId:
-                    type: integer
-                    format: int64
-                code:
-                    type: string
-                codeProvince:
-                    type: string
-                status:
-                    type: boolean
-                createdAt:
-                    type: string
-                    format: date-time
-                updatedAt:
-                    type: string
-                    format: date-time
+    Site:
+      properties:
+        id:
+          type: integer
+          format: int64
+        libelle:
+          type: string
+        type:
+          type: integer
+        parentId:
+          type: integer
+          format: int64
+        code:
+          type: string
+        codeProvince:
+          type: string
+        status:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
-        Terminal:
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                codeTerminal:
-                    type: string
-                concessionnaireId:
-                    type: integer
-                    format: int64
-                concessionnaireCode:
-                    type: string
-                produitId:
-                    type: integer
-                    format: int64
-                concessionnaireProduitCode:
-                    type: string
-                siteId:
-                    type: integer
-                    format: int64
-                produit:
-                    $ref: "#/components/schemas/Produit"
-                site:
-                    $ref: "#/components/schemas/Site"
-                solde:
-                    type: integer
-                    format: int64
-                createdAt:
-                    type: string
-                    format: date-time
-                updatedAt:
-                    type: string
-                    format: date-time
+    Terminal:
+      properties:
+        id:
+          type: integer
+          format: int64
+        codeTerminal:
+          type: string
+        concessionnaireId:
+          type: integer
+          format: int64
+        concessionnaireCode:
+          type: string
+        produitId:
+          type: integer
+          format: int64
+        concessionnaireProduitCode:
+          type: string
+        siteId:
+          type: integer
+          format: int64
+        produit:
+          $ref: "#/components/schemas/Produit"
+        site:
+          $ref: "#/components/schemas/Site"
+        solde:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
-        Operation:
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                code:
-                    type: string
-                reference:
-                    type: string
-                montant:
-                    type: integer
-                    format: int64
-                montantReel:
-                    type: integer
-                    format: int64
-                statut:
-                    type: string
-                terminalId:
-                    type: integer
-                    format: int64
-                codeTerminal:
-                    type: string
-                guichet:
-                    type: string
-                dateOperation:
-                    type: string
-                    format: date-time
-                libelle:
-                    type: string
+    TerminalDetail:
+      properties:
+        id:
+          type: integer
+          format: int64
+        codeTerminal:
+          type: string
+        concessionnaireProduitCode:
+          type: string
+        siteId:
+          type: integer
+          format: int64
+        solde:
+          type: integer
+          format: int64
+        chiffreAffaires:
+          type: integer
+          format: int64
+        totalOperations:
+          type: integer
+          format: int64
+        totalPaiements:
+          type: integer
+          format: int64
 
-        OperationDetail:
-            properties:
-                id:
-                    type: integer
-                    format: int64
-                codeOperation:
-                    type: string
-                codeTerminal:
-                    type: string
-                reference:
-                    type: string
-                dateHeure:
-                    type: string
-                    format: date-time
-                libelle:
-                    type: string
-                montant:
-                    type: integer
-                    format: int64
-                montantReel:
-                    type: integer
-                    format: int64
-                statut:
-                    type: string
-                guichet:
-                    type: string
+    TerminauxConcessionnaire:
+      properties:
+        soldeTotal:
+          type: integer
+          format: int64
+        totalOperations:
+          type: integer
+          format: int64
+        totalPaiements:
+          type: integer
+          format: int64
+        chiffreAffaires:
+          type: integer
+          format: int64
+        terminalDetails:
+          type: array
+          items:
+            $ref: "#/components/schemas/TerminalDetail"
+
+    Operation:
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        reference:
+          type: string
+        montant:
+          type: integer
+          format: int64
+        montantReel:
+          type: integer
+          format: int64
+        statut:
+          type: string
+        terminalId:
+          type: integer
+          format: int64
+        codeTerminal:
+          type: string
+        guichet:
+          type: string
+        dateOperation:
+          type: string
+          format: date-time
+        libelle:
+          type: string
+
+    OperationDetail:
+      properties:
+        id:
+          type: integer
+          format: int64
+        codeOperation:
+          type: string
+        codeTerminal:
+          type: string
+        reference:
+          type: string
+        dateHeure:
+          type: string
+          format: date-time
+        libelle:
+          type: string
+        montant:
+          type: integer
+          format: int64
+        montantReel:
+          type: integer
+          format: int64
+        statut:
+          type: string
+        guichet:
+          type: string
+
+    ExportResponse:
+      description: "Reponse d une demande d'export"
+      properties:
+        downloadUrl:
+          type: string
+        fileName:
+          type: string
+        format:
+          type: string
+          enum: [ xlsx, pdf ]
+        expiresAt:
+          type: string
+          format: date-time
+
+    Commission:
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        terminalId:
+          type: integer
+          format: int64
+        codeTerminal:
+          type: string
+        nombreTerminaux:
+          type: integer
+        paye:
+          type: boolean
+        libelle:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CommissionDetail:
+      properties:
+        id:
+          type: integer
+          format: int64
+        codeTerminal:
+          type: string
+        dateVersement:
+          type: string
+          format: date-time
+        chiffreAffaires:
+          type: integer
+          format: int64
+        commissionVersee:
+          type: integer
+          format: int64
+        typeVersement:
+          type: string
+        compteReception:
+          type: string
+        paye:
+          type: boolean
+        status:
+          type: string

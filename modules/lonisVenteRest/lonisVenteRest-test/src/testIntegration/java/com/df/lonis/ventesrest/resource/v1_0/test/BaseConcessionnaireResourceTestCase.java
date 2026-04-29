@@ -531,6 +531,26 @@ public abstract class BaseConcessionnaireResourceTestCase {
 		return null;
 	}
 
+	@Test
+	public void testDeleteConcessionnaireProduit() throws Exception {
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		Concessionnaire concessionnaire =
+			testDeleteConcessionnaireProduit_addConcessionnaire();
+
+		assertHttpResponseStatusCode(
+			204,
+			concessionnaireResource.deleteConcessionnaireProduitHttpResponse(
+				concessionnaire.getUid(), null));
+	}
+
+	protected Concessionnaire
+			testDeleteConcessionnaireProduit_addConcessionnaire()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 

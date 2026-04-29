@@ -1,11 +1,15 @@
 package com.df.lonis.ventesrest.client.resource.v1_0;
 
+import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.client.dto.v1_0.Terminal;
+import com.df.lonis.ventesrest.client.dto.v1_0.TerminauxConcessionnaire;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
 import com.df.lonis.ventesrest.client.problem.Problem;
+import com.df.lonis.ventesrest.client.serdes.v1_0.ExportResponseSerDes;
 import com.df.lonis.ventesrest.client.serdes.v1_0.TerminalSerDes;
+import com.df.lonis.ventesrest.client.serdes.v1_0.TerminauxConcessionnaireSerDes;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -34,6 +38,23 @@ public interface TerminalResource {
 	public HttpInvoker.HttpResponse getTerminauxPageHttpResponse(
 			String search, String filterString, Pagination pagination,
 			String sortString)
+		throws Exception;
+
+	public ExportResponse getTerminauxExport(String format) throws Exception;
+
+	public HttpInvoker.HttpResponse getTerminauxExportHttpResponse(
+			String format)
+		throws Exception;
+
+	public TerminauxConcessionnaire getConcessionnairesUidTerminauxPage(
+			String uid, String concessionnaireProduitCode, String dateDebut,
+			String dateFin)
+		throws Exception;
+
+	public HttpInvoker.HttpResponse
+			getConcessionnairesUidTerminauxPageHttpResponse(
+				String uid, String concessionnaireProduitCode, String dateDebut,
+				String dateFin)
 		throws Exception;
 
 	public static class Builder {
@@ -201,6 +222,188 @@ public interface TerminalResource {
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port + "/o/lonisVenteRest/v1.0/terminaux");
+
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
+
+			return httpInvoker.invoke();
+		}
+
+		public ExportResponse getTerminauxExport(String format)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse =
+				getTerminauxExportHttpResponse(format);
+
+			String content = httpResponse.getContent();
+
+			if ((httpResponse.getStatusCode() / 100) != 2) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response content: " + content);
+				_logger.log(
+					Level.WARNING,
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.log(
+					Level.WARNING,
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+			else {
+				_logger.fine("HTTP response content: " + content);
+				_logger.fine(
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.fine(
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+			}
+
+			try {
+				return ExportResponseSerDes.toDTO(content);
+			}
+			catch (Exception e) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response: " + content, e);
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+		}
+
+		public HttpInvoker.HttpResponse getTerminauxExportHttpResponse(
+				String format)
+			throws Exception {
+
+			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
+
+			if (_builder._locale != null) {
+				httpInvoker.header(
+					"Accept-Language", _builder._locale.toLanguageTag());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._headers.entrySet()) {
+
+				httpInvoker.header(entry.getKey(), entry.getValue());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._parameters.entrySet()) {
+
+				httpInvoker.parameter(entry.getKey(), entry.getValue());
+			}
+
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			if (format != null) {
+				httpInvoker.parameter("format", String.valueOf(format));
+			}
+
+			httpInvoker.path(
+				_builder._scheme + "://" + _builder._host + ":" +
+					_builder._port + "/o/lonisVenteRest/v1.0/terminaux/export");
+
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
+
+			return httpInvoker.invoke();
+		}
+
+		public TerminauxConcessionnaire getConcessionnairesUidTerminauxPage(
+				String uid, String concessionnaireProduitCode, String dateDebut,
+				String dateFin)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse =
+				getConcessionnairesUidTerminauxPageHttpResponse(
+					uid, concessionnaireProduitCode, dateDebut, dateFin);
+
+			String content = httpResponse.getContent();
+
+			if ((httpResponse.getStatusCode() / 100) != 2) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response content: " + content);
+				_logger.log(
+					Level.WARNING,
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.log(
+					Level.WARNING,
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+			else {
+				_logger.fine("HTTP response content: " + content);
+				_logger.fine(
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.fine(
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+			}
+
+			try {
+				return TerminauxConcessionnaireSerDes.toDTO(content);
+			}
+			catch (Exception e) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response: " + content, e);
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+		}
+
+		public HttpInvoker.HttpResponse
+				getConcessionnairesUidTerminauxPageHttpResponse(
+					String uid, String concessionnaireProduitCode,
+					String dateDebut, String dateFin)
+			throws Exception {
+
+			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
+
+			if (_builder._locale != null) {
+				httpInvoker.header(
+					"Accept-Language", _builder._locale.toLanguageTag());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._headers.entrySet()) {
+
+				httpInvoker.header(entry.getKey(), entry.getValue());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._parameters.entrySet()) {
+
+				httpInvoker.parameter(entry.getKey(), entry.getValue());
+			}
+
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			if (concessionnaireProduitCode != null) {
+				httpInvoker.parameter(
+					"concessionnaireProduitCode",
+					String.valueOf(concessionnaireProduitCode));
+			}
+
+			if (dateDebut != null) {
+				httpInvoker.parameter("dateDebut", String.valueOf(dateDebut));
+			}
+
+			if (dateFin != null) {
+				httpInvoker.parameter("dateFin", String.valueOf(dateFin));
+			}
+
+			httpInvoker.path(
+				_builder._scheme + "://" + _builder._host + ":" +
+					_builder._port +
+						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/terminaux");
+
+			httpInvoker.path("uid", uid);
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);

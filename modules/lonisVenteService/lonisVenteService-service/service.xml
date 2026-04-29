@@ -54,6 +54,11 @@
 		<column name="siteId" type="long" db-name="site_id"/>
 		<column name="createdAt" type="Date" db-name="created_at"/>
 		<column name="updatedAt" type="Date" db-name="updated_at"/>
+
+		<finder name="ConcessionnaireProduitCode" return-type="Collection">
+			<finder-column name="concessionnaireProduitCode"/>
+		</finder>
+
 		<finder name="ConcessionnaireId" return-type="Collection">
 			<finder-column name="concessionnaireId"/>
 		</finder>

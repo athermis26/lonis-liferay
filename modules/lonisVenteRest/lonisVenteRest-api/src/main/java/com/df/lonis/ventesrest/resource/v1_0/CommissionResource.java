@@ -1,10 +1,9 @@
 package com.df.lonis.ventesrest.resource.v1_0;
 
+import com.df.lonis.ventesrest.dto.v1_0.Commission;
+import com.df.lonis.ventesrest.dto.v1_0.CommissionDetail;
 import com.df.lonis.ventesrest.dto.v1_0.ExportResponse;
-import com.df.lonis.ventesrest.dto.v1_0.Terminal;
-import com.df.lonis.ventesrest.dto.v1_0.TerminauxConcessionnaire;
 
-import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
@@ -40,21 +39,25 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @Generated("")
 @ProviderType
-public interface TerminalResource {
+public interface CommissionResource {
 
 	public static Builder builder() {
 		return FactoryHolder.factory.create();
 	}
 
-	public Page<Terminal> getTerminauxPage(
-			String search, Filter filter, Pagination pagination, Sort[] sorts)
+	public Page<Commission> getCommissionsPage(
+			String search, Long siteId, String periode, Pagination pagination)
 		throws Exception;
 
-	public ExportResponse getTerminauxExport(String format) throws Exception;
+	public CommissionDetail getCommission(Long id) throws Exception;
 
-	public TerminauxConcessionnaire getConcessionnairesUidTerminauxPage(
-			String uid, String concessionnaireProduitCode, String dateDebut,
-			String dateFin)
+	public Commission getConcessionnaireCommissions(
+			String uid, String concessionnaireProduitCode, String periode,
+			Pagination pagination)
+		throws Exception;
+
+	public ExportResponse getCommissionsExport(
+			String format, Long siteId, String periode)
 		throws Exception;
 
 	public default void setContextAcceptLanguage(
@@ -114,7 +117,7 @@ public interface TerminalResource {
 	@ProviderType
 	public interface Builder {
 
-		public TerminalResource build();
+		public CommissionResource build();
 
 		public Builder checkPermissions(boolean checkPermissions);
 

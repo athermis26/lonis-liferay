@@ -1,15 +1,15 @@
 package com.df.lonis.ventesrest.client.resource.v1_0;
 
-import com.df.lonis.ventesrest.client.dto.v1_0.Concessionnaire;
-import com.df.lonis.ventesrest.client.dto.v1_0.ConcessionnaireDetail;
-import com.df.lonis.ventesrest.client.dto.v1_0.ConcessionnaireProduit;
+import com.df.lonis.ventesrest.client.dto.v1_0.Commission;
+import com.df.lonis.ventesrest.client.dto.v1_0.CommissionDetail;
+import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
 import com.df.lonis.ventesrest.client.problem.Problem;
-import com.df.lonis.ventesrest.client.serdes.v1_0.ConcessionnaireDetailSerDes;
-import com.df.lonis.ventesrest.client.serdes.v1_0.ConcessionnaireProduitSerDes;
-import com.df.lonis.ventesrest.client.serdes.v1_0.ConcessionnaireSerDes;
+import com.df.lonis.ventesrest.client.serdes.v1_0.CommissionDetailSerDes;
+import com.df.lonis.ventesrest.client.serdes.v1_0.CommissionSerDes;
+import com.df.lonis.ventesrest.client.serdes.v1_0.ExportResponseSerDes;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -24,42 +24,41 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public interface ConcessionnaireResource {
+public interface CommissionResource {
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public Page<Concessionnaire> getConcessionnairesPage(
-			String search, String filterString, Pagination pagination,
-			String sortString)
+	public Page<Commission> getCommissionsPage(
+			String search, Long siteId, String periode, Pagination pagination)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse getConcessionnairesPageHttpResponse(
-			String search, String filterString, Pagination pagination,
-			String sortString)
+	public HttpInvoker.HttpResponse getCommissionsPageHttpResponse(
+			String search, Long siteId, String periode, Pagination pagination)
 		throws Exception;
 
-	public ConcessionnaireDetail getConcessionnaireByUid(String uid)
+	public CommissionDetail getCommission(Long id) throws Exception;
+
+	public HttpInvoker.HttpResponse getCommissionHttpResponse(Long id)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse getConcessionnaireByUidHttpResponse(
-			String uid)
+	public Commission getConcessionnaireCommissions(
+			String uid, String concessionnaireProduitCode, String periode,
+			Pagination pagination)
 		throws Exception;
 
-	public Page<ConcessionnaireProduit> getConcessionnaireProduits(String uid)
+	public HttpInvoker.HttpResponse getConcessionnaireCommissionsHttpResponse(
+			String uid, String concessionnaireProduitCode, String periode,
+			Pagination pagination)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse getConcessionnaireProduitsHttpResponse(
-			String uid)
+	public ExportResponse getCommissionsExport(
+			String format, Long siteId, String periode)
 		throws Exception;
 
-	public void deleteConcessionnaireProduit(
-			String uid, Long concessionnaireProduitId)
-		throws Exception;
-
-	public HttpInvoker.HttpResponse deleteConcessionnaireProduitHttpResponse(
-			String uid, Long concessionnaireProduitId)
+	public HttpInvoker.HttpResponse getCommissionsExportHttpResponse(
+			String format, Long siteId, String periode)
 		throws Exception;
 
 	public static class Builder {
@@ -71,8 +70,8 @@ public interface ConcessionnaireResource {
 			return this;
 		}
 
-		public ConcessionnaireResource build() {
-			return new ConcessionnaireResourceImpl(this);
+		public CommissionResource build() {
+			return new CommissionResourceImpl(this);
 		}
 
 		public Builder endpoint(String host, int port, String scheme) {
@@ -131,17 +130,16 @@ public interface ConcessionnaireResource {
 
 	}
 
-	public static class ConcessionnaireResourceImpl
-		implements ConcessionnaireResource {
+	public static class CommissionResourceImpl implements CommissionResource {
 
-		public Page<Concessionnaire> getConcessionnairesPage(
-				String search, String filterString, Pagination pagination,
-				String sortString)
+		public Page<Commission> getCommissionsPage(
+				String search, Long siteId, String periode,
+				Pagination pagination)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getConcessionnairesPageHttpResponse(
-					search, filterString, pagination, sortString);
+				getCommissionsPageHttpResponse(
+					search, siteId, periode, pagination);
 
 			String content = httpResponse.getContent();
 
@@ -169,7 +167,7 @@ public interface ConcessionnaireResource {
 			}
 
 			try {
-				return Page.of(content, ConcessionnaireSerDes::toDTO);
+				return Page.of(content, CommissionSerDes::toDTO);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -180,9 +178,9 @@ public interface ConcessionnaireResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getConcessionnairesPageHttpResponse(
-				String search, String filterString, Pagination pagination,
-				String sortString)
+		public HttpInvoker.HttpResponse getCommissionsPageHttpResponse(
+				String search, Long siteId, String periode,
+				Pagination pagination)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -210,8 +208,12 @@ public interface ConcessionnaireResource {
 				httpInvoker.parameter("search", String.valueOf(search));
 			}
 
-			if (filterString != null) {
-				httpInvoker.parameter("filter", filterString);
+			if (siteId != null) {
+				httpInvoker.parameter("siteId", String.valueOf(siteId));
+			}
+
+			if (periode != null) {
+				httpInvoker.parameter("periode", String.valueOf(periode));
 			}
 
 			if (pagination != null) {
@@ -221,13 +223,9 @@ public interface ConcessionnaireResource {
 					"pageSize", String.valueOf(pagination.getPageSize()));
 			}
 
-			if (sortString != null) {
-				httpInvoker.parameter("sort", sortString);
-			}
-
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/lonisVenteRest/v1.0/concessionnaires");
+					_builder._port + "/o/lonisVenteRest/v1.0/commissions");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -235,11 +233,9 @@ public interface ConcessionnaireResource {
 			return httpInvoker.invoke();
 		}
 
-		public ConcessionnaireDetail getConcessionnaireByUid(String uid)
-			throws Exception {
-
-			HttpInvoker.HttpResponse httpResponse =
-				getConcessionnaireByUidHttpResponse(uid);
+		public CommissionDetail getCommission(Long id) throws Exception {
+			HttpInvoker.HttpResponse httpResponse = getCommissionHttpResponse(
+				id);
 
 			String content = httpResponse.getContent();
 
@@ -267,7 +263,7 @@ public interface ConcessionnaireResource {
 			}
 
 			try {
-				return ConcessionnaireDetailSerDes.toDTO(content);
+				return CommissionDetailSerDes.toDTO(content);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -278,8 +274,7 @@ public interface ConcessionnaireResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getConcessionnaireByUidHttpResponse(
-				String uid)
+		public HttpInvoker.HttpResponse getCommissionHttpResponse(Long id)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -305,10 +300,9 @@ public interface ConcessionnaireResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port +
-						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}");
+					_builder._port + "/o/lonisVenteRest/v1.0/commissions/{id}");
 
-			httpInvoker.path("uid", uid);
+			httpInvoker.path("id", id);
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -316,12 +310,14 @@ public interface ConcessionnaireResource {
 			return httpInvoker.invoke();
 		}
 
-		public Page<ConcessionnaireProduit> getConcessionnaireProduits(
-				String uid)
+		public Commission getConcessionnaireCommissions(
+				String uid, String concessionnaireProduitCode, String periode,
+				Pagination pagination)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getConcessionnaireProduitsHttpResponse(uid);
+				getConcessionnaireCommissionsHttpResponse(
+					uid, concessionnaireProduitCode, periode, pagination);
 
 			String content = httpResponse.getContent();
 
@@ -349,7 +345,7 @@ public interface ConcessionnaireResource {
 			}
 
 			try {
-				return Page.of(content, ConcessionnaireProduitSerDes::toDTO);
+				return CommissionSerDes.toDTO(content);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -357,84 +353,13 @@ public interface ConcessionnaireResource {
 					"Unable to process HTTP response: " + content, e);
 
 				throw new Problem.ProblemException(Problem.toDTO(content));
-			}
-		}
-
-		public HttpInvoker.HttpResponse getConcessionnaireProduitsHttpResponse(
-				String uid)
-			throws Exception {
-
-			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
-
-			if (_builder._locale != null) {
-				httpInvoker.header(
-					"Accept-Language", _builder._locale.toLanguageTag());
-			}
-
-			for (Map.Entry<String, String> entry :
-					_builder._headers.entrySet()) {
-
-				httpInvoker.header(entry.getKey(), entry.getValue());
-			}
-
-			for (Map.Entry<String, String> entry :
-					_builder._parameters.entrySet()) {
-
-				httpInvoker.parameter(entry.getKey(), entry.getValue());
-			}
-
-			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
-
-			httpInvoker.path(
-				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port +
-						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/produits");
-
-			httpInvoker.path("uid", uid);
-
-			httpInvoker.userNameAndPassword(
-				_builder._login + ":" + _builder._password);
-
-			return httpInvoker.invoke();
-		}
-
-		public void deleteConcessionnaireProduit(
-				String uid, Long concessionnaireProduitId)
-			throws Exception {
-
-			HttpInvoker.HttpResponse httpResponse =
-				deleteConcessionnaireProduitHttpResponse(
-					uid, concessionnaireProduitId);
-
-			String content = httpResponse.getContent();
-
-			if ((httpResponse.getStatusCode() / 100) != 2) {
-				_logger.log(
-					Level.WARNING,
-					"Unable to process HTTP response content: " + content);
-				_logger.log(
-					Level.WARNING,
-					"HTTP response message: " + httpResponse.getMessage());
-				_logger.log(
-					Level.WARNING,
-					"HTTP response status code: " +
-						httpResponse.getStatusCode());
-
-				throw new Problem.ProblemException(Problem.toDTO(content));
-			}
-			else {
-				_logger.fine("HTTP response content: " + content);
-				_logger.fine(
-					"HTTP response message: " + httpResponse.getMessage());
-				_logger.fine(
-					"HTTP response status code: " +
-						httpResponse.getStatusCode());
 			}
 		}
 
 		public HttpInvoker.HttpResponse
-				deleteConcessionnaireProduitHttpResponse(
-					String uid, Long concessionnaireProduitId)
+				getConcessionnaireCommissionsHttpResponse(
+					String uid, String concessionnaireProduitCode,
+					String periode, Pagination pagination)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -456,16 +381,31 @@ public interface ConcessionnaireResource {
 				httpInvoker.parameter(entry.getKey(), entry.getValue());
 			}
 
-			httpInvoker.httpMethod(HttpInvoker.HttpMethod.DELETE);
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			if (concessionnaireProduitCode != null) {
+				httpInvoker.parameter(
+					"concessionnaireProduitCode",
+					String.valueOf(concessionnaireProduitCode));
+			}
+
+			if (periode != null) {
+				httpInvoker.parameter("periode", String.valueOf(periode));
+			}
+
+			if (pagination != null) {
+				httpInvoker.parameter(
+					"page", String.valueOf(pagination.getPage()));
+				httpInvoker.parameter(
+					"pageSize", String.valueOf(pagination.getPageSize()));
+			}
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port +
-						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/produits/{concessionnaireProduitId}");
+						"/o/lonisVenteRest/v1.0/concessionnaires/{uid}/commissions");
 
 			httpInvoker.path("uid", uid);
-			httpInvoker.path(
-				"concessionnaireProduitId", concessionnaireProduitId);
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -473,12 +413,104 @@ public interface ConcessionnaireResource {
 			return httpInvoker.invoke();
 		}
 
-		private ConcessionnaireResourceImpl(Builder builder) {
+		public ExportResponse getCommissionsExport(
+				String format, Long siteId, String periode)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse =
+				getCommissionsExportHttpResponse(format, siteId, periode);
+
+			String content = httpResponse.getContent();
+
+			if ((httpResponse.getStatusCode() / 100) != 2) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response content: " + content);
+				_logger.log(
+					Level.WARNING,
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.log(
+					Level.WARNING,
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+			else {
+				_logger.fine("HTTP response content: " + content);
+				_logger.fine(
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.fine(
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+			}
+
+			try {
+				return ExportResponseSerDes.toDTO(content);
+			}
+			catch (Exception e) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response: " + content, e);
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+		}
+
+		public HttpInvoker.HttpResponse getCommissionsExportHttpResponse(
+				String format, Long siteId, String periode)
+			throws Exception {
+
+			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
+
+			if (_builder._locale != null) {
+				httpInvoker.header(
+					"Accept-Language", _builder._locale.toLanguageTag());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._headers.entrySet()) {
+
+				httpInvoker.header(entry.getKey(), entry.getValue());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._parameters.entrySet()) {
+
+				httpInvoker.parameter(entry.getKey(), entry.getValue());
+			}
+
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			if (format != null) {
+				httpInvoker.parameter("format", String.valueOf(format));
+			}
+
+			if (siteId != null) {
+				httpInvoker.parameter("siteId", String.valueOf(siteId));
+			}
+
+			if (periode != null) {
+				httpInvoker.parameter("periode", String.valueOf(periode));
+			}
+
+			httpInvoker.path(
+				_builder._scheme + "://" + _builder._host + ":" +
+					_builder._port +
+						"/o/lonisVenteRest/v1.0/commissions/export");
+
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
+
+			return httpInvoker.invoke();
+		}
+
+		private CommissionResourceImpl(Builder builder) {
 			_builder = builder;
 		}
 
 		private static final Logger _logger = Logger.getLogger(
-			ConcessionnaireResource.class.getName());
+			CommissionResource.class.getName());
 
 		private Builder _builder;
 

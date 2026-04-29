@@ -26,6 +26,7 @@ import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -54,6 +55,10 @@ public interface ConcessionnaireResource {
 		throws Exception;
 
 	public Page<ConcessionnaireProduit> getConcessionnaireProduits(String uid)
+		throws Exception;
+
+	public Response deleteConcessionnaireProduit(
+			String uid, Long concessionnaireProduitId)
 		throws Exception;
 
 	public default void setContextAcceptLanguage(

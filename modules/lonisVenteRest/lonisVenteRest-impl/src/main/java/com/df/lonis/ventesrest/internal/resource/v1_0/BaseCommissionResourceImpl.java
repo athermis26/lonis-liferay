@@ -1,10 +1,10 @@
 package com.df.lonis.ventesrest.internal.resource.v1_0;
 
+import com.df.lonis.ventesrest.dto.v1_0.Commission;
+import com.df.lonis.ventesrest.dto.v1_0.CommissionDetail;
 import com.df.lonis.ventesrest.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.dto.v1_0.Operation;
-import com.df.lonis.ventesrest.dto.v1_0.Terminal;
-import com.df.lonis.ventesrest.dto.v1_0.TerminauxConcessionnaire;
-import com.df.lonis.ventesrest.resource.v1_0.TerminalResource;
+import com.df.lonis.ventesrest.resource.v1_0.CommissionResource;
 
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -52,17 +52,17 @@ import javax.ws.rs.core.UriInfo;
  */
 @Generated("")
 @javax.ws.rs.Path("/v1.0")
-public abstract class BaseTerminalResourceImpl
-	implements EntityModelResource, TerminalResource,
-			   VulcanBatchEngineTaskItemDelegate<Terminal> {
+public abstract class BaseCommissionResourceImpl
+	implements CommissionResource, EntityModelResource,
+			   VulcanBatchEngineTaskItemDelegate<Commission> {
 
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/terminaux'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/commissions'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
-		description = "Liste des terminaux (Points de ventes"
+		description = "Historique global des commissions"
 	)
 	@io.swagger.v3.oas.annotations.Parameters(
 		value = {
@@ -72,7 +72,11 @@ public abstract class BaseTerminalResourceImpl
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "filter"
+				name = "siteId"
+			),
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "periode"
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
@@ -81,27 +85,27 @@ public abstract class BaseTerminalResourceImpl
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
 				name = "pageSize"
-			),
-			@io.swagger.v3.oas.annotations.Parameter(
-				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "sort"
 			)
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Terminal")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Commission")}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/terminaux")
+	@javax.ws.rs.Path("/commissions")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public Page<Terminal> getTerminauxPage(
+	public Page<Commission> getCommissionsPage(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.ws.rs.QueryParam("search")
 			String search,
-			@javax.ws.rs.core.Context Filter filter,
-			@javax.ws.rs.core.Context Pagination pagination,
-			@javax.ws.rs.core.Context Sort[] sorts)
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.ws.rs.QueryParam("siteId")
+			Long siteId,
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.ws.rs.QueryParam("periode")
+			String periode,
+			@javax.ws.rs.core.Context Pagination pagination)
 		throws Exception {
 
 		return Page.of(Collections.emptyList());
@@ -110,43 +114,42 @@ public abstract class BaseTerminalResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/terminaux/export'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/commissions/{id}'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
-		description = "Export inventaire terminaux - retourne une URL de telechargement"
+		description = "Detail d une commission"
 	)
 	@io.swagger.v3.oas.annotations.Parameters(
 		value = {
 			@io.swagger.v3.oas.annotations.Parameter(
-				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "format"
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+				name = "id"
 			)
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Terminal")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Commission")}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/terminaux/export")
+	@javax.ws.rs.Path("/commissions/{id}")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public ExportResponse getTerminauxExport(
+	public CommissionDetail getCommission(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.validation.constraints.NotNull
-			@javax.ws.rs.QueryParam("format")
-			String format)
+			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("id")
+			Long id)
 		throws Exception {
 
-		return new ExportResponse();
+		return new CommissionDetail();
 	}
 
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}/terminaux'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaires/{uid}/commissions'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
-		description = "Terminaux d un concessionnaire pour un code produit et une periode"
+		description = "Liste des commissions d un concessionnaire"
 	)
 	@io.swagger.v3.oas.annotations.Parameters(
 		value = {
@@ -160,22 +163,26 @@ public abstract class BaseTerminalResourceImpl
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "dateDebut"
+				name = "periode"
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "dateFin"
+				name = "page"
+			),
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "pageSize"
 			)
 		}
 	)
 	@io.swagger.v3.oas.annotations.tags.Tags(
-		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Terminal")}
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Commission")}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/concessionnaires/{uid}/terminaux")
+	@javax.ws.rs.Path("/concessionnaires/{uid}/commissions")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public TerminauxConcessionnaire getConcessionnairesUidTerminauxPage(
+	public Commission getConcessionnaireCommissions(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("uid")
 			String uid,
@@ -183,27 +190,72 @@ public abstract class BaseTerminalResourceImpl
 			@javax.ws.rs.QueryParam("concessionnaireProduitCode")
 			String concessionnaireProduitCode,
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.ws.rs.QueryParam("dateDebut")
-			String dateDebut,
-			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.ws.rs.QueryParam("dateFin")
-			String dateFin)
+			@javax.ws.rs.QueryParam("periode")
+			String periode,
+			@javax.ws.rs.core.Context Pagination pagination)
 		throws Exception {
 
-		return new TerminauxConcessionnaire();
+		return new Commission();
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/commissions/export'  -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Export inventaire commissions - retourne une URL de telechargement"
+	)
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "format"
+			),
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "siteId"
+			),
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "periode"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Commission")}
+	)
+	@javax.ws.rs.GET
+	@javax.ws.rs.Path("/commissions/export")
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@Override
+	public ExportResponse getCommissionsExport(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.validation.constraints.NotNull
+			@javax.ws.rs.QueryParam("format")
+			String format,
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.ws.rs.QueryParam("siteId")
+			Long siteId,
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.ws.rs.QueryParam("periode")
+			String periode)
+		throws Exception {
+
+		return new ExportResponse();
 	}
 
 	@Override
 	@SuppressWarnings("PMD.UnusedLocalVariable")
 	public void create(
-			java.util.Collection<Terminal> terminals,
+			java.util.Collection<Commission> commissions,
 			Map<String, Serializable> parameters)
 		throws Exception {
 	}
 
 	@Override
 	public void delete(
-			java.util.Collection<Terminal> terminals,
+			java.util.Collection<Commission> commissions,
 			Map<String, Serializable> parameters)
 		throws Exception {
 	}
@@ -224,12 +276,14 @@ public abstract class BaseTerminalResourceImpl
 	}
 
 	@Override
-	public Page<Terminal> read(
+	public Page<Commission> read(
 			Filter filter, Pagination pagination, Sort[] sorts,
 			Map<String, Serializable> parameters, String search)
 		throws Exception {
 
-		return null;
+		return getCommissionsPage(
+			search, (Long)parameters.get("siteId"),
+			(String)parameters.get("periode"), pagination);
 	}
 
 	@Override
@@ -256,7 +310,7 @@ public abstract class BaseTerminalResourceImpl
 
 	@Override
 	public void update(
-			java.util.Collection<Terminal> terminals,
+			java.util.Collection<Commission> commissions,
 			Map<String, Serializable> parameters)
 		throws Exception {
 	}
@@ -429,6 +483,6 @@ public abstract class BaseTerminalResourceImpl
 		vulcanBatchEngineImportTaskResource;
 
 	private static final com.liferay.portal.kernel.log.Log _log =
-		LogFactoryUtil.getLog(BaseTerminalResourceImpl.class);
+		LogFactoryUtil.getLog(BaseCommissionResourceImpl.class);
 
 }

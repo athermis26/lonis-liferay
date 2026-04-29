@@ -1,13 +1,13 @@
 package com.df.lonis.ventesrest.resource.v1_0.test;
 
+import com.df.lonis.ventesrest.client.dto.v1_0.Commission;
+import com.df.lonis.ventesrest.client.dto.v1_0.CommissionDetail;
 import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
-import com.df.lonis.ventesrest.client.dto.v1_0.Terminal;
-import com.df.lonis.ventesrest.client.dto.v1_0.TerminauxConcessionnaire;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
-import com.df.lonis.ventesrest.client.resource.v1_0.TerminalResource;
-import com.df.lonis.ventesrest.client.serdes.v1_0.TerminalSerDes;
+import com.df.lonis.ventesrest.client.resource.v1_0.CommissionResource;
+import com.df.lonis.ventesrest.client.serdes.v1_0.CommissionSerDes;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
-import com.liferay.petra.function.UnsafeTriConsumer;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -36,7 +35,6 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
-import com.liferay.portal.search.test.util.SearchTestRule;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
@@ -47,8 +45,6 @@ import java.text.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +56,6 @@ import javax.annotation.Generated;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang.time.DateUtils;
 
@@ -77,7 +72,7 @@ import org.junit.Test;
  * @generated
  */
 @Generated("")
-public abstract class BaseTerminalResourceTestCase {
+public abstract class BaseCommissionResourceTestCase {
 
 	@ClassRule
 	@Rule
@@ -98,11 +93,11 @@ public abstract class BaseTerminalResourceTestCase {
 		testCompany = CompanyLocalServiceUtil.getCompany(
 			testGroup.getCompanyId());
 
-		_terminalResource.setContextCompany(testCompany);
+		_commissionResource.setContextCompany(testCompany);
 
-		TerminalResource.Builder builder = TerminalResource.builder();
+		CommissionResource.Builder builder = CommissionResource.builder();
 
-		terminalResource = builder.authentication(
+		commissionResource = builder.authentication(
 			"test@liferay.com", "test"
 		).locale(
 			LocaleUtil.getDefault()
@@ -133,13 +128,13 @@ public abstract class BaseTerminalResourceTestCase {
 			}
 		};
 
-		Terminal terminal1 = randomTerminal();
+		Commission commission1 = randomCommission();
 
-		String json = objectMapper.writeValueAsString(terminal1);
+		String json = objectMapper.writeValueAsString(commission1);
 
-		Terminal terminal2 = TerminalSerDes.toDTO(json);
+		Commission commission2 = CommissionSerDes.toDTO(json);
 
-		Assert.assertTrue(equals(terminal1, terminal2));
+		Assert.assertTrue(equals(commission1, commission2));
 	}
 
 	@Test
@@ -159,10 +154,10 @@ public abstract class BaseTerminalResourceTestCase {
 			}
 		};
 
-		Terminal terminal = randomTerminal();
+		Commission commission = randomCommission();
 
-		String json1 = objectMapper.writeValueAsString(terminal);
-		String json2 = TerminalSerDes.toJSON(terminal);
+		String json1 = objectMapper.writeValueAsString(commission);
+		String json2 = CommissionSerDes.toJSON(commission);
 
 		Assert.assertEquals(
 			objectMapper.readTree(json1), objectMapper.readTree(json2));
@@ -172,274 +167,134 @@ public abstract class BaseTerminalResourceTestCase {
 	public void testEscapeRegexInStringFields() throws Exception {
 		String regex = "^[0-9]+(\\.[0-9]{1,2})\"?";
 
-		Terminal terminal = randomTerminal();
+		Commission commission = randomCommission();
 
-		terminal.setCodeTerminal(regex);
-		terminal.setConcessionnaireCode(regex);
-		terminal.setConcessionnaireProduitCode(regex);
+		commission.setCode(regex);
+		commission.setCodeTerminal(regex);
+		commission.setLibelle(regex);
+		commission.setStatus(regex);
 
-		String json = TerminalSerDes.toJSON(terminal);
+		String json = CommissionSerDes.toJSON(commission);
 
 		Assert.assertFalse(json.contains(regex));
 
-		terminal = TerminalSerDes.toDTO(json);
+		commission = CommissionSerDes.toDTO(json);
 
-		Assert.assertEquals(regex, terminal.getCodeTerminal());
-		Assert.assertEquals(regex, terminal.getConcessionnaireCode());
-		Assert.assertEquals(regex, terminal.getConcessionnaireProduitCode());
+		Assert.assertEquals(regex, commission.getCode());
+		Assert.assertEquals(regex, commission.getCodeTerminal());
+		Assert.assertEquals(regex, commission.getLibelle());
+		Assert.assertEquals(regex, commission.getStatus());
 	}
 
 	@Test
-	public void testGetTerminauxPage() throws Exception {
-		Page<Terminal> page = terminalResource.getTerminauxPage(
-			null, null, Pagination.of(1, 10), null);
+	public void testGetCommissionsPage() throws Exception {
+		Page<Commission> page = commissionResource.getCommissionsPage(
+			null, null, RandomTestUtil.randomString(), Pagination.of(1, 10));
 
 		long totalCount = page.getTotalCount();
 
-		Terminal terminal1 = testGetTerminauxPage_addTerminal(randomTerminal());
+		Commission commission1 = testGetCommissionsPage_addCommission(
+			randomCommission());
 
-		Terminal terminal2 = testGetTerminauxPage_addTerminal(randomTerminal());
+		Commission commission2 = testGetCommissionsPage_addCommission(
+			randomCommission());
 
-		page = terminalResource.getTerminauxPage(
-			null, null, Pagination.of(1, 10), null);
+		page = commissionResource.getCommissionsPage(
+			null, null, null, Pagination.of(1, 10));
 
 		Assert.assertEquals(totalCount + 2, page.getTotalCount());
 
-		assertContains(terminal1, (List<Terminal>)page.getItems());
-		assertContains(terminal2, (List<Terminal>)page.getItems());
+		assertContains(commission1, (List<Commission>)page.getItems());
+		assertContains(commission2, (List<Commission>)page.getItems());
 		assertValid(page);
 	}
 
 	@Test
-	public void testGetTerminauxPageWithFilterDateTimeEquals()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DATE_TIME);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Terminal terminal1 = randomTerminal();
-
-		terminal1 = testGetTerminauxPage_addTerminal(terminal1);
-
-		for (EntityField entityField : entityFields) {
-			Page<Terminal> page = terminalResource.getTerminauxPage(
-				null, getFilterString(entityField, "between", terminal1),
-				Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(terminal1),
-				(List<Terminal>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetTerminauxPageWithFilterStringEquals() throws Exception {
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.STRING);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Terminal terminal1 = testGetTerminauxPage_addTerminal(randomTerminal());
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		Terminal terminal2 = testGetTerminauxPage_addTerminal(randomTerminal());
-
-		for (EntityField entityField : entityFields) {
-			Page<Terminal> page = terminalResource.getTerminauxPage(
-				null, getFilterString(entityField, "eq", terminal1),
-				Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(terminal1),
-				(List<Terminal>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetTerminauxPageWithPagination() throws Exception {
-		Page<Terminal> totalPage = terminalResource.getTerminauxPage(
+	public void testGetCommissionsPageWithPagination() throws Exception {
+		Page<Commission> totalPage = commissionResource.getCommissionsPage(
 			null, null, null, null);
 
 		int totalCount = GetterUtil.getInteger(totalPage.getTotalCount());
 
-		Terminal terminal1 = testGetTerminauxPage_addTerminal(randomTerminal());
+		Commission commission1 = testGetCommissionsPage_addCommission(
+			randomCommission());
 
-		Terminal terminal2 = testGetTerminauxPage_addTerminal(randomTerminal());
+		Commission commission2 = testGetCommissionsPage_addCommission(
+			randomCommission());
 
-		Terminal terminal3 = testGetTerminauxPage_addTerminal(randomTerminal());
+		Commission commission3 = testGetCommissionsPage_addCommission(
+			randomCommission());
 
-		Page<Terminal> page1 = terminalResource.getTerminauxPage(
-			null, null, Pagination.of(1, totalCount + 2), null);
+		Page<Commission> page1 = commissionResource.getCommissionsPage(
+			null, null, null, Pagination.of(1, totalCount + 2));
 
-		List<Terminal> terminals1 = (List<Terminal>)page1.getItems();
+		List<Commission> commissions1 = (List<Commission>)page1.getItems();
 
 		Assert.assertEquals(
-			terminals1.toString(), totalCount + 2, terminals1.size());
+			commissions1.toString(), totalCount + 2, commissions1.size());
 
-		Page<Terminal> page2 = terminalResource.getTerminauxPage(
-			null, null, Pagination.of(2, totalCount + 2), null);
+		Page<Commission> page2 = commissionResource.getCommissionsPage(
+			null, null, null, Pagination.of(2, totalCount + 2));
 
 		Assert.assertEquals(totalCount + 3, page2.getTotalCount());
 
-		List<Terminal> terminals2 = (List<Terminal>)page2.getItems();
+		List<Commission> commissions2 = (List<Commission>)page2.getItems();
 
-		Assert.assertEquals(terminals2.toString(), 1, terminals2.size());
+		Assert.assertEquals(commissions2.toString(), 1, commissions2.size());
 
-		Page<Terminal> page3 = terminalResource.getTerminauxPage(
-			null, null, Pagination.of(1, totalCount + 3), null);
+		Page<Commission> page3 = commissionResource.getCommissionsPage(
+			null, null, null, Pagination.of(1, totalCount + 3));
 
-		assertContains(terminal1, (List<Terminal>)page3.getItems());
-		assertContains(terminal2, (List<Terminal>)page3.getItems());
-		assertContains(terminal3, (List<Terminal>)page3.getItems());
+		assertContains(commission1, (List<Commission>)page3.getItems());
+		assertContains(commission2, (List<Commission>)page3.getItems());
+		assertContains(commission3, (List<Commission>)page3.getItems());
 	}
 
-	@Test
-	public void testGetTerminauxPageWithSortDateTime() throws Exception {
-		testGetTerminauxPageWithSort(
-			EntityField.Type.DATE_TIME,
-			(entityField, terminal1, terminal2) -> {
-				BeanUtils.setProperty(
-					terminal1, entityField.getName(),
-					DateUtils.addMinutes(new Date(), -2));
-			});
-	}
-
-	@Test
-	public void testGetTerminauxPageWithSortInteger() throws Exception {
-		testGetTerminauxPageWithSort(
-			EntityField.Type.INTEGER,
-			(entityField, terminal1, terminal2) -> {
-				BeanUtils.setProperty(terminal1, entityField.getName(), 0);
-				BeanUtils.setProperty(terminal2, entityField.getName(), 1);
-			});
-	}
-
-	@Test
-	public void testGetTerminauxPageWithSortString() throws Exception {
-		testGetTerminauxPageWithSort(
-			EntityField.Type.STRING,
-			(entityField, terminal1, terminal2) -> {
-				Class<?> clazz = terminal1.getClass();
-
-				String entityFieldName = entityField.getName();
-
-				java.lang.reflect.Method method = clazz.getMethod(
-					"get" + StringUtil.upperCaseFirstLetter(entityFieldName));
-
-				Class<?> returnType = method.getReturnType();
-
-				if (returnType.isAssignableFrom(Map.class)) {
-					BeanUtils.setProperty(
-						terminal1, entityFieldName,
-						Collections.singletonMap("Aaa", "Aaa"));
-					BeanUtils.setProperty(
-						terminal2, entityFieldName,
-						Collections.singletonMap("Bbb", "Bbb"));
-				}
-				else if (entityFieldName.contains("email")) {
-					BeanUtils.setProperty(
-						terminal1, entityFieldName,
-						"aaa" +
-							StringUtil.toLowerCase(
-								RandomTestUtil.randomString()) +
-									"@liferay.com");
-					BeanUtils.setProperty(
-						terminal2, entityFieldName,
-						"bbb" +
-							StringUtil.toLowerCase(
-								RandomTestUtil.randomString()) +
-									"@liferay.com");
-				}
-				else {
-					BeanUtils.setProperty(
-						terminal1, entityFieldName,
-						"aaa" +
-							StringUtil.toLowerCase(
-								RandomTestUtil.randomString()));
-					BeanUtils.setProperty(
-						terminal2, entityFieldName,
-						"bbb" +
-							StringUtil.toLowerCase(
-								RandomTestUtil.randomString()));
-				}
-			});
-	}
-
-	protected void testGetTerminauxPageWithSort(
-			EntityField.Type type,
-			UnsafeTriConsumer<EntityField, Terminal, Terminal, Exception>
-				unsafeTriConsumer)
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(type);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Terminal terminal1 = randomTerminal();
-		Terminal terminal2 = randomTerminal();
-
-		for (EntityField entityField : entityFields) {
-			unsafeTriConsumer.accept(entityField, terminal1, terminal2);
-		}
-
-		terminal1 = testGetTerminauxPage_addTerminal(terminal1);
-
-		terminal2 = testGetTerminauxPage_addTerminal(terminal2);
-
-		for (EntityField entityField : entityFields) {
-			Page<Terminal> ascPage = terminalResource.getTerminauxPage(
-				null, null, Pagination.of(1, 2),
-				entityField.getName() + ":asc");
-
-			assertEquals(
-				Arrays.asList(terminal1, terminal2),
-				(List<Terminal>)ascPage.getItems());
-
-			Page<Terminal> descPage = terminalResource.getTerminauxPage(
-				null, null, Pagination.of(1, 2),
-				entityField.getName() + ":desc");
-
-			assertEquals(
-				Arrays.asList(terminal2, terminal1),
-				(List<Terminal>)descPage.getItems());
-		}
-	}
-
-	protected Terminal testGetTerminauxPage_addTerminal(Terminal terminal)
+	protected Commission testGetCommissionsPage_addCommission(
+			Commission commission)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	@Rule
-	public SearchTestRule searchTestRule = new SearchTestRule();
+	@Test
+	public void testGetConcessionnaireCommissions() throws Exception {
+		Commission postCommission =
+			testGetConcessionnaireCommissions_addCommission();
+
+		Commission getCommission =
+			commissionResource.getConcessionnaireCommissions(
+				null, null, null, Pagination.of(1, 2));
+
+		assertEquals(postCommission, getCommission);
+		assertValid(getCommission);
+	}
+
+	protected Commission testGetConcessionnaireCommissions_addCommission()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
 
 	@Test
-	public void testGetTerminauxExport() throws Exception {
-		Terminal postTerminal = testGetTerminal_addTerminal();
+	public void testGetCommissionsExport() throws Exception {
+		Commission postCommission = testGetCommission_addCommission();
 
 		ExportResponse postExportResponse =
-			testGetTerminauxExport_addExportResponse(
-				postTerminal.getId(), randomExportResponse());
+			testGetCommissionsExport_addExportResponse(
+				postCommission.getId(), randomExportResponse());
 
-		ExportResponse getExportResponse = terminalResource.getTerminauxExport(
-			postTerminal.getId());
+		ExportResponse getExportResponse =
+			commissionResource.getCommissionsExport(postCommission.getId());
 
 		assertEquals(postExportResponse, getExportResponse);
 		assertValid(getExportResponse);
 	}
 
-	protected ExportResponse testGetTerminauxExport_addExportResponse(
-			long terminalId, ExportResponse exportResponse)
+	protected ExportResponse testGetCommissionsExport_addExportResponse(
+			long commissionId, ExportResponse exportResponse)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -447,41 +302,42 @@ public abstract class BaseTerminalResourceTestCase {
 	}
 
 	@Test
-	public void testGetConcessionnairesUidTerminauxPage() throws Exception {
-		Terminal postTerminal = testGetTerminal_addTerminal();
+	public void testGetCommission() throws Exception {
+		Commission postCommission = testGetCommission_addCommission();
 
-		TerminauxConcessionnaire postTerminauxConcessionnaire =
-			testGetConcessionnairesUidTerminauxPage_addTerminauxConcessionnaire(
-				postTerminal.getId(), randomTerminauxConcessionnaire());
+		CommissionDetail postCommissionDetail =
+			testGetCommission_addCommissionDetail(
+				postCommission.getId(), randomCommissionDetail());
 
-		TerminauxConcessionnaire getTerminauxConcessionnaire =
-			terminalResource.getConcessionnairesUidTerminauxPage(
-				postTerminal.getId());
+		CommissionDetail getCommissionDetail = commissionResource.getCommission(
+			postCommission.getId());
 
-		assertEquals(postTerminauxConcessionnaire, getTerminauxConcessionnaire);
-		assertValid(getTerminauxConcessionnaire);
+		assertEquals(postCommissionDetail, getCommissionDetail);
+		assertValid(getCommissionDetail);
 	}
 
-	protected TerminauxConcessionnaire
-			testGetConcessionnairesUidTerminauxPage_addTerminauxConcessionnaire(
-				long terminalId,
-				TerminauxConcessionnaire terminauxConcessionnaire)
+	protected CommissionDetail testGetCommission_addCommissionDetail(
+			long commissionId, CommissionDetail commissionDetail)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Terminal testGraphQLTerminal_addTerminal() throws Exception {
+	protected Commission testGraphQLCommission_addCommission()
+		throws Exception {
+
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected void assertContains(Terminal terminal, List<Terminal> terminals) {
+	protected void assertContains(
+		Commission commission, List<Commission> commissions) {
+
 		boolean contains = false;
 
-		for (Terminal item : terminals) {
-			if (equals(terminal, item)) {
+		for (Commission item : commissions) {
+			if (equals(commission, item)) {
 				contains = true;
 
 				break;
@@ -489,7 +345,7 @@ public abstract class BaseTerminalResourceTestCase {
 		}
 
 		Assert.assertTrue(
-			terminals + " does not contain " + terminal, contains);
+			commissions + " does not contain " + commission, contains);
 	}
 
 	protected void assertHttpResponseStatusCode(
@@ -500,22 +356,24 @@ public abstract class BaseTerminalResourceTestCase {
 			expectedHttpResponseStatusCode, actualHttpResponse.getStatusCode());
 	}
 
-	protected void assertEquals(Terminal terminal1, Terminal terminal2) {
+	protected void assertEquals(
+		Commission commission1, Commission commission2) {
+
 		Assert.assertTrue(
-			terminal1 + " does not equal " + terminal2,
-			equals(terminal1, terminal2));
+			commission1 + " does not equal " + commission2,
+			equals(commission1, commission2));
 	}
 
 	protected void assertEquals(
-		List<Terminal> terminals1, List<Terminal> terminals2) {
+		List<Commission> commissions1, List<Commission> commissions2) {
 
-		Assert.assertEquals(terminals1.size(), terminals2.size());
+		Assert.assertEquals(commissions1.size(), commissions2.size());
 
-		for (int i = 0; i < terminals1.size(); i++) {
-			Terminal terminal1 = terminals1.get(i);
-			Terminal terminal2 = terminals2.get(i);
+		for (int i = 0; i < commissions1.size(); i++) {
+			Commission commission1 = commissions1.get(i);
+			Commission commission2 = commissions2.get(i);
 
-			assertEquals(terminal1, terminal2);
+			assertEquals(commission1, commission2);
 		}
 	}
 
@@ -528,25 +386,24 @@ public abstract class BaseTerminalResourceTestCase {
 	}
 
 	protected void assertEquals(
-		TerminauxConcessionnaire terminauxConcessionnaire1,
-		TerminauxConcessionnaire terminauxConcessionnaire2) {
+		CommissionDetail commissionDetail1,
+		CommissionDetail commissionDetail2) {
 
 		Assert.assertTrue(
-			terminauxConcessionnaire1 + " does not equal " +
-				terminauxConcessionnaire2,
-			equals(terminauxConcessionnaire1, terminauxConcessionnaire2));
+			commissionDetail1 + " does not equal " + commissionDetail2,
+			equals(commissionDetail1, commissionDetail2));
 	}
 
 	protected void assertEqualsIgnoringOrder(
-		List<Terminal> terminals1, List<Terminal> terminals2) {
+		List<Commission> commissions1, List<Commission> commissions2) {
 
-		Assert.assertEquals(terminals1.size(), terminals2.size());
+		Assert.assertEquals(commissions1.size(), commissions2.size());
 
-		for (Terminal terminal1 : terminals1) {
+		for (Commission commission1 : commissions1) {
 			boolean contains = false;
 
-			for (Terminal terminal2 : terminals2) {
-				if (equals(terminal1, terminal2)) {
+			for (Commission commission2 : commissions2) {
+				if (equals(commission1, commission2)) {
 					contains = true;
 
 					break;
@@ -554,56 +411,30 @@ public abstract class BaseTerminalResourceTestCase {
 			}
 
 			Assert.assertTrue(
-				terminals2 + " does not contain " + terminal1, contains);
+				commissions2 + " does not contain " + commission1, contains);
 		}
 	}
 
-	protected void assertValid(Terminal terminal) throws Exception {
+	protected void assertValid(Commission commission) throws Exception {
 		boolean valid = true;
 
-		if (terminal.getId() == null) {
-			valid = false;
-		}
-
-		if (!Objects.equals(terminal.getSiteId(), testGroup.getGroupId())) {
+		if (commission.getId() == null) {
 			valid = false;
 		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
+			if (Objects.equals("code", additionalAssertFieldName)) {
+				if (commission.getCode() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("codeTerminal", additionalAssertFieldName)) {
-				if (terminal.getCodeTerminal() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"concessionnaireCode", additionalAssertFieldName)) {
-
-				if (terminal.getConcessionnaireCode() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"concessionnaireId", additionalAssertFieldName)) {
-
-				if (terminal.getConcessionnaireId() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"concessionnaireProduitCode", additionalAssertFieldName)) {
-
-				if (terminal.getConcessionnaireProduitCode() == null) {
+				if (commission.getCodeTerminal() == null) {
 					valid = false;
 				}
 
@@ -611,47 +442,47 @@ public abstract class BaseTerminalResourceTestCase {
 			}
 
 			if (Objects.equals("createdAt", additionalAssertFieldName)) {
-				if (terminal.getCreatedAt() == null) {
+				if (commission.getCreatedAt() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("produit", additionalAssertFieldName)) {
-				if (terminal.getProduit() == null) {
+			if (Objects.equals("libelle", additionalAssertFieldName)) {
+				if (commission.getLibelle() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("produitId", additionalAssertFieldName)) {
-				if (terminal.getProduitId() == null) {
+			if (Objects.equals("nombreTerminaux", additionalAssertFieldName)) {
+				if (commission.getNombreTerminaux() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("site", additionalAssertFieldName)) {
-				if (terminal.getSite() == null) {
+			if (Objects.equals("paye", additionalAssertFieldName)) {
+				if (commission.getPaye() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("solde", additionalAssertFieldName)) {
-				if (terminal.getSolde() == null) {
+			if (Objects.equals("status", additionalAssertFieldName)) {
+				if (commission.getStatus() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("updatedAt", additionalAssertFieldName)) {
-				if (terminal.getUpdatedAt() == null) {
+			if (Objects.equals("terminalId", additionalAssertFieldName)) {
+				if (commission.getTerminalId() == null) {
 					valid = false;
 				}
 
@@ -666,12 +497,12 @@ public abstract class BaseTerminalResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
-	protected void assertValid(Page<Terminal> page) {
+	protected void assertValid(Page<Commission> page) {
 		boolean valid = false;
 
-		java.util.Collection<Terminal> terminals = page.getItems();
+		java.util.Collection<Commission> commissions = page.getItems();
 
-		int size = terminals.size();
+		int size = commissions.size();
 
 		if ((page.getLastPage() > 0) && (page.getPage() > 0) &&
 			(page.getPageSize() > 0) && (page.getTotalCount() > 0) &&
@@ -729,48 +560,74 @@ public abstract class BaseTerminalResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
-	protected void assertValid(
-		TerminauxConcessionnaire terminauxConcessionnaire) {
-
+	protected void assertValid(CommissionDetail commissionDetail) {
 		boolean valid = true;
 
+		if (commissionDetail.getId() == null) {
+			valid = false;
+		}
+
 		for (String additionalAssertFieldName :
-				getAdditionalTerminauxConcessionnaireAssertFieldNames()) {
+				getAdditionalCommissionDetailAssertFieldNames()) {
 
 			if (Objects.equals("chiffreAffaires", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getChiffreAffaires() == null) {
+				if (commissionDetail.getChiffreAffaires() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("soldeTotal", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getSoldeTotal() == null) {
+			if (Objects.equals("codeTerminal", additionalAssertFieldName)) {
+				if (commissionDetail.getCodeTerminal() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("terminalDetails", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getTerminalDetails() == null) {
+			if (Objects.equals("commissionVersee", additionalAssertFieldName)) {
+				if (commissionDetail.getCommissionVersee() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("totalOperations", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getTotalOperations() == null) {
+			if (Objects.equals("compteReception", additionalAssertFieldName)) {
+				if (commissionDetail.getCompteReception() == null) {
 					valid = false;
 				}
 
 				continue;
 			}
 
-			if (Objects.equals("totalPaiements", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getTotalPaiements() == null) {
+			if (Objects.equals("dateVersement", additionalAssertFieldName)) {
+				if (commissionDetail.getDateVersement() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("paye", additionalAssertFieldName)) {
+				if (commissionDetail.getPaye() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("status", additionalAssertFieldName)) {
+				if (commissionDetail.getStatus() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("typeVersement", additionalAssertFieldName)) {
+				if (commissionDetail.getTypeVersement() == null) {
 					valid = false;
 				}
 
@@ -793,18 +650,16 @@ public abstract class BaseTerminalResourceTestCase {
 		return new String[0];
 	}
 
-	protected String[] getAdditionalTerminauxConcessionnaireAssertFieldNames() {
+	protected String[] getAdditionalCommissionDetailAssertFieldNames() {
 		return new String[0];
 	}
 
 	protected List<GraphQLField> getGraphQLFields() throws Exception {
 		List<GraphQLField> graphQLFields = new ArrayList<>();
 
-		graphQLFields.add(new GraphQLField("siteId"));
-
 		for (java.lang.reflect.Field field :
 				getDeclaredFields(
-					com.df.lonis.ventesrest.dto.v1_0.Terminal.class)) {
+					com.df.lonis.ventesrest.dto.v1_0.Commission.class)) {
 
 			if (!ArrayUtil.contains(
 					getAdditionalAssertFieldNames(), field.getName())) {
@@ -852,61 +707,28 @@ public abstract class BaseTerminalResourceTestCase {
 		return new String[0];
 	}
 
-	protected boolean equals(Terminal terminal1, Terminal terminal2) {
-		if (terminal1 == terminal2) {
+	protected boolean equals(Commission commission1, Commission commission2) {
+		if (commission1 == commission2) {
 			return true;
-		}
-
-		if (!Objects.equals(terminal1.getSiteId(), terminal2.getSiteId())) {
-			return false;
 		}
 
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
+			if (Objects.equals("code", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						commission1.getCode(), commission2.getCode())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("codeTerminal", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminal1.getCodeTerminal(),
-						terminal2.getCodeTerminal())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"concessionnaireCode", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						terminal1.getConcessionnaireCode(),
-						terminal2.getConcessionnaireCode())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"concessionnaireId", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						terminal1.getConcessionnaireId(),
-						terminal2.getConcessionnaireId())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals(
-					"concessionnaireProduitCode", additionalAssertFieldName)) {
-
-				if (!Objects.deepEquals(
-						terminal1.getConcessionnaireProduitCode(),
-						terminal2.getConcessionnaireProduitCode())) {
+						commission1.getCodeTerminal(),
+						commission2.getCodeTerminal())) {
 
 					return false;
 				}
@@ -916,7 +738,8 @@ public abstract class BaseTerminalResourceTestCase {
 
 			if (Objects.equals("createdAt", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminal1.getCreatedAt(), terminal2.getCreatedAt())) {
+						commission1.getCreatedAt(),
+						commission2.getCreatedAt())) {
 
 					return false;
 				}
@@ -925,16 +748,8 @@ public abstract class BaseTerminalResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(terminal1.getId(), terminal2.getId())) {
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("produit", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminal1.getProduit(), terminal2.getProduit())) {
+						commission1.getId(), commission2.getId())) {
 
 					return false;
 				}
@@ -942,9 +757,9 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("produitId", additionalAssertFieldName)) {
+			if (Objects.equals("libelle", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminal1.getProduitId(), terminal2.getProduitId())) {
+						commission1.getLibelle(), commission2.getLibelle())) {
 
 					return false;
 				}
@@ -952,9 +767,10 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("site", additionalAssertFieldName)) {
+			if (Objects.equals("nombreTerminaux", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminal1.getSite(), terminal2.getSite())) {
+						commission1.getNombreTerminaux(),
+						commission2.getNombreTerminaux())) {
 
 					return false;
 				}
@@ -962,9 +778,9 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("solde", additionalAssertFieldName)) {
+			if (Objects.equals("paye", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminal1.getSolde(), terminal2.getSolde())) {
+						commission1.getPaye(), commission2.getPaye())) {
 
 					return false;
 				}
@@ -972,9 +788,20 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("updatedAt", additionalAssertFieldName)) {
+			if (Objects.equals("status", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminal1.getUpdatedAt(), terminal2.getUpdatedAt())) {
+						commission1.getStatus(), commission2.getStatus())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("terminalId", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						commission1.getTerminalId(),
+						commission2.getTerminalId())) {
 
 					return false;
 				}
@@ -1079,20 +906,20 @@ public abstract class BaseTerminalResourceTestCase {
 	}
 
 	protected boolean equals(
-		TerminauxConcessionnaire terminauxConcessionnaire1,
-		TerminauxConcessionnaire terminauxConcessionnaire2) {
+		CommissionDetail commissionDetail1,
+		CommissionDetail commissionDetail2) {
 
-		if (terminauxConcessionnaire1 == terminauxConcessionnaire2) {
+		if (commissionDetail1 == commissionDetail2) {
 			return true;
 		}
 
 		for (String additionalAssertFieldName :
-				getAdditionalTerminauxConcessionnaireAssertFieldNames()) {
+				getAdditionalCommissionDetailAssertFieldNames()) {
 
 			if (Objects.equals("chiffreAffaires", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getChiffreAffaires(),
-						terminauxConcessionnaire2.getChiffreAffaires())) {
+						commissionDetail1.getChiffreAffaires(),
+						commissionDetail2.getChiffreAffaires())) {
 
 					return false;
 				}
@@ -1100,10 +927,10 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("soldeTotal", additionalAssertFieldName)) {
+			if (Objects.equals("codeTerminal", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getSoldeTotal(),
-						terminauxConcessionnaire2.getSoldeTotal())) {
+						commissionDetail1.getCodeTerminal(),
+						commissionDetail2.getCodeTerminal())) {
 
 					return false;
 				}
@@ -1111,10 +938,10 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("terminalDetails", additionalAssertFieldName)) {
+			if (Objects.equals("commissionVersee", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getTerminalDetails(),
-						terminauxConcessionnaire2.getTerminalDetails())) {
+						commissionDetail1.getCommissionVersee(),
+						commissionDetail2.getCommissionVersee())) {
 
 					return false;
 				}
@@ -1122,10 +949,10 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("totalOperations", additionalAssertFieldName)) {
+			if (Objects.equals("compteReception", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getTotalOperations(),
-						terminauxConcessionnaire2.getTotalOperations())) {
+						commissionDetail1.getCompteReception(),
+						commissionDetail2.getCompteReception())) {
 
 					return false;
 				}
@@ -1133,10 +960,53 @@ public abstract class BaseTerminalResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("totalPaiements", additionalAssertFieldName)) {
+			if (Objects.equals("dateVersement", additionalAssertFieldName)) {
 				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getTotalPaiements(),
-						terminauxConcessionnaire2.getTotalPaiements())) {
+						commissionDetail1.getDateVersement(),
+						commissionDetail2.getDateVersement())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						commissionDetail1.getId(), commissionDetail2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("paye", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						commissionDetail1.getPaye(),
+						commissionDetail2.getPaye())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("status", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						commissionDetail1.getStatus(),
+						commissionDetail2.getStatus())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("typeVersement", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						commissionDetail1.getTypeVersement(),
+						commissionDetail2.getTypeVersement())) {
 
 					return false;
 				}
@@ -1168,13 +1038,13 @@ public abstract class BaseTerminalResourceTestCase {
 	protected java.util.Collection<EntityField> getEntityFields()
 		throws Exception {
 
-		if (!(_terminalResource instanceof EntityModelResource)) {
+		if (!(_commissionResource instanceof EntityModelResource)) {
 			throw new UnsupportedOperationException(
 				"Resource is not an instance of EntityModelResource");
 		}
 
 		EntityModelResource entityModelResource =
-			(EntityModelResource)_terminalResource;
+			(EntityModelResource)_commissionResource;
 
 		EntityModel entityModel = entityModelResource.getEntityModel(
 			new MultivaluedHashMap());
@@ -1203,7 +1073,7 @@ public abstract class BaseTerminalResourceTestCase {
 	}
 
 	protected String getFilterString(
-		EntityField entityField, String operator, Terminal terminal) {
+		EntityField entityField, String operator, Commission commission) {
 
 		StringBundler sb = new StringBundler();
 
@@ -1215,30 +1085,17 @@ public abstract class BaseTerminalResourceTestCase {
 		sb.append(operator);
 		sb.append(" ");
 
+		if (entityFieldName.equals("code")) {
+			sb.append("'");
+			sb.append(String.valueOf(commission.getCode()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
 		if (entityFieldName.equals("codeTerminal")) {
 			sb.append("'");
-			sb.append(String.valueOf(terminal.getCodeTerminal()));
-			sb.append("'");
-
-			return sb.toString();
-		}
-
-		if (entityFieldName.equals("concessionnaireCode")) {
-			sb.append("'");
-			sb.append(String.valueOf(terminal.getConcessionnaireCode()));
-			sb.append("'");
-
-			return sb.toString();
-		}
-
-		if (entityFieldName.equals("concessionnaireId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("concessionnaireProduitCode")) {
-			sb.append("'");
-			sb.append(String.valueOf(terminal.getConcessionnaireProduitCode()));
+			sb.append(String.valueOf(commission.getCodeTerminal()));
 			sb.append("'");
 
 			return sb.toString();
@@ -1253,13 +1110,13 @@ public abstract class BaseTerminalResourceTestCase {
 				sb.append(" gt ");
 				sb.append(
 					_dateFormat.format(
-						DateUtils.addSeconds(terminal.getCreatedAt(), -2)));
+						DateUtils.addSeconds(commission.getCreatedAt(), -2)));
 				sb.append(" and ");
 				sb.append(entityFieldName);
 				sb.append(" lt ");
 				sb.append(
 					_dateFormat.format(
-						DateUtils.addSeconds(terminal.getCreatedAt(), 2)));
+						DateUtils.addSeconds(commission.getCreatedAt(), 2)));
 				sb.append(")");
 			}
 			else {
@@ -1269,7 +1126,7 @@ public abstract class BaseTerminalResourceTestCase {
 				sb.append(operator);
 				sb.append(" ");
 
-				sb.append(_dateFormat.format(terminal.getCreatedAt()));
+				sb.append(_dateFormat.format(commission.getCreatedAt()));
 			}
 
 			return sb.toString();
@@ -1280,60 +1137,35 @@ public abstract class BaseTerminalResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
-		if (entityFieldName.equals("produit")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("produitId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("site")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("siteId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("solde")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("updatedAt")) {
-			if (operator.equals("between")) {
-				sb = new StringBundler();
-
-				sb.append("(");
-				sb.append(entityFieldName);
-				sb.append(" gt ");
-				sb.append(
-					_dateFormat.format(
-						DateUtils.addSeconds(terminal.getUpdatedAt(), -2)));
-				sb.append(" and ");
-				sb.append(entityFieldName);
-				sb.append(" lt ");
-				sb.append(
-					_dateFormat.format(
-						DateUtils.addSeconds(terminal.getUpdatedAt(), 2)));
-				sb.append(")");
-			}
-			else {
-				sb.append(entityFieldName);
-
-				sb.append(" ");
-				sb.append(operator);
-				sb.append(" ");
-
-				sb.append(_dateFormat.format(terminal.getUpdatedAt()));
-			}
+		if (entityFieldName.equals("libelle")) {
+			sb.append("'");
+			sb.append(String.valueOf(commission.getLibelle()));
+			sb.append("'");
 
 			return sb.toString();
+		}
+
+		if (entityFieldName.equals("nombreTerminaux")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("paye")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("status")) {
+			sb.append("'");
+			sb.append(String.valueOf(commission.getStatus()));
+			sb.append("'");
+
+			return sb.toString();
+		}
+
+		if (entityFieldName.equals("terminalId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
 		}
 
 		throw new IllegalArgumentException(
@@ -1377,36 +1209,31 @@ public abstract class BaseTerminalResourceTestCase {
 			invoke(queryGraphQLField.toString()));
 	}
 
-	protected Terminal randomTerminal() throws Exception {
-		return new Terminal() {
+	protected Commission randomCommission() throws Exception {
+		return new Commission() {
 			{
+				code = StringUtil.toLowerCase(RandomTestUtil.randomString());
 				codeTerminal = StringUtil.toLowerCase(
-					RandomTestUtil.randomString());
-				concessionnaireCode = StringUtil.toLowerCase(
-					RandomTestUtil.randomString());
-				concessionnaireId = RandomTestUtil.randomLong();
-				concessionnaireProduitCode = StringUtil.toLowerCase(
 					RandomTestUtil.randomString());
 				createdAt = RandomTestUtil.nextDate();
 				id = RandomTestUtil.randomLong();
-				produitId = RandomTestUtil.randomLong();
-				siteId = testGroup.getGroupId();
-				solde = RandomTestUtil.randomLong();
-				updatedAt = RandomTestUtil.nextDate();
+				libelle = StringUtil.toLowerCase(RandomTestUtil.randomString());
+				nombreTerminaux = RandomTestUtil.randomInt();
+				paye = RandomTestUtil.randomBoolean();
+				status = StringUtil.toLowerCase(RandomTestUtil.randomString());
+				terminalId = RandomTestUtil.randomLong();
 			}
 		};
 	}
 
-	protected Terminal randomIrrelevantTerminal() throws Exception {
-		Terminal randomIrrelevantTerminal = randomTerminal();
+	protected Commission randomIrrelevantCommission() throws Exception {
+		Commission randomIrrelevantCommission = randomCommission();
 
-		randomIrrelevantTerminal.setSiteId(irrelevantGroup.getGroupId());
-
-		return randomIrrelevantTerminal;
+		return randomIrrelevantCommission;
 	}
 
-	protected Terminal randomPatchTerminal() throws Exception {
-		return randomTerminal();
+	protected Commission randomPatchCommission() throws Exception {
+		return randomCommission();
 	}
 
 	protected ExportResponse randomExportResponse() throws Exception {
@@ -1419,20 +1246,23 @@ public abstract class BaseTerminalResourceTestCase {
 		};
 	}
 
-	protected TerminauxConcessionnaire randomTerminauxConcessionnaire()
-		throws Exception {
-
-		return new TerminauxConcessionnaire() {
+	protected CommissionDetail randomCommissionDetail() throws Exception {
+		return new CommissionDetail() {
 			{
 				chiffreAffaires = RandomTestUtil.randomLong();
-				soldeTotal = RandomTestUtil.randomLong();
-				totalOperations = RandomTestUtil.randomLong();
-				totalPaiements = RandomTestUtil.randomLong();
+				codeTerminal = RandomTestUtil.randomString();
+				commissionVersee = RandomTestUtil.randomLong();
+				compteReception = RandomTestUtil.randomString();
+				dateVersement = RandomTestUtil.nextDate();
+				id = RandomTestUtil.randomLong();
+				paye = RandomTestUtil.randomBoolean();
+				status = RandomTestUtil.randomString();
+				typeVersement = RandomTestUtil.randomString();
 			}
 		};
 	}
 
-	protected TerminalResource terminalResource;
+	protected CommissionResource commissionResource;
 	protected Group irrelevantGroup;
 	protected Company testCompany;
 	protected Group testGroup;
@@ -1509,7 +1339,7 @@ public abstract class BaseTerminalResourceTestCase {
 	}
 
 	private static final com.liferay.portal.kernel.log.Log _log =
-		LogFactoryUtil.getLog(BaseTerminalResourceTestCase.class);
+		LogFactoryUtil.getLog(BaseCommissionResourceTestCase.class);
 
 	private static BeanUtilsBean _beanUtilsBean = new BeanUtilsBean() {
 
@@ -1526,7 +1356,7 @@ public abstract class BaseTerminalResourceTestCase {
 	private static DateFormat _dateFormat;
 
 	@Inject
-	private com.df.lonis.ventesrest.resource.v1_0.TerminalResource
-		_terminalResource;
+	private com.df.lonis.ventesrest.resource.v1_0.CommissionResource
+		_commissionResource;
 
 }
