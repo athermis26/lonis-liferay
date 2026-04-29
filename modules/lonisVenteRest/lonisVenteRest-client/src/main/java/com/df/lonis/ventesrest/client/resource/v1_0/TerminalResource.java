@@ -2,14 +2,12 @@ package com.df.lonis.ventesrest.client.resource.v1_0;
 
 import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.client.dto.v1_0.Terminal;
-import com.df.lonis.ventesrest.client.dto.v1_0.TerminauxConcessionnaire;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
 import com.df.lonis.ventesrest.client.problem.Problem;
 import com.df.lonis.ventesrest.client.serdes.v1_0.ExportResponseSerDes;
 import com.df.lonis.ventesrest.client.serdes.v1_0.TerminalSerDes;
-import com.df.lonis.ventesrest.client.serdes.v1_0.TerminauxConcessionnaireSerDes;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -46,7 +44,7 @@ public interface TerminalResource {
 			String format)
 		throws Exception;
 
-	public TerminauxConcessionnaire getConcessionnaireTerminaux(
+	public Page<Terminal> getConcessionnaireTerminaux(
 			Long id, String concessionnaireProduitCode, String dateDebut,
 			String dateFin)
 		throws Exception;
@@ -310,7 +308,7 @@ public interface TerminalResource {
 			return httpInvoker.invoke();
 		}
 
-		public TerminauxConcessionnaire getConcessionnaireTerminaux(
+		public Page<Terminal> getConcessionnaireTerminaux(
 				Long id, String concessionnaireProduitCode, String dateDebut,
 				String dateFin)
 			throws Exception {
@@ -345,7 +343,7 @@ public interface TerminalResource {
 			}
 
 			try {
-				return TerminauxConcessionnaireSerDes.toDTO(content);
+				return Page.of(content, TerminalSerDes::toDTO);
 			}
 			catch (Exception e) {
 				_logger.log(

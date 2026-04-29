@@ -414,10 +414,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TerminauxConcessionnaire"
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
             application/xml:
               schema:
-                $ref: "#/components/schemas/TerminauxConcessionnaire"
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
           description: "Terminaux du concessionnaire avec solde total"
 
   # ─────────────────────────────────────────────

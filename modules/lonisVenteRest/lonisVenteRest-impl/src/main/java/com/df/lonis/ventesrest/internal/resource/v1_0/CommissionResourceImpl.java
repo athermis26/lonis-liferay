@@ -7,6 +7,7 @@ import com.df.lonis.ventesrest.resource.v1_0.CommissionResource;
 import com.df.lonis.ventesservice.model.Concessionnaire;
 import com.df.lonis.ventesservice.service.CommissionLocalService;
 import com.df.lonis.ventesservice.service.ConcessionnaireLocalService;
+import com.df.lonis.ventesservice.service.TerminalLocalService;
 import com.liferay.petra.function.UnsafeBiConsumer;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.vulcan.pagination.Page;
@@ -44,14 +45,13 @@ public class CommissionResourceImpl extends BaseCommissionResourceImpl {
 	}
 
 	@Override
-	public CommissionDetail getCommission(Long id) throws Exception {
+	public CommissionDetail getCommission(Long id) {
 		com.df.lonis.ventesservice.model.Commission commission = _commissionLocalService.fetchCommission(id);
 
 		if (commission == null) {
 			throw new NotFoundException("Commission introuvable: " + id);
 		}
-
-//		return super.getCommission(id);
+		
 		return _toDtoDetail(commission);
 	}
 

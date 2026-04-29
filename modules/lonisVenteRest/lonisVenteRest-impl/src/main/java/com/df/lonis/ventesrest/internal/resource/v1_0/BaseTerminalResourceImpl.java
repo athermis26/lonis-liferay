@@ -3,7 +3,6 @@ package com.df.lonis.ventesrest.internal.resource.v1_0;
 import com.df.lonis.ventesrest.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.dto.v1_0.Operation;
 import com.df.lonis.ventesrest.dto.v1_0.Terminal;
-import com.df.lonis.ventesrest.dto.v1_0.TerminauxConcessionnaire;
 import com.df.lonis.ventesrest.resource.v1_0.TerminalResource;
 
 import com.liferay.petra.function.UnsafeFunction;
@@ -175,7 +174,7 @@ public abstract class BaseTerminalResourceImpl
 	@javax.ws.rs.Path("/concessionnaires/{id}/terminaux")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public TerminauxConcessionnaire getConcessionnaireTerminaux(
+	public Page<Terminal> getConcessionnaireTerminaux(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("id")
 			Long id,
@@ -190,7 +189,7 @@ public abstract class BaseTerminalResourceImpl
 			String dateFin)
 		throws Exception {
 
-		return new TerminauxConcessionnaire();
+		return Page.of(Collections.emptyList());
 	}
 
 	@Override

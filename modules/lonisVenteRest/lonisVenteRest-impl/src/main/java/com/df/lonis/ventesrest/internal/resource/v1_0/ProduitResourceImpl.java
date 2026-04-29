@@ -1,6 +1,7 @@
 package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Produit;
+import com.df.lonis.ventesrest.internal.resource.v1_0.mapper.ProduitMapper;
 import com.df.lonis.ventesrest.resource.v1_0.ProduitResource;
 
 import com.df.lonis.ventesservice.service.ProduitLocalService;
@@ -28,7 +29,7 @@ public class ProduitResourceImpl extends BaseProduitResourceImpl {
         List<com.df.lonis.ventesservice.model.Produit> entries =_produitLocalService.getProduits(-1, -1);
 
 		return Page.of(
-			entries.stream().map(this::_toDto).collect(Collectors.toList())
+			entries.stream().map(_produitMapper::toDto).collect(Collectors.toList())
 		);
 	}
 
@@ -37,18 +38,8 @@ public class ProduitResourceImpl extends BaseProduitResourceImpl {
 
 	}
 
-	private Produit _toDto(com.df.lonis.ventesservice.model.Produit entry) {
-		Produit dto = new Produit();
-		dto.setId(entry.getId());
-		dto.setCode(entry.getCode());
-		dto.setAbreviation(entry.getAbreviation());
-		dto.setLibelle(entry.getLibelle());
-		dto.setActive(entry.isActive());
-		dto.setCreatedAt(entry.getCreatedAt());
-		dto.setUpdatedAt(entry.getUpdatedAt());
-
-		return dto;
-	}
+	@Reference
+	private ProduitMapper _produitMapper;
 
 	@Reference
 	private ProduitLocalService _produitLocalService;

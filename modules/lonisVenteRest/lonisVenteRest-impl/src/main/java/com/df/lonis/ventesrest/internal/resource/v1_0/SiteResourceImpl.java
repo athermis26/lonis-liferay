@@ -1,6 +1,7 @@
 package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Site;
+import com.df.lonis.ventesrest.internal.resource.v1_0.mapper.SiteMapper;
 import com.df.lonis.ventesrest.resource.v1_0.SiteResource;
 
 import com.df.lonis.ventesservice.service.SiteLocalService;
@@ -31,7 +32,7 @@ public class SiteResourceImpl extends BaseSiteResourceImpl {
 		List<com.df.lonis.ventesservice.model.Site> entries = _siteLocalService.getSites(pagination.getStartPosition(), pagination.getEndPosition());
 
 		return Page.of(
-				entries.stream().map(this::_toDto).collect(java.util.stream.Collectors.toList()), pagination, _siteLocalService.getSitesCount()
+				entries.stream().map(_siteMapper::toDto).collect(java.util.stream.Collectors.toList()), pagination, _siteLocalService.getSitesCount()
 		);
 	}
 
@@ -39,7 +40,7 @@ public class SiteResourceImpl extends BaseSiteResourceImpl {
 	public Page<Site> getAllSites() throws Exception {
 		List<com.df.lonis.ventesservice.model.Site> entries = _siteLocalService.getSites(-1, -1);
 		return Page.of(
-				entries.stream().map(this::_toDto).collect(java.util.stream.Collectors.toList())
+				entries.stream().map(_siteMapper::toDto).collect(java.util.stream.Collectors.toList())
 		);
 	}
 
@@ -48,20 +49,8 @@ public class SiteResourceImpl extends BaseSiteResourceImpl {
 
 	}
 
-	private Site _toDto(com.df.lonis.ventesservice.model.Site entry) {
-		Site dto = new Site();
-		dto.setId(entry.getId());
-		dto.setCode(entry.getCode());
-		dto.setLibelle(entry.getLibelle());
-		dto.setCodeProvince(entry.getCodeProvinov());
-		dto.setParentId(entry.getParentId());
-		dto.setStatus(entry.getStatus());
-		dto.setType(entry.getType());
-		dto.setCreatedAt(entry.getCreatedAt());
-		dto.setUpdatedAt(entry.getUpdatedAt());
-
-		return dto;
-	}
+	@Reference
+	private SiteMapper _siteMapper;
 
 	@Reference
 	private SiteLocalService _siteLocalService;

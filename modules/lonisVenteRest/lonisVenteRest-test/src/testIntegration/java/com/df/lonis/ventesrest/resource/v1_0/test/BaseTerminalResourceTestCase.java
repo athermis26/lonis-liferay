@@ -2,7 +2,6 @@ package com.df.lonis.ventesrest.resource.v1_0.test;
 
 import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.client.dto.v1_0.Terminal;
-import com.df.lonis.ventesrest.client.dto.v1_0.TerminauxConcessionnaire;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
@@ -426,6 +425,69 @@ public abstract class BaseTerminalResourceTestCase {
 			"This method needs to be implemented");
 	}
 
+	@Test
+	public void testGetConcessionnaireTerminaux() throws Exception {
+		Long id = testGetConcessionnaireTerminaux_getId();
+		Long irrelevantId = testGetConcessionnaireTerminaux_getIrrelevantId();
+
+		Page<Terminal> page = terminalResource.getConcessionnaireTerminaux(
+			id, RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			RandomTestUtil.randomString());
+
+		Assert.assertEquals(0, page.getTotalCount());
+
+		if (irrelevantId != null) {
+			Terminal irrelevantTerminal =
+				testGetConcessionnaireTerminaux_addTerminal(
+					irrelevantId, randomIrrelevantTerminal());
+
+			page = terminalResource.getConcessionnaireTerminaux(
+				irrelevantId, null, null, null);
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantTerminal),
+				(List<Terminal>)page.getItems());
+			assertValid(page);
+		}
+
+		Terminal terminal1 = testGetConcessionnaireTerminaux_addTerminal(
+			id, randomTerminal());
+
+		Terminal terminal2 = testGetConcessionnaireTerminaux_addTerminal(
+			id, randomTerminal());
+
+		page = terminalResource.getConcessionnaireTerminaux(
+			id, null, null, null);
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(terminal1, terminal2),
+			(List<Terminal>)page.getItems());
+		assertValid(page);
+	}
+
+	protected Terminal testGetConcessionnaireTerminaux_addTerminal(
+			Long id, Terminal terminal)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetConcessionnaireTerminaux_getId() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetConcessionnaireTerminaux_getIrrelevantId()
+		throws Exception {
+
+		return null;
+	}
+
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
@@ -446,31 +508,6 @@ public abstract class BaseTerminalResourceTestCase {
 
 	protected ExportResponse testGetTerminauxExport_addExportResponse(
 			long terminalId, ExportResponse exportResponse)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	@Test
-	public void testGetConcessionnaireTerminaux() throws Exception {
-		Terminal postTerminal = testGetTerminal_addTerminal();
-
-		TerminauxConcessionnaire postTerminauxConcessionnaire =
-			testGetConcessionnaireTerminaux_addTerminauxConcessionnaire(
-				postTerminal.getId(), randomTerminauxConcessionnaire());
-
-		TerminauxConcessionnaire getTerminauxConcessionnaire =
-			terminalResource.getConcessionnaireTerminaux(postTerminal.getId());
-
-		assertEquals(postTerminauxConcessionnaire, getTerminauxConcessionnaire);
-		assertValid(getTerminauxConcessionnaire);
-	}
-
-	protected TerminauxConcessionnaire
-			testGetConcessionnaireTerminaux_addTerminauxConcessionnaire(
-				long terminalId,
-				TerminauxConcessionnaire terminauxConcessionnaire)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -530,16 +567,6 @@ public abstract class BaseTerminalResourceTestCase {
 		Assert.assertTrue(
 			exportResponse1 + " does not equal " + exportResponse2,
 			equals(exportResponse1, exportResponse2));
-	}
-
-	protected void assertEquals(
-		TerminauxConcessionnaire terminauxConcessionnaire1,
-		TerminauxConcessionnaire terminauxConcessionnaire2) {
-
-		Assert.assertTrue(
-			terminauxConcessionnaire1 + " does not equal " +
-				terminauxConcessionnaire2,
-			equals(terminauxConcessionnaire1, terminauxConcessionnaire2));
 	}
 
 	protected void assertEqualsIgnoringOrder(
@@ -760,71 +787,11 @@ public abstract class BaseTerminalResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
-	protected void assertValid(
-		TerminauxConcessionnaire terminauxConcessionnaire) {
-
-		boolean valid = true;
-
-		for (String additionalAssertFieldName :
-				getAdditionalTerminauxConcessionnaireAssertFieldNames()) {
-
-			if (Objects.equals("chiffreAffaires", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getChiffreAffaires() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("soldeTotal", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getSoldeTotal() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("terminalDetails", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getTerminalDetails() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("totalOperations", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getTotalOperations() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("totalPaiements", additionalAssertFieldName)) {
-				if (terminauxConcessionnaire.getTotalPaiements() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			throw new IllegalArgumentException(
-				"Invalid additional assert field name " +
-					additionalAssertFieldName);
-		}
-
-		Assert.assertTrue(valid);
-	}
-
 	protected String[] getAdditionalAssertFieldNames() {
 		return new String[0];
 	}
 
 	protected String[] getAdditionalExportResponseAssertFieldNames() {
-		return new String[0];
-	}
-
-	protected String[] getAdditionalTerminauxConcessionnaireAssertFieldNames() {
 		return new String[0];
 	}
 
@@ -1144,80 +1111,6 @@ public abstract class BaseTerminalResourceTestCase {
 		return true;
 	}
 
-	protected boolean equals(
-		TerminauxConcessionnaire terminauxConcessionnaire1,
-		TerminauxConcessionnaire terminauxConcessionnaire2) {
-
-		if (terminauxConcessionnaire1 == terminauxConcessionnaire2) {
-			return true;
-		}
-
-		for (String additionalAssertFieldName :
-				getAdditionalTerminauxConcessionnaireAssertFieldNames()) {
-
-			if (Objects.equals("chiffreAffaires", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getChiffreAffaires(),
-						terminauxConcessionnaire2.getChiffreAffaires())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("soldeTotal", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getSoldeTotal(),
-						terminauxConcessionnaire2.getSoldeTotal())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("terminalDetails", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getTerminalDetails(),
-						terminauxConcessionnaire2.getTerminalDetails())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("totalOperations", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getTotalOperations(),
-						terminauxConcessionnaire2.getTotalOperations())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("totalPaiements", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						terminauxConcessionnaire1.getTotalPaiements(),
-						terminauxConcessionnaire2.getTotalPaiements())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			throw new IllegalArgumentException(
-				"Invalid additional assert field name " +
-					additionalAssertFieldName);
-		}
-
-		return true;
-	}
-
 	protected java.lang.reflect.Field[] getDeclaredFields(Class clazz)
 		throws Exception {
 
@@ -1511,19 +1404,6 @@ public abstract class BaseTerminalResourceTestCase {
 				downloadUrl = RandomTestUtil.randomString();
 				expiresAt = RandomTestUtil.nextDate();
 				fileName = RandomTestUtil.randomString();
-			}
-		};
-	}
-
-	protected TerminauxConcessionnaire randomTerminauxConcessionnaire()
-		throws Exception {
-
-		return new TerminauxConcessionnaire() {
-			{
-				chiffreAffaires = RandomTestUtil.randomLong();
-				soldeTotal = RandomTestUtil.randomLong();
-				totalOperations = RandomTestUtil.randomLong();
-				totalPaiements = RandomTestUtil.randomLong();
 			}
 		};
 	}

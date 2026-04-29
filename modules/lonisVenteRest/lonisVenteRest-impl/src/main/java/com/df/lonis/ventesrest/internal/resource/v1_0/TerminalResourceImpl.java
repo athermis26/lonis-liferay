@@ -1,6 +1,8 @@
 package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Terminal;
+import com.df.lonis.ventesrest.dto.v1_0.TerminauxConcessionnaire;
+import com.df.lonis.ventesrest.internal.resource.v1_0.mapper.TerminalMapper;
 import com.df.lonis.ventesrest.resource.v1_0.TerminalResource;
 import com.df.lonis.ventesservice.model.*;
 import com.df.lonis.ventesservice.service.*;
@@ -14,8 +16,10 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ServiceScope;
 
+import javax.ws.rs.NotFoundException;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author HP
@@ -31,7 +35,23 @@ public class TerminalResourceImpl extends BaseTerminalResourceImpl {
 		List<com.df.lonis.ventesservice.model.Terminal> entries = _terminalLocalService.getTerminals(pagination.getStartPosition(), pagination.getEndPosition());
 
 		return Page.of(
-				entries.stream().map(this::_toDto).collect(java.util.stream.Collectors.toList()), pagination, _terminalLocalService.getTerminalsCount()
+				entries.stream().map(_terminalMapper::toDto).collect(java.util.stream.Collectors.toList()), pagination, _terminalLocalService.getTerminalsCount()
+		);
+	}
+
+	@Override
+	public Page<Terminal> getConcessionnaireTerminaux(Long id, String concessionnaireProduitCode, String dateDebut, String dateFin) {
+
+		com.df.lonis.ventesservice.model.Concessionnaire c = _concessionnaireLocalService.fetchConcessionnaire(id);
+
+		if (c == null) {
+			throw new NotFoundException("Concessionnaire introuvable: " + id);
+		}
+
+		List<com.df.lonis.ventesservice.model.Terminal> entries = _terminalLocalService.findByConcessionnaireId(id);
+
+		return Page.of(
+				entries.stream().map(_terminalMapper::toDto).collect(Collectors.toList())
 		);
 	}
 
@@ -40,60 +60,12 @@ public class TerminalResourceImpl extends BaseTerminalResourceImpl {
 
 	}
 
-	private Terminal _toDto(com.df.lonis.ventesservice.model.Terminal entry) {
-		Terminal dto = new Terminal();
-		dto.setId(entry.getId());
-		dto.setCodeTerminal(entry.getCodeTerminal());
-		dto.setConcessionnaireCode(entry.getConcessionnaireCode());
-		dto.setConcessionnaireId(entry.getConcessionnaireId());
-//		dto.setProduitId(entry.getProduitId());
-//		dto.setConcessionnaireProduitCode(entry.getConcessionnaireProduitCode());
-//		dto.setSiteId(entry.getSiteId());
-		dto.setCreatedAt(entry.getCreatedAt());
-		dto.setUpdatedAt(entry.getUpdatedAt());
-
-		long soldeTotal = 0L;
-
-		List<ChiffreAffaires> cas = _chiffreAffairesLocalService.findByTerminalId(entry.getId());
-
-		Concessionnaire c = _concessionnaireLocalService.fetchConcessionnaire(entry.getConcessionnaireId());
-
-		ConcessionnaireProduit cp = _concessionnaireProduitLocalService.findByCode(entry.getConcessionnaireProduitCode());
-
-		Produit p = _produitLocalService.fetchProduit(cp.getProduitId());
-
-		Site s = _siteLocalService.fetchSite(entry.getSiteId());
-
-		for (ChiffreAffaires ca : cas) {
-			soldeTotal += ca.getBalance();
-		}
-
-		dto.setConcessionnaireNomPrenom(c.getNom() + " " + c.getPrenoms());
-
-		dto.setProduitType(p.getLibelle());
-
-		dto.setSiteLibelle(s.getLibelle());
-
-		dto.setSolde(soldeTotal);
-
-		return dto;
-	}
+	@Reference
+	private TerminalMapper _terminalMapper;
 
 	@Reference
 	private TerminalLocalService _terminalLocalService;
 
 	@Reference
-	private ChiffreAffairesLocalService _chiffreAffairesLocalService;
-
-	@Reference
-	private ConcessionnaireProduitLocalService _concessionnaireProduitLocalService;
-
-	@Reference
 	private ConcessionnaireLocalService _concessionnaireLocalService;
-
-	@Reference
-	private ProduitLocalService _produitLocalService;
-
-	@Reference
-	private SiteLocalService _siteLocalService;
 }

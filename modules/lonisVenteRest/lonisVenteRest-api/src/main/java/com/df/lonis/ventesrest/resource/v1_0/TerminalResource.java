@@ -2,7 +2,6 @@ package com.df.lonis.ventesrest.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.dto.v1_0.Terminal;
-import com.df.lonis.ventesrest.dto.v1_0.TerminauxConcessionnaire;
 
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
@@ -52,7 +51,7 @@ public interface TerminalResource {
 
 	public ExportResponse getTerminauxExport(String format) throws Exception;
 
-	public TerminauxConcessionnaire getConcessionnaireTerminaux(
+	public Page<Terminal> getConcessionnaireTerminaux(
 			Long id, String concessionnaireProduitCode, String dateDebut,
 			String dateFin)
 		throws Exception;
