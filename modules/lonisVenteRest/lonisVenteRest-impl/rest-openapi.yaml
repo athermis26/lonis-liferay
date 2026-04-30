@@ -7,6 +7,7 @@ info:
   version: v1.0
 openapi: 3.0.1
 
+
 paths:
   # ─────────────────────────────────────────────
   # DASHBOARD
@@ -75,6 +76,29 @@ paths:
                   $ref: "#/components/schemas/Concessionnaire"
                 type: array
           description: "Liste paginée"
+  /concessionnaire:
+    post:
+      operationId: addConcessionnaire
+      tags: [ "Concessionnaire" ]
+      description: "Ajouter un concessionnaire"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConcessionnaireBody"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ConcessionnaireBody"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Concessionnaire"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Concessionnaire"
+          description: "Merci"
 
   /concessionnaires/{id}:
     get:
@@ -557,6 +581,8 @@ paths:
                 $ref: "#/components/schemas/OperationDetail"
           description: "Detail operation"
 
+
+
 components:
   schemas:
 
@@ -914,4 +940,11 @@ components:
         paye:
           type: boolean
         status:
+          type: string
+
+    ConcessionnaireBody:
+      properties:
+        nom:
+          type: string
+        prenom:
           type: string
