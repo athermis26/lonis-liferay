@@ -1,7 +1,7 @@
 package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Produit;
-import com.df.lonis.ventesrest.internal.resource.v1_0.mapper.ProduitMapper;
+import com.df.lonis.ventesrest.internal.resource.v1_0.internal.mapper.ProduitMapper;
 import com.df.lonis.ventesrest.resource.v1_0.ProduitResource;
 
 import com.df.lonis.ventesservice.service.ProduitLocalService;

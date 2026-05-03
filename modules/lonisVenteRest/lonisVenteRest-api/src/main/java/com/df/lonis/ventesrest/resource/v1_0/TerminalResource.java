@@ -1,6 +1,5 @@
 package com.df.lonis.ventesrest.resource.v1_0;
 
-import com.df.lonis.ventesrest.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.dto.v1_0.Terminal;
 
 import com.liferay.portal.kernel.search.Sort;
@@ -25,6 +24,7 @@ import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -49,7 +49,8 @@ public interface TerminalResource {
 			String search, Filter filter, Pagination pagination, Sort[] sorts)
 		throws Exception;
 
-	public ExportResponse getTerminauxExport(String format) throws Exception;
+	public Response exportTerminaux(String format, Filter filter)
+		throws Exception;
 
 	public Page<Terminal> getConcessionnaireTerminaux(
 			Long id, String concessionnaireProduitCode, String dateDebut,

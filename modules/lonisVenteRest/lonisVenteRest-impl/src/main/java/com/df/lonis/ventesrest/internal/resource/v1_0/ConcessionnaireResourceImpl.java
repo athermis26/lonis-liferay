@@ -3,32 +3,34 @@ package com.df.lonis.ventesrest.internal.resource.v1_0;
 import com.df.lonis.ventesrest.dto.v1_0.Concessionnaire;
 import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireDetail;
 import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireProduit;
-import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireStats;
-import com.df.lonis.ventesrest.dto.v1_0.Produit;
-import com.df.lonis.ventesrest.dto.v1_0.Site;
-import com.df.lonis.ventesrest.internal.resource.v1_0.mapper.ConcessionnaireMapper;
-import com.df.lonis.ventesrest.internal.resource.v1_0.mapper.ConcessionnaireProduitMapper;
-import com.df.lonis.ventesrest.internal.resource.v1_0.mapper.TerminalMapper;
+import com.df.lonis.ventesrest.internal.resource.v1_0.internal.mapper.ConcessionnaireMapper;
+import com.df.lonis.ventesrest.internal.resource.v1_0.internal.mapper.ConcessionnaireProduitMapper;
+import com.df.lonis.ventesrest.internal.resource.v1_0.internal.mapper.TerminalMapper;
+import com.df.lonis.ventesrest.internal.resource.v1_0.internal.odata.GenericODataFilterVisitor;
+import com.df.lonis.ventesrest.internal.resource.v1_0.internal.odata.ODataFilterApplier;
+import com.df.lonis.ventesrest.internal.resource.v1_0.internal.odata.ODataFilterUtil;
+import com.df.lonis.ventesrest.internal.resource.v1_0.internal.odata.entity.v1_0.ConcessionnaireEntityModel;
 import com.df.lonis.ventesrest.resource.v1_0.ConcessionnaireResource;
 
 import com.df.lonis.ventesservice.model.Terminal;
-import com.df.lonis.ventesservice.service.ChiffreAffairesLocalService;
 import com.df.lonis.ventesservice.service.ConcessionnaireLocalService;
 import com.df.lonis.ventesservice.service.ConcessionnaireProduitLocalService;
-import com.df.lonis.ventesservice.service.OperationLocalService;
-import com.df.lonis.ventesservice.service.ProduitLocalService;
-import com.df.lonis.ventesservice.service.SiteLocalService;
 import com.df.lonis.ventesservice.service.TerminalLocalService;
 
 import com.liferay.petra.function.UnsafeBiConsumer;
 import com.liferay.petra.function.UnsafeFunction;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.odata.entity.EntityModel;
+import com.liferay.portal.odata.filter.FilterParserProvider;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.NotFoundException;
@@ -49,17 +51,35 @@ public class ConcessionnaireResourceImpl extends BaseConcessionnaireResourceImpl
 
 	@Override
 	public Page<Concessionnaire> getConcessionnairesPage(
-			String search, Filter filter, Pagination pagination, Sort[] sorts) {
+			String search, Filter filter, Pagination pagination, Sort[] sorts)
+		throws Exception {
+
+		List<GenericODataFilterVisitor.Criterion> criteria =
+				ODataFilterUtil.extractCriteria(
+						contextUriInfo, _filterParserProvider, _entityModel);
+
+		DynamicQuery dq = _concessionnaireLocalService.dynamicQuery();
+		ODataFilterApplier.apply(dq, criteria, _FIELD_TYPES);
+		dq.setLimit(
+				pagination.getStartPosition(), pagination.getEndPosition());
 
 		List<com.df.lonis.ventesservice.model.Concessionnaire> entries =
-				_concessionnaireLocalService.getConcessionnaires(
-						pagination.getStartPosition(), pagination.getEndPosition());
+				_concessionnaireLocalService.dynamicQuery(dq);
 
-		int total = _concessionnaireLocalService.getConcessionnairesCount();
+		DynamicQuery countDq = _concessionnaireLocalService.dynamicQuery();
+		ODataFilterApplier.apply(countDq, criteria, _FIELD_TYPES);
+		long total = _concessionnaireLocalService.dynamicQueryCount(countDq);
 
 		return Page.of(
 				entries.stream().map(_concessionnaireMapper::toDto).collect(Collectors.toList()),
 				pagination, total);
+	}
+
+	@Override
+	public EntityModel getEntityModel(
+		Map<String, List<String>> multivaluedMap) {
+
+		return _entityModel;
 	}
 
 	@Override
@@ -110,6 +130,22 @@ public class ConcessionnaireResourceImpl extends BaseConcessionnaireResourceImpl
 					UnsafeFunction<Concessionnaire, Concessionnaire, Exception>,
 					Exception> contextBatchUnsafeBiConsumer) {
 	}
+
+	private static final Map<String, Class<?>> _FIELD_TYPES = new HashMap<>();
+
+	static {
+		_FIELD_TYPES.put("id", Long.class);
+		_FIELD_TYPES.put("uid", String.class);
+		_FIELD_TYPES.put("nom", String.class);
+		_FIELD_TYPES.put("prenoms", String.class);
+		_FIELD_TYPES.put("telephone", String.class);
+		_FIELD_TYPES.put("email", String.class);
+	}
+
+	private final EntityModel _entityModel = new ConcessionnaireEntityModel();
+
+	@Reference
+	private FilterParserProvider _filterParserProvider;
 
 //	Les Mappers
 	@Reference

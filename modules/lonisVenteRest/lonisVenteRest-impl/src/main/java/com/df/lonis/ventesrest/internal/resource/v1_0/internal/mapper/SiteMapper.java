@@ -1,4 +1,4 @@
-package com.df.lonis.ventesrest.internal.resource.v1_0.mapper;
+package com.df.lonis.ventesrest.internal.resource.v1_0.internal.mapper;
 
 import com.df.lonis.ventesrest.dto.v1_0.Site;
 import org.osgi.service.component.annotations.Component;

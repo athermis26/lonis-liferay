@@ -1,12 +1,10 @@
 package com.df.lonis.ventesrest.client.resource.v1_0;
 
-import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.client.dto.v1_0.Terminal;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
 import com.df.lonis.ventesrest.client.problem.Problem;
-import com.df.lonis.ventesrest.client.serdes.v1_0.ExportResponseSerDes;
 import com.df.lonis.ventesrest.client.serdes.v1_0.TerminalSerDes;
 
 import java.util.LinkedHashMap;
@@ -38,10 +36,11 @@ public interface TerminalResource {
 			String sortString)
 		throws Exception;
 
-	public ExportResponse getTerminauxExport(String format) throws Exception;
+	public void exportTerminaux(String format, String filterString)
+		throws Exception;
 
-	public HttpInvoker.HttpResponse getTerminauxExportHttpResponse(
-			String format)
+	public HttpInvoker.HttpResponse exportTerminauxHttpResponse(
+			String format, String filterString)
 		throws Exception;
 
 	public Page<Terminal> getConcessionnaireTerminaux(
@@ -226,11 +225,11 @@ public interface TerminalResource {
 			return httpInvoker.invoke();
 		}
 
-		public ExportResponse getTerminauxExport(String format)
+		public void exportTerminaux(String format, String filterString)
 			throws Exception {
 
-			HttpInvoker.HttpResponse httpResponse =
-				getTerminauxExportHttpResponse(format);
+			HttpInvoker.HttpResponse httpResponse = exportTerminauxHttpResponse(
+				format, filterString);
 
 			String content = httpResponse.getContent();
 
@@ -256,21 +255,10 @@ public interface TerminalResource {
 					"HTTP response status code: " +
 						httpResponse.getStatusCode());
 			}
-
-			try {
-				return ExportResponseSerDes.toDTO(content);
-			}
-			catch (Exception e) {
-				_logger.log(
-					Level.WARNING,
-					"Unable to process HTTP response: " + content, e);
-
-				throw new Problem.ProblemException(Problem.toDTO(content));
-			}
 		}
 
-		public HttpInvoker.HttpResponse getTerminauxExportHttpResponse(
-				String format)
+		public HttpInvoker.HttpResponse exportTerminauxHttpResponse(
+				String format, String filterString)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -296,6 +284,10 @@ public interface TerminalResource {
 
 			if (format != null) {
 				httpInvoker.parameter("format", String.valueOf(format));
+			}
+
+			if (filterString != null) {
+				httpInvoker.parameter("filter", filterString);
 			}
 
 			httpInvoker.path(

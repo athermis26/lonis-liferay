@@ -3,6 +3,7 @@ package com.df.lonis.ventesrest.resource.v1_0;
 import com.df.lonis.ventesrest.dto.v1_0.Operation;
 import com.df.lonis.ventesrest.dto.v1_0.OperationDetail;
 
+import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
@@ -24,6 +25,7 @@ import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -45,7 +47,10 @@ public interface OperationResource {
 	}
 
 	public Page<Operation> getOperationsPage(
-			String search, Long siteId, String periode, Pagination pagination)
+			String search, Filter filter, Pagination pagination, Sort[] sorts)
+		throws Exception;
+
+	public Response exportOperations(String format, Filter filter)
 		throws Exception;
 
 	public OperationDetail getOperation(Long operationId) throws Exception;

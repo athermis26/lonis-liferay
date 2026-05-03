@@ -206,8 +206,39 @@ public class ChiffreAffairesLocalServiceUtil {
 		return getService().fetchChiffreAffaires(id);
 	}
 
+	/**
+	 * Tous les CA dans une plage de dates.
+	 * dateDebut et/ou dateFin peuvent etre null (pas de borne).
+	 */
+	public static List<ChiffreAffaires> findByDateRange(
+		java.util.Date dateDebut, java.util.Date dateFin) {
+
+		return getService().findByDateRange(dateDebut, dateFin);
+	}
+
 	public static List<ChiffreAffaires> findByTerminalId(long terminalId) {
 		return getService().findByTerminalId(terminalId);
+	}
+
+	/**
+	 * CA d un terminal sur une plage de dates.
+	 */
+	public static List<ChiffreAffaires> findByTerminalIdAndDateRange(
+		long terminalId, java.util.Date dateDebut, java.util.Date dateFin) {
+
+		return getService().findByTerminalIdAndDateRange(
+			terminalId, dateDebut, dateFin);
+	}
+
+	/**
+	 * CA de plusieurs terminaux sur une plage de dates (utile pour un concessionnaire).
+	 */
+	public static List<ChiffreAffaires> findByTerminalIdsAndDateRange(
+		List<Long> terminalIds, java.util.Date dateDebut,
+		java.util.Date dateFin) {
+
+		return getService().findByTerminalIdsAndDateRange(
+			terminalIds, dateDebut, dateFin);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery

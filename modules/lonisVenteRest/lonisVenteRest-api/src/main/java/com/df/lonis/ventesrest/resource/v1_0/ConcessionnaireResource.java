@@ -1,6 +1,7 @@
 package com.df.lonis.ventesrest.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Concessionnaire;
+import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireBody;
 import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireDetail;
 import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireProduit;
 
@@ -49,6 +50,10 @@ public interface ConcessionnaireResource {
 
 	public Page<Concessionnaire> getConcessionnairesPage(
 			String search, Filter filter, Pagination pagination, Sort[] sorts)
+		throws Exception;
+
+	public Concessionnaire addConcessionnaire(
+			ConcessionnaireBody concessionnaireBody)
 		throws Exception;
 
 	public ConcessionnaireDetail getConcessionnaireById(Long id)

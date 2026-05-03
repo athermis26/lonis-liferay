@@ -2,8 +2,8 @@ package com.df.lonis.ventesrest.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Commission;
 import com.df.lonis.ventesrest.dto.v1_0.CommissionDetail;
-import com.df.lonis.ventesrest.dto.v1_0.ExportResponse;
 
+import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
@@ -25,6 +25,7 @@ import javax.annotation.Generated;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -46,18 +47,16 @@ public interface CommissionResource {
 	}
 
 	public Page<Commission> getCommissionsPage(
-			String search, Long siteId, String periode, Pagination pagination)
+			String search, Filter filter, Pagination pagination, Sort[] sorts)
 		throws Exception;
 
 	public CommissionDetail getCommission(Long id) throws Exception;
 
-	public Commission getConcessionnaireCommissions(
-			Long id, String concessionnaireProduitCode, String periode,
-			Pagination pagination)
+	public Page<Commission> getConcessionnaireCommissions(
+			Long id, Pagination pagination)
 		throws Exception;
 
-	public ExportResponse getCommissionsExport(
-			String format, Long siteId, String periode)
+	public Response exportCommissions(String format, Filter filter)
 		throws Exception;
 
 	public default void setContextAcceptLanguage(

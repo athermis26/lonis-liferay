@@ -1,4 +1,4 @@
-package com.df.lonis.ventesrest.internal.resource.v1_0.mapper;
+package com.df.lonis.ventesrest.internal.resource.v1_0.internal.mapper;
 
 import com.df.lonis.ventesrest.dto.v1_0.Concessionnaire;
 import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireDetail;
@@ -53,7 +53,7 @@ public class ConcessionnaireMapper {
             List<com.df.lonis.ventesservice.model.ChiffreAffaires> cas = _chiffreAffairesLocalService.findByTerminalId(t.getId());
 
             for (com.df.lonis.ventesservice.model.ChiffreAffaires ca : cas) {
-                chiffreAffaires += ca.getVentes();
+                chiffreAffaires += ca.getBrut() - ca.getAnnulation() - ca.getRemboursement();
                 soldeTotal += ca.getBalance();
                 totalPaiements += ca.getPaiement();
             }

@@ -230,11 +230,47 @@ public class ChiffreAffairesLocalServiceWrapper
 		return _chiffreAffairesLocalService.fetchChiffreAffaires(id);
 	}
 
+	/**
+	 * Tous les CA dans une plage de dates.
+	 * dateDebut et/ou dateFin peuvent etre null (pas de borne).
+	 */
+	@Override
+	public java.util.List<com.df.lonis.ventesservice.model.ChiffreAffaires>
+		findByDateRange(java.util.Date dateDebut, java.util.Date dateFin) {
+
+		return _chiffreAffairesLocalService.findByDateRange(dateDebut, dateFin);
+	}
+
 	@Override
 	public java.util.List<com.df.lonis.ventesservice.model.ChiffreAffaires>
 		findByTerminalId(long terminalId) {
 
 		return _chiffreAffairesLocalService.findByTerminalId(terminalId);
+	}
+
+	/**
+	 * CA d un terminal sur une plage de dates.
+	 */
+	@Override
+	public java.util.List<com.df.lonis.ventesservice.model.ChiffreAffaires>
+		findByTerminalIdAndDateRange(
+			long terminalId, java.util.Date dateDebut, java.util.Date dateFin) {
+
+		return _chiffreAffairesLocalService.findByTerminalIdAndDateRange(
+			terminalId, dateDebut, dateFin);
+	}
+
+	/**
+	 * CA de plusieurs terminaux sur une plage de dates (utile pour un concessionnaire).
+	 */
+	@Override
+	public java.util.List<com.df.lonis.ventesservice.model.ChiffreAffaires>
+		findByTerminalIdsAndDateRange(
+			java.util.List<Long> terminalIds, java.util.Date dateDebut,
+			java.util.Date dateFin) {
+
+		return _chiffreAffairesLocalService.findByTerminalIdsAndDateRange(
+			terminalIds, dateDebut, dateFin);
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.df.lonis.ventesrest.resource.v1_0.test;
 
 import com.df.lonis.ventesrest.client.dto.v1_0.Commission;
 import com.df.lonis.ventesrest.client.dto.v1_0.CommissionDetail;
-import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
@@ -17,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
+import com.liferay.petra.function.UnsafeTriConsumer;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
+import com.liferay.portal.search.test.util.SearchTestRule;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
@@ -45,6 +46,8 @@ import java.text.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +59,7 @@ import javax.annotation.Generated;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang.time.DateUtils;
 
@@ -189,7 +193,7 @@ public abstract class BaseCommissionResourceTestCase {
 	@Test
 	public void testGetCommissionsPage() throws Exception {
 		Page<Commission> page = commissionResource.getCommissionsPage(
-			null, null, RandomTestUtil.randomString(), Pagination.of(1, 10));
+			null, null, Pagination.of(1, 10), null);
 
 		long totalCount = page.getTotalCount();
 
@@ -200,13 +204,68 @@ public abstract class BaseCommissionResourceTestCase {
 			randomCommission());
 
 		page = commissionResource.getCommissionsPage(
-			null, null, null, Pagination.of(1, 10));
+			null, null, Pagination.of(1, 10), null);
 
 		Assert.assertEquals(totalCount + 2, page.getTotalCount());
 
 		assertContains(commission1, (List<Commission>)page.getItems());
 		assertContains(commission2, (List<Commission>)page.getItems());
 		assertValid(page);
+	}
+
+	@Test
+	public void testGetCommissionsPageWithFilterDateTimeEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Commission commission1 = randomCommission();
+
+		commission1 = testGetCommissionsPage_addCommission(commission1);
+
+		for (EntityField entityField : entityFields) {
+			Page<Commission> page = commissionResource.getCommissionsPage(
+				null, getFilterString(entityField, "between", commission1),
+				Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(commission1),
+				(List<Commission>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetCommissionsPageWithFilterStringEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Commission commission1 = testGetCommissionsPage_addCommission(
+			randomCommission());
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		Commission commission2 = testGetCommissionsPage_addCommission(
+			randomCommission());
+
+		for (EntityField entityField : entityFields) {
+			Page<Commission> page = commissionResource.getCommissionsPage(
+				null, getFilterString(entityField, "eq", commission1),
+				Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(commission1),
+				(List<Commission>)page.getItems());
+		}
 	}
 
 	@Test
@@ -226,7 +285,7 @@ public abstract class BaseCommissionResourceTestCase {
 			randomCommission());
 
 		Page<Commission> page1 = commissionResource.getCommissionsPage(
-			null, null, null, Pagination.of(1, totalCount + 2));
+			null, null, Pagination.of(1, totalCount + 2), null);
 
 		List<Commission> commissions1 = (List<Commission>)page1.getItems();
 
@@ -234,7 +293,7 @@ public abstract class BaseCommissionResourceTestCase {
 			commissions1.toString(), totalCount + 2, commissions1.size());
 
 		Page<Commission> page2 = commissionResource.getCommissionsPage(
-			null, null, null, Pagination.of(2, totalCount + 2));
+			null, null, Pagination.of(2, totalCount + 2), null);
 
 		Assert.assertEquals(totalCount + 3, page2.getTotalCount());
 
@@ -243,11 +302,125 @@ public abstract class BaseCommissionResourceTestCase {
 		Assert.assertEquals(commissions2.toString(), 1, commissions2.size());
 
 		Page<Commission> page3 = commissionResource.getCommissionsPage(
-			null, null, null, Pagination.of(1, totalCount + 3));
+			null, null, Pagination.of(1, totalCount + 3), null);
 
 		assertContains(commission1, (List<Commission>)page3.getItems());
 		assertContains(commission2, (List<Commission>)page3.getItems());
 		assertContains(commission3, (List<Commission>)page3.getItems());
+	}
+
+	@Test
+	public void testGetCommissionsPageWithSortDateTime() throws Exception {
+		testGetCommissionsPageWithSort(
+			EntityField.Type.DATE_TIME,
+			(entityField, commission1, commission2) -> {
+				BeanUtils.setProperty(
+					commission1, entityField.getName(),
+					DateUtils.addMinutes(new Date(), -2));
+			});
+	}
+
+	@Test
+	public void testGetCommissionsPageWithSortInteger() throws Exception {
+		testGetCommissionsPageWithSort(
+			EntityField.Type.INTEGER,
+			(entityField, commission1, commission2) -> {
+				BeanUtils.setProperty(commission1, entityField.getName(), 0);
+				BeanUtils.setProperty(commission2, entityField.getName(), 1);
+			});
+	}
+
+	@Test
+	public void testGetCommissionsPageWithSortString() throws Exception {
+		testGetCommissionsPageWithSort(
+			EntityField.Type.STRING,
+			(entityField, commission1, commission2) -> {
+				Class<?> clazz = commission1.getClass();
+
+				String entityFieldName = entityField.getName();
+
+				java.lang.reflect.Method method = clazz.getMethod(
+					"get" + StringUtil.upperCaseFirstLetter(entityFieldName));
+
+				Class<?> returnType = method.getReturnType();
+
+				if (returnType.isAssignableFrom(Map.class)) {
+					BeanUtils.setProperty(
+						commission1, entityFieldName,
+						Collections.singletonMap("Aaa", "Aaa"));
+					BeanUtils.setProperty(
+						commission2, entityFieldName,
+						Collections.singletonMap("Bbb", "Bbb"));
+				}
+				else if (entityFieldName.contains("email")) {
+					BeanUtils.setProperty(
+						commission1, entityFieldName,
+						"aaa" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()) +
+									"@liferay.com");
+					BeanUtils.setProperty(
+						commission2, entityFieldName,
+						"bbb" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()) +
+									"@liferay.com");
+				}
+				else {
+					BeanUtils.setProperty(
+						commission1, entityFieldName,
+						"aaa" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()));
+					BeanUtils.setProperty(
+						commission2, entityFieldName,
+						"bbb" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()));
+				}
+			});
+	}
+
+	protected void testGetCommissionsPageWithSort(
+			EntityField.Type type,
+			UnsafeTriConsumer<EntityField, Commission, Commission, Exception>
+				unsafeTriConsumer)
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(type);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Commission commission1 = randomCommission();
+		Commission commission2 = randomCommission();
+
+		for (EntityField entityField : entityFields) {
+			unsafeTriConsumer.accept(entityField, commission1, commission2);
+		}
+
+		commission1 = testGetCommissionsPage_addCommission(commission1);
+
+		commission2 = testGetCommissionsPage_addCommission(commission2);
+
+		for (EntityField entityField : entityFields) {
+			Page<Commission> ascPage = commissionResource.getCommissionsPage(
+				null, null, Pagination.of(1, 2),
+				entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(commission1, commission2),
+				(List<Commission>)ascPage.getItems());
+
+			Page<Commission> descPage = commissionResource.getCommissionsPage(
+				null, null, Pagination.of(1, 2),
+				entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(commission2, commission1),
+				(List<Commission>)descPage.getItems());
+		}
 	}
 
 	protected Commission testGetCommissionsPage_addCommission(
@@ -260,46 +433,121 @@ public abstract class BaseCommissionResourceTestCase {
 
 	@Test
 	public void testGetConcessionnaireCommissions() throws Exception {
-		Commission postCommission =
-			testGetConcessionnaireCommissions_addCommission();
+		Long id = testGetConcessionnaireCommissions_getId();
+		Long irrelevantId = testGetConcessionnaireCommissions_getIrrelevantId();
 
-		Commission getCommission =
+		Page<Commission> page =
 			commissionResource.getConcessionnaireCommissions(
-				postCommission.getId(), null, null, Pagination.of(1, 2));
+				id, Pagination.of(1, 10));
 
-		assertEquals(postCommission, getCommission);
-		assertValid(getCommission);
-	}
+		Assert.assertEquals(0, page.getTotalCount());
 
-	protected Commission testGetConcessionnaireCommissions_addCommission()
-		throws Exception {
+		if (irrelevantId != null) {
+			Commission irrelevantCommission =
+				testGetConcessionnaireCommissions_addCommission(
+					irrelevantId, randomIrrelevantCommission());
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+			page = commissionResource.getConcessionnaireCommissions(
+				irrelevantId, Pagination.of(1, 2));
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantCommission),
+				(List<Commission>)page.getItems());
+			assertValid(page);
+		}
+
+		Commission commission1 =
+			testGetConcessionnaireCommissions_addCommission(
+				id, randomCommission());
+
+		Commission commission2 =
+			testGetConcessionnaireCommissions_addCommission(
+				id, randomCommission());
+
+		page = commissionResource.getConcessionnaireCommissions(
+			id, Pagination.of(1, 10));
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(commission1, commission2),
+			(List<Commission>)page.getItems());
+		assertValid(page);
 	}
 
 	@Test
-	public void testGetCommissionsExport() throws Exception {
-		Commission postCommission = testGetCommission_addCommission();
+	public void testGetConcessionnaireCommissionsWithPagination()
+		throws Exception {
 
-		ExportResponse postExportResponse =
-			testGetCommissionsExport_addExportResponse(
-				postCommission.getId(), randomExportResponse());
+		Long id = testGetConcessionnaireCommissions_getId();
 
-		ExportResponse getExportResponse =
-			commissionResource.getCommissionsExport(postCommission.getId());
+		Commission commission1 =
+			testGetConcessionnaireCommissions_addCommission(
+				id, randomCommission());
 
-		assertEquals(postExportResponse, getExportResponse);
-		assertValid(getExportResponse);
+		Commission commission2 =
+			testGetConcessionnaireCommissions_addCommission(
+				id, randomCommission());
+
+		Commission commission3 =
+			testGetConcessionnaireCommissions_addCommission(
+				id, randomCommission());
+
+		Page<Commission> page1 =
+			commissionResource.getConcessionnaireCommissions(
+				id, Pagination.of(1, 2));
+
+		List<Commission> commissions1 = (List<Commission>)page1.getItems();
+
+		Assert.assertEquals(commissions1.toString(), 2, commissions1.size());
+
+		Page<Commission> page2 =
+			commissionResource.getConcessionnaireCommissions(
+				id, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
+
+		List<Commission> commissions2 = (List<Commission>)page2.getItems();
+
+		Assert.assertEquals(commissions2.toString(), 1, commissions2.size());
+
+		Page<Commission> page3 =
+			commissionResource.getConcessionnaireCommissions(
+				id, Pagination.of(1, 3));
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(commission1, commission2, commission3),
+			(List<Commission>)page3.getItems());
 	}
 
-	protected ExportResponse testGetCommissionsExport_addExportResponse(
-			long commissionId, ExportResponse exportResponse)
+	protected Commission testGetConcessionnaireCommissions_addCommission(
+			Long id, Commission commission)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
+
+	protected Long testGetConcessionnaireCommissions_getId() throws Exception {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetConcessionnaireCommissions_getIrrelevantId()
+		throws Exception {
+
+		return null;
+	}
+
+	@Test
+	public void testExportCommissions() throws Exception {
+		Assert.assertTrue(false);
+	}
+
+	@Rule
+	public SearchTestRule searchTestRule = new SearchTestRule();
 
 	@Test
 	public void testGetCommission() throws Exception {
@@ -375,14 +623,6 @@ public abstract class BaseCommissionResourceTestCase {
 
 			assertEquals(commission1, commission2);
 		}
-	}
-
-	protected void assertEquals(
-		ExportResponse exportResponse1, ExportResponse exportResponse2) {
-
-		Assert.assertTrue(
-			exportResponse1 + " does not equal " + exportResponse2,
-			equals(exportResponse1, exportResponse2));
 	}
 
 	protected void assertEquals(
@@ -522,52 +762,6 @@ public abstract class BaseCommissionResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
-	protected void assertValid(ExportResponse exportResponse) {
-		boolean valid = true;
-
-		for (String additionalAssertFieldName :
-				getAdditionalExportResponseAssertFieldNames()) {
-
-			if (Objects.equals("downloadUrl", additionalAssertFieldName)) {
-				if (exportResponse.getDownloadUrl() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("expiresAt", additionalAssertFieldName)) {
-				if (exportResponse.getExpiresAt() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("fileName", additionalAssertFieldName)) {
-				if (exportResponse.getFileName() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("format", additionalAssertFieldName)) {
-				if (exportResponse.getFormat() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			throw new IllegalArgumentException(
-				"Invalid additional assert field name " +
-					additionalAssertFieldName);
-		}
-
-		Assert.assertTrue(valid);
-	}
-
 	protected void assertValid(CommissionDetail commissionDetail) {
 		boolean valid = true;
 
@@ -651,10 +845,6 @@ public abstract class BaseCommissionResourceTestCase {
 	}
 
 	protected String[] getAdditionalAssertFieldNames() {
-		return new String[0];
-	}
-
-	protected String[] getAdditionalExportResponseAssertFieldNames() {
 		return new String[0];
 	}
 
@@ -860,68 +1050,6 @@ public abstract class BaseCommissionResourceTestCase {
 		}
 
 		return false;
-	}
-
-	protected boolean equals(
-		ExportResponse exportResponse1, ExportResponse exportResponse2) {
-
-		if (exportResponse1 == exportResponse2) {
-			return true;
-		}
-
-		for (String additionalAssertFieldName :
-				getAdditionalExportResponseAssertFieldNames()) {
-
-			if (Objects.equals("downloadUrl", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						exportResponse1.getDownloadUrl(),
-						exportResponse2.getDownloadUrl())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("expiresAt", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						exportResponse1.getExpiresAt(),
-						exportResponse2.getExpiresAt())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("fileName", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						exportResponse1.getFileName(),
-						exportResponse2.getFileName())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("format", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						exportResponse1.getFormat(),
-						exportResponse2.getFormat())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			throw new IllegalArgumentException(
-				"Invalid additional assert field name " +
-					additionalAssertFieldName);
-		}
-
-		return true;
 	}
 
 	protected boolean equals(
@@ -1285,16 +1413,6 @@ public abstract class BaseCommissionResourceTestCase {
 
 	protected Commission randomPatchCommission() throws Exception {
 		return randomCommission();
-	}
-
-	protected ExportResponse randomExportResponse() throws Exception {
-		return new ExportResponse() {
-			{
-				downloadUrl = RandomTestUtil.randomString();
-				expiresAt = RandomTestUtil.nextDate();
-				fileName = RandomTestUtil.randomString();
-			}
-		};
 	}
 
 	protected CommissionDetail randomCommissionDetail() throws Exception {

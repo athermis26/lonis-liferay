@@ -468,6 +468,25 @@ public abstract class BaseConcessionnaireResourceTestCase {
 	}
 
 	@Test
+	public void testAddConcessionnaire() throws Exception {
+		Concessionnaire randomConcessionnaire = randomConcessionnaire();
+
+		Concessionnaire postConcessionnaire =
+			testAddConcessionnaire_addConcessionnaire(randomConcessionnaire);
+
+		assertEquals(randomConcessionnaire, postConcessionnaire);
+		assertValid(postConcessionnaire);
+	}
+
+	protected Concessionnaire testAddConcessionnaire_addConcessionnaire(
+			Concessionnaire concessionnaire)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	@Test
 	public void testGetConcessionnaireProduits() throws Exception {
 		Long id = testGetConcessionnaireProduits_getId();
 		Long irrelevantId = testGetConcessionnaireProduits_getIrrelevantId();

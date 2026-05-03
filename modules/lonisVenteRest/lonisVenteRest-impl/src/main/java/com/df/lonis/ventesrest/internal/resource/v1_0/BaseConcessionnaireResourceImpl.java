@@ -1,6 +1,7 @@
 package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Concessionnaire;
+import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireBody;
 import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireDetail;
 import com.df.lonis.ventesrest.dto.v1_0.ConcessionnaireProduit;
 import com.df.lonis.ventesrest.dto.v1_0.Operation;
@@ -108,6 +109,31 @@ public abstract class BaseConcessionnaireResourceImpl
 		throws Exception {
 
 		return Page.of(Collections.emptyList());
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'POST' 'http://localhost:8080/o/lonisVenteRest/v1.0/concessionnaire' -d $'{"nom": ___, "prenom": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Ajouter un concessionnaire"
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {
+			@io.swagger.v3.oas.annotations.tags.Tag(name = "Concessionnaire")
+		}
+	)
+	@javax.ws.rs.Consumes({"application/json", "application/xml"})
+	@javax.ws.rs.Path("/concessionnaire")
+	@javax.ws.rs.POST
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@Override
+	public Concessionnaire addConcessionnaire(
+			ConcessionnaireBody concessionnaireBody)
+		throws Exception {
+
+		return new Concessionnaire();
 	}
 
 	/**

@@ -2,7 +2,6 @@ package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Commission;
 import com.df.lonis.ventesrest.dto.v1_0.CommissionDetail;
-import com.df.lonis.ventesrest.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.dto.v1_0.Operation;
 import com.df.lonis.ventesrest.resource.v1_0.CommissionResource;
 
@@ -44,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -72,11 +72,7 @@ public abstract class BaseCommissionResourceImpl
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "siteId"
-			),
-			@io.swagger.v3.oas.annotations.Parameter(
-				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "periode"
+				name = "filter"
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
@@ -85,6 +81,10 @@ public abstract class BaseCommissionResourceImpl
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
 				name = "pageSize"
+			),
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "sort"
 			)
 		}
 	)
@@ -99,13 +99,9 @@ public abstract class BaseCommissionResourceImpl
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.ws.rs.QueryParam("search")
 			String search,
-			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.ws.rs.QueryParam("siteId")
-			Long siteId,
-			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.ws.rs.QueryParam("periode")
-			String periode,
-			@javax.ws.rs.core.Context Pagination pagination)
+			@javax.ws.rs.core.Context Filter filter,
+			@javax.ws.rs.core.Context Pagination pagination,
+			@javax.ws.rs.core.Context Sort[] sorts)
 		throws Exception {
 
 		return Page.of(Collections.emptyList());
@@ -159,14 +155,6 @@ public abstract class BaseCommissionResourceImpl
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "concessionnaireProduitCode"
-			),
-			@io.swagger.v3.oas.annotations.Parameter(
-				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "periode"
-			),
-			@io.swagger.v3.oas.annotations.Parameter(
-				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
 				name = "page"
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
@@ -182,20 +170,14 @@ public abstract class BaseCommissionResourceImpl
 	@javax.ws.rs.Path("/concessionnaires/{id}/commissions")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
-	public Commission getConcessionnaireCommissions(
+	public Page<Commission> getConcessionnaireCommissions(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull @javax.ws.rs.PathParam("id")
 			Long id,
-			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.ws.rs.QueryParam("concessionnaireProduitCode")
-			String concessionnaireProduitCode,
-			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.ws.rs.QueryParam("periode")
-			String periode,
 			@javax.ws.rs.core.Context Pagination pagination)
 		throws Exception {
 
-		return new Commission();
+		return Page.of(Collections.emptyList());
 	}
 
 	/**
@@ -204,7 +186,7 @@ public abstract class BaseCommissionResourceImpl
 	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/commissions/export'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
-		description = "Export inventaire commissions - retourne une URL de telechargement"
+		description = "Export commissions au format xlsx ou pdf"
 	)
 	@io.swagger.v3.oas.annotations.Parameters(
 		value = {
@@ -214,11 +196,7 @@ public abstract class BaseCommissionResourceImpl
 			),
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "siteId"
-			),
-			@io.swagger.v3.oas.annotations.Parameter(
-				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
-				name = "periode"
+				name = "filter"
 			)
 		}
 	)
@@ -227,22 +205,19 @@ public abstract class BaseCommissionResourceImpl
 	)
 	@javax.ws.rs.GET
 	@javax.ws.rs.Path("/commissions/export")
-	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@javax.ws.rs.Produces({"application/json", "application/xml", "text/csv"})
 	@Override
-	public ExportResponse getCommissionsExport(
+	public Response exportCommissions(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull
 			@javax.ws.rs.QueryParam("format")
 			String format,
-			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.ws.rs.QueryParam("siteId")
-			Long siteId,
-			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
-			@javax.ws.rs.QueryParam("periode")
-			String periode)
+			@javax.ws.rs.core.Context Filter filter)
 		throws Exception {
 
-		return new ExportResponse();
+		Response.ResponseBuilder responseBuilder = Response.ok();
+
+		return responseBuilder.build();
 	}
 
 	@Override
@@ -281,9 +256,7 @@ public abstract class BaseCommissionResourceImpl
 			Map<String, Serializable> parameters, String search)
 		throws Exception {
 
-		return getCommissionsPage(
-			search, (Long)parameters.get("siteId"),
-			(String)parameters.get("periode"), pagination);
+		return getCommissionsPage(search, filter, pagination, sorts);
 	}
 
 	@Override

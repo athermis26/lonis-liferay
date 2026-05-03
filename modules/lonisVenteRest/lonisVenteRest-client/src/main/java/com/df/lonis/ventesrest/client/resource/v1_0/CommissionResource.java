@@ -2,14 +2,12 @@ package com.df.lonis.ventesrest.client.resource.v1_0;
 
 import com.df.lonis.ventesrest.client.dto.v1_0.Commission;
 import com.df.lonis.ventesrest.client.dto.v1_0.CommissionDetail;
-import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
 import com.df.lonis.ventesrest.client.problem.Problem;
 import com.df.lonis.ventesrest.client.serdes.v1_0.CommissionDetailSerDes;
 import com.df.lonis.ventesrest.client.serdes.v1_0.CommissionSerDes;
-import com.df.lonis.ventesrest.client.serdes.v1_0.ExportResponseSerDes;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -31,11 +29,13 @@ public interface CommissionResource {
 	}
 
 	public Page<Commission> getCommissionsPage(
-			String search, Long siteId, String periode, Pagination pagination)
+			String search, String filterString, Pagination pagination,
+			String sortString)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse getCommissionsPageHttpResponse(
-			String search, Long siteId, String periode, Pagination pagination)
+			String search, String filterString, Pagination pagination,
+			String sortString)
 		throws Exception;
 
 	public CommissionDetail getCommission(Long id) throws Exception;
@@ -43,22 +43,19 @@ public interface CommissionResource {
 	public HttpInvoker.HttpResponse getCommissionHttpResponse(Long id)
 		throws Exception;
 
-	public Commission getConcessionnaireCommissions(
-			Long id, String concessionnaireProduitCode, String periode,
-			Pagination pagination)
+	public Page<Commission> getConcessionnaireCommissions(
+			Long id, Pagination pagination)
 		throws Exception;
 
 	public HttpInvoker.HttpResponse getConcessionnaireCommissionsHttpResponse(
-			Long id, String concessionnaireProduitCode, String periode,
-			Pagination pagination)
+			Long id, Pagination pagination)
 		throws Exception;
 
-	public ExportResponse getCommissionsExport(
-			String format, Long siteId, String periode)
+	public void exportCommissions(String format, String filterString)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse getCommissionsExportHttpResponse(
-			String format, Long siteId, String periode)
+	public HttpInvoker.HttpResponse exportCommissionsHttpResponse(
+			String format, String filterString)
 		throws Exception;
 
 	public static class Builder {
@@ -133,13 +130,13 @@ public interface CommissionResource {
 	public static class CommissionResourceImpl implements CommissionResource {
 
 		public Page<Commission> getCommissionsPage(
-				String search, Long siteId, String periode,
-				Pagination pagination)
+				String search, String filterString, Pagination pagination,
+				String sortString)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
 				getCommissionsPageHttpResponse(
-					search, siteId, periode, pagination);
+					search, filterString, pagination, sortString);
 
 			String content = httpResponse.getContent();
 
@@ -179,8 +176,8 @@ public interface CommissionResource {
 		}
 
 		public HttpInvoker.HttpResponse getCommissionsPageHttpResponse(
-				String search, Long siteId, String periode,
-				Pagination pagination)
+				String search, String filterString, Pagination pagination,
+				String sortString)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -208,12 +205,8 @@ public interface CommissionResource {
 				httpInvoker.parameter("search", String.valueOf(search));
 			}
 
-			if (siteId != null) {
-				httpInvoker.parameter("siteId", String.valueOf(siteId));
-			}
-
-			if (periode != null) {
-				httpInvoker.parameter("periode", String.valueOf(periode));
+			if (filterString != null) {
+				httpInvoker.parameter("filter", filterString);
 			}
 
 			if (pagination != null) {
@@ -221,6 +214,10 @@ public interface CommissionResource {
 					"page", String.valueOf(pagination.getPage()));
 				httpInvoker.parameter(
 					"pageSize", String.valueOf(pagination.getPageSize()));
+			}
+
+			if (sortString != null) {
+				httpInvoker.parameter("sort", sortString);
 			}
 
 			httpInvoker.path(
@@ -310,14 +307,12 @@ public interface CommissionResource {
 			return httpInvoker.invoke();
 		}
 
-		public Commission getConcessionnaireCommissions(
-				Long id, String concessionnaireProduitCode, String periode,
-				Pagination pagination)
+		public Page<Commission> getConcessionnaireCommissions(
+				Long id, Pagination pagination)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getConcessionnaireCommissionsHttpResponse(
-					id, concessionnaireProduitCode, periode, pagination);
+				getConcessionnaireCommissionsHttpResponse(id, pagination);
 
 			String content = httpResponse.getContent();
 
@@ -345,7 +340,7 @@ public interface CommissionResource {
 			}
 
 			try {
-				return CommissionSerDes.toDTO(content);
+				return Page.of(content, CommissionSerDes::toDTO);
 			}
 			catch (Exception e) {
 				_logger.log(
@@ -358,8 +353,7 @@ public interface CommissionResource {
 
 		public HttpInvoker.HttpResponse
 				getConcessionnaireCommissionsHttpResponse(
-					Long id, String concessionnaireProduitCode, String periode,
-					Pagination pagination)
+					Long id, Pagination pagination)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -383,16 +377,6 @@ public interface CommissionResource {
 
 			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
 
-			if (concessionnaireProduitCode != null) {
-				httpInvoker.parameter(
-					"concessionnaireProduitCode",
-					String.valueOf(concessionnaireProduitCode));
-			}
-
-			if (periode != null) {
-				httpInvoker.parameter("periode", String.valueOf(periode));
-			}
-
 			if (pagination != null) {
 				httpInvoker.parameter(
 					"page", String.valueOf(pagination.getPage()));
@@ -413,12 +397,11 @@ public interface CommissionResource {
 			return httpInvoker.invoke();
 		}
 
-		public ExportResponse getCommissionsExport(
-				String format, Long siteId, String periode)
+		public void exportCommissions(String format, String filterString)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getCommissionsExportHttpResponse(format, siteId, periode);
+				exportCommissionsHttpResponse(format, filterString);
 
 			String content = httpResponse.getContent();
 
@@ -444,21 +427,10 @@ public interface CommissionResource {
 					"HTTP response status code: " +
 						httpResponse.getStatusCode());
 			}
-
-			try {
-				return ExportResponseSerDes.toDTO(content);
-			}
-			catch (Exception e) {
-				_logger.log(
-					Level.WARNING,
-					"Unable to process HTTP response: " + content, e);
-
-				throw new Problem.ProblemException(Problem.toDTO(content));
-			}
 		}
 
-		public HttpInvoker.HttpResponse getCommissionsExportHttpResponse(
-				String format, Long siteId, String periode)
+		public HttpInvoker.HttpResponse exportCommissionsHttpResponse(
+				String format, String filterString)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
@@ -486,12 +458,8 @@ public interface CommissionResource {
 				httpInvoker.parameter("format", String.valueOf(format));
 			}
 
-			if (siteId != null) {
-				httpInvoker.parameter("siteId", String.valueOf(siteId));
-			}
-
-			if (periode != null) {
-				httpInvoker.parameter("periode", String.valueOf(periode));
+			if (filterString != null) {
+				httpInvoker.parameter("filter", filterString);
 			}
 
 			httpInvoker.path(

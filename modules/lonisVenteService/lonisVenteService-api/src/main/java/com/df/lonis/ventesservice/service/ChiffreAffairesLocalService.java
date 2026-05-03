@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.io.Serializable;
 
+import java.util.Date;
 import java.util.List;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -193,7 +194,25 @@ public interface ChiffreAffairesLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ChiffreAffaires fetchChiffreAffaires(long id);
 
+	/**
+	 * Tous les CA dans une plage de dates.
+	 * dateDebut et/ou dateFin peuvent etre null (pas de borne).
+	 */
+	public List<ChiffreAffaires> findByDateRange(Date dateDebut, Date dateFin);
+
 	public List<ChiffreAffaires> findByTerminalId(long terminalId);
+
+	/**
+	 * CA d un terminal sur une plage de dates.
+	 */
+	public List<ChiffreAffaires> findByTerminalIdAndDateRange(
+		long terminalId, Date dateDebut, Date dateFin);
+
+	/**
+	 * CA de plusieurs terminaux sur une plage de dates (utile pour un concessionnaire).
+	 */
+	public List<ChiffreAffaires> findByTerminalIdsAndDateRange(
+		List<Long> terminalIds, Date dateDebut, Date dateFin);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

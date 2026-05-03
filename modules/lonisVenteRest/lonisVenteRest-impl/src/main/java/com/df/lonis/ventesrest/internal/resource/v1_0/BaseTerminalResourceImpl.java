@@ -1,6 +1,5 @@
 package com.df.lonis.ventesrest.internal.resource.v1_0;
 
-import com.df.lonis.ventesrest.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.dto.v1_0.Operation;
 import com.df.lonis.ventesrest.dto.v1_0.Terminal;
 import com.df.lonis.ventesrest.resource.v1_0.TerminalResource;
@@ -43,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -112,13 +112,17 @@ public abstract class BaseTerminalResourceImpl
 	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/terminaux/export'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
-		description = "Export inventaire terminaux - retourne une URL de telechargement"
+		description = "Export terminaux au format xlsx ou pdf"
 	)
 	@io.swagger.v3.oas.annotations.Parameters(
 		value = {
 			@io.swagger.v3.oas.annotations.Parameter(
 				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
 				name = "format"
+			),
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "filter"
 			)
 		}
 	)
@@ -127,16 +131,19 @@ public abstract class BaseTerminalResourceImpl
 	)
 	@javax.ws.rs.GET
 	@javax.ws.rs.Path("/terminaux/export")
-	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@javax.ws.rs.Produces({"application/json", "application/xml", "text/csv"})
 	@Override
-	public ExportResponse getTerminauxExport(
+	public Response exportTerminaux(
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.validation.constraints.NotNull
 			@javax.ws.rs.QueryParam("format")
-			String format)
+			String format,
+			@javax.ws.rs.core.Context Filter filter)
 		throws Exception {
 
-		return new ExportResponse();
+		Response.ResponseBuilder responseBuilder = Response.ok();
+
+		return responseBuilder.build();
 	}
 
 	/**

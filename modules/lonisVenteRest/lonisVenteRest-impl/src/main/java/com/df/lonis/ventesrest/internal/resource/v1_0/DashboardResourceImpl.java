@@ -33,11 +33,10 @@ public class DashboardResourceImpl extends BaseDashboardResourceImpl {
 		List<ChiffreAffaires> cas = _chiffreAffairesLocalService.getChiffreAffaireses(-1, -1);
 
 		for (ChiffreAffaires chiffreAffaire : cas) {
-			totalChiffreAffaire += chiffreAffaire.getBalance();
+			totalChiffreAffaire += (chiffreAffaire.getBrut() - chiffreAffaire.getAnnulation() - chiffreAffaire.getRemboursement());
 			totalPaiement += chiffreAffaire.getPaiement();
 		}
-
-
+		
 		DashboardKpis dashboardKpis = new DashboardKpis();
 
 		dashboardKpis.setTotalConcessionnaires((long) _concessionnaireLocalService.getConcessionnairesCount());

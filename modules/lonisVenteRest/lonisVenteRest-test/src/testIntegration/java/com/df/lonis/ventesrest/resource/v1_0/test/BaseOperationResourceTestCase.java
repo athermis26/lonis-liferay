@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
+import com.liferay.petra.function.UnsafeTriConsumer;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -34,6 +35,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
+import com.liferay.portal.search.test.util.SearchTestRule;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
@@ -44,6 +46,8 @@ import java.text.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +59,7 @@ import javax.annotation.Generated;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang.time.DateUtils;
 
@@ -192,7 +197,7 @@ public abstract class BaseOperationResourceTestCase {
 	@Test
 	public void testGetOperationsPage() throws Exception {
 		Page<Operation> page = operationResource.getOperationsPage(
-			null, null, RandomTestUtil.randomString(), Pagination.of(1, 10));
+			null, null, Pagination.of(1, 10), null);
 
 		long totalCount = page.getTotalCount();
 
@@ -203,13 +208,66 @@ public abstract class BaseOperationResourceTestCase {
 			randomOperation());
 
 		page = operationResource.getOperationsPage(
-			null, null, null, Pagination.of(1, 10));
+			null, null, Pagination.of(1, 10), null);
 
 		Assert.assertEquals(totalCount + 2, page.getTotalCount());
 
 		assertContains(operation1, (List<Operation>)page.getItems());
 		assertContains(operation2, (List<Operation>)page.getItems());
 		assertValid(page);
+	}
+
+	@Test
+	public void testGetOperationsPageWithFilterDateTimeEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Operation operation1 = randomOperation();
+
+		operation1 = testGetOperationsPage_addOperation(operation1);
+
+		for (EntityField entityField : entityFields) {
+			Page<Operation> page = operationResource.getOperationsPage(
+				null, getFilterString(entityField, "between", operation1),
+				Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(operation1),
+				(List<Operation>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetOperationsPageWithFilterStringEquals() throws Exception {
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Operation operation1 = testGetOperationsPage_addOperation(
+			randomOperation());
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		Operation operation2 = testGetOperationsPage_addOperation(
+			randomOperation());
+
+		for (EntityField entityField : entityFields) {
+			Page<Operation> page = operationResource.getOperationsPage(
+				null, getFilterString(entityField, "eq", operation1),
+				Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(operation1),
+				(List<Operation>)page.getItems());
+		}
 	}
 
 	@Test
@@ -229,7 +287,7 @@ public abstract class BaseOperationResourceTestCase {
 			randomOperation());
 
 		Page<Operation> page1 = operationResource.getOperationsPage(
-			null, null, null, Pagination.of(1, totalCount + 2));
+			null, null, Pagination.of(1, totalCount + 2), null);
 
 		List<Operation> operations1 = (List<Operation>)page1.getItems();
 
@@ -237,7 +295,7 @@ public abstract class BaseOperationResourceTestCase {
 			operations1.toString(), totalCount + 2, operations1.size());
 
 		Page<Operation> page2 = operationResource.getOperationsPage(
-			null, null, null, Pagination.of(2, totalCount + 2));
+			null, null, Pagination.of(2, totalCount + 2), null);
 
 		Assert.assertEquals(totalCount + 3, page2.getTotalCount());
 
@@ -246,11 +304,125 @@ public abstract class BaseOperationResourceTestCase {
 		Assert.assertEquals(operations2.toString(), 1, operations2.size());
 
 		Page<Operation> page3 = operationResource.getOperationsPage(
-			null, null, null, Pagination.of(1, totalCount + 3));
+			null, null, Pagination.of(1, totalCount + 3), null);
 
 		assertContains(operation1, (List<Operation>)page3.getItems());
 		assertContains(operation2, (List<Operation>)page3.getItems());
 		assertContains(operation3, (List<Operation>)page3.getItems());
+	}
+
+	@Test
+	public void testGetOperationsPageWithSortDateTime() throws Exception {
+		testGetOperationsPageWithSort(
+			EntityField.Type.DATE_TIME,
+			(entityField, operation1, operation2) -> {
+				BeanUtils.setProperty(
+					operation1, entityField.getName(),
+					DateUtils.addMinutes(new Date(), -2));
+			});
+	}
+
+	@Test
+	public void testGetOperationsPageWithSortInteger() throws Exception {
+		testGetOperationsPageWithSort(
+			EntityField.Type.INTEGER,
+			(entityField, operation1, operation2) -> {
+				BeanUtils.setProperty(operation1, entityField.getName(), 0);
+				BeanUtils.setProperty(operation2, entityField.getName(), 1);
+			});
+	}
+
+	@Test
+	public void testGetOperationsPageWithSortString() throws Exception {
+		testGetOperationsPageWithSort(
+			EntityField.Type.STRING,
+			(entityField, operation1, operation2) -> {
+				Class<?> clazz = operation1.getClass();
+
+				String entityFieldName = entityField.getName();
+
+				java.lang.reflect.Method method = clazz.getMethod(
+					"get" + StringUtil.upperCaseFirstLetter(entityFieldName));
+
+				Class<?> returnType = method.getReturnType();
+
+				if (returnType.isAssignableFrom(Map.class)) {
+					BeanUtils.setProperty(
+						operation1, entityFieldName,
+						Collections.singletonMap("Aaa", "Aaa"));
+					BeanUtils.setProperty(
+						operation2, entityFieldName,
+						Collections.singletonMap("Bbb", "Bbb"));
+				}
+				else if (entityFieldName.contains("email")) {
+					BeanUtils.setProperty(
+						operation1, entityFieldName,
+						"aaa" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()) +
+									"@liferay.com");
+					BeanUtils.setProperty(
+						operation2, entityFieldName,
+						"bbb" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()) +
+									"@liferay.com");
+				}
+				else {
+					BeanUtils.setProperty(
+						operation1, entityFieldName,
+						"aaa" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()));
+					BeanUtils.setProperty(
+						operation2, entityFieldName,
+						"bbb" +
+							StringUtil.toLowerCase(
+								RandomTestUtil.randomString()));
+				}
+			});
+	}
+
+	protected void testGetOperationsPageWithSort(
+			EntityField.Type type,
+			UnsafeTriConsumer<EntityField, Operation, Operation, Exception>
+				unsafeTriConsumer)
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(type);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Operation operation1 = randomOperation();
+		Operation operation2 = randomOperation();
+
+		for (EntityField entityField : entityFields) {
+			unsafeTriConsumer.accept(entityField, operation1, operation2);
+		}
+
+		operation1 = testGetOperationsPage_addOperation(operation1);
+
+		operation2 = testGetOperationsPage_addOperation(operation2);
+
+		for (EntityField entityField : entityFields) {
+			Page<Operation> ascPage = operationResource.getOperationsPage(
+				null, null, Pagination.of(1, 2),
+				entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(operation1, operation2),
+				(List<Operation>)ascPage.getItems());
+
+			Page<Operation> descPage = operationResource.getOperationsPage(
+				null, null, Pagination.of(1, 2),
+				entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(operation2, operation1),
+				(List<Operation>)descPage.getItems());
+		}
 	}
 
 	protected Operation testGetOperationsPage_addOperation(Operation operation)
@@ -259,6 +431,14 @@ public abstract class BaseOperationResourceTestCase {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
+
+	@Test
+	public void testExportOperations() throws Exception {
+		Assert.assertTrue(false);
+	}
+
+	@Rule
+	public SearchTestRule searchTestRule = new SearchTestRule();
 
 	@Test
 	public void testGetOperation() throws Exception {

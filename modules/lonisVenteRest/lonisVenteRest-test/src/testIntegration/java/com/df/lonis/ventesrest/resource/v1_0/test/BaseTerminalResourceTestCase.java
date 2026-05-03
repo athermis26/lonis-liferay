@@ -1,6 +1,5 @@
 package com.df.lonis.ventesrest.resource.v1_0.test;
 
-import com.df.lonis.ventesrest.client.dto.v1_0.ExportResponse;
 import com.df.lonis.ventesrest.client.dto.v1_0.Terminal;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
@@ -426,6 +425,11 @@ public abstract class BaseTerminalResourceTestCase {
 	}
 
 	@Test
+	public void testExportTerminaux() throws Exception {
+		Assert.assertTrue(false);
+	}
+
+	@Test
 	public void testGetConcessionnaireTerminaux() throws Exception {
 		Long id = testGetConcessionnaireTerminaux_getId();
 		Long irrelevantId = testGetConcessionnaireTerminaux_getIrrelevantId();
@@ -491,29 +495,6 @@ public abstract class BaseTerminalResourceTestCase {
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
-	@Test
-	public void testGetTerminauxExport() throws Exception {
-		Terminal postTerminal = testGetTerminal_addTerminal();
-
-		ExportResponse postExportResponse =
-			testGetTerminauxExport_addExportResponse(
-				postTerminal.getId(), randomExportResponse());
-
-		ExportResponse getExportResponse = terminalResource.getTerminauxExport(
-			postTerminal.getId());
-
-		assertEquals(postExportResponse, getExportResponse);
-		assertValid(getExportResponse);
-	}
-
-	protected ExportResponse testGetTerminauxExport_addExportResponse(
-			long terminalId, ExportResponse exportResponse)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
 	protected Terminal testGraphQLTerminal_addTerminal() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
@@ -559,14 +540,6 @@ public abstract class BaseTerminalResourceTestCase {
 
 			assertEquals(terminal1, terminal2);
 		}
-	}
-
-	protected void assertEquals(
-		ExportResponse exportResponse1, ExportResponse exportResponse2) {
-
-		Assert.assertTrue(
-			exportResponse1 + " does not equal " + exportResponse2,
-			equals(exportResponse1, exportResponse2));
 	}
 
 	protected void assertEqualsIgnoringOrder(
@@ -741,57 +714,7 @@ public abstract class BaseTerminalResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
-	protected void assertValid(ExportResponse exportResponse) {
-		boolean valid = true;
-
-		for (String additionalAssertFieldName :
-				getAdditionalExportResponseAssertFieldNames()) {
-
-			if (Objects.equals("downloadUrl", additionalAssertFieldName)) {
-				if (exportResponse.getDownloadUrl() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("expiresAt", additionalAssertFieldName)) {
-				if (exportResponse.getExpiresAt() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("fileName", additionalAssertFieldName)) {
-				if (exportResponse.getFileName() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("format", additionalAssertFieldName)) {
-				if (exportResponse.getFormat() == null) {
-					valid = false;
-				}
-
-				continue;
-			}
-
-			throw new IllegalArgumentException(
-				"Invalid additional assert field name " +
-					additionalAssertFieldName);
-		}
-
-		Assert.assertTrue(valid);
-	}
-
 	protected String[] getAdditionalAssertFieldNames() {
-		return new String[0];
-	}
-
-	protected String[] getAdditionalExportResponseAssertFieldNames() {
 		return new String[0];
 	}
 
@@ -1047,68 +970,6 @@ public abstract class BaseTerminalResourceTestCase {
 		}
 
 		return false;
-	}
-
-	protected boolean equals(
-		ExportResponse exportResponse1, ExportResponse exportResponse2) {
-
-		if (exportResponse1 == exportResponse2) {
-			return true;
-		}
-
-		for (String additionalAssertFieldName :
-				getAdditionalExportResponseAssertFieldNames()) {
-
-			if (Objects.equals("downloadUrl", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						exportResponse1.getDownloadUrl(),
-						exportResponse2.getDownloadUrl())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("expiresAt", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						exportResponse1.getExpiresAt(),
-						exportResponse2.getExpiresAt())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("fileName", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						exportResponse1.getFileName(),
-						exportResponse2.getFileName())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			if (Objects.equals("format", additionalAssertFieldName)) {
-				if (!Objects.deepEquals(
-						exportResponse1.getFormat(),
-						exportResponse2.getFormat())) {
-
-					return false;
-				}
-
-				continue;
-			}
-
-			throw new IllegalArgumentException(
-				"Invalid additional assert field name " +
-					additionalAssertFieldName);
-		}
-
-		return true;
 	}
 
 	protected java.lang.reflect.Field[] getDeclaredFields(Class clazz)
@@ -1396,16 +1257,6 @@ public abstract class BaseTerminalResourceTestCase {
 
 	protected Terminal randomPatchTerminal() throws Exception {
 		return randomTerminal();
-	}
-
-	protected ExportResponse randomExportResponse() throws Exception {
-		return new ExportResponse() {
-			{
-				downloadUrl = RandomTestUtil.randomString();
-				expiresAt = RandomTestUtil.nextDate();
-				fileName = RandomTestUtil.randomString();
-			}
-		};
 	}
 
 	protected TerminalResource terminalResource;
