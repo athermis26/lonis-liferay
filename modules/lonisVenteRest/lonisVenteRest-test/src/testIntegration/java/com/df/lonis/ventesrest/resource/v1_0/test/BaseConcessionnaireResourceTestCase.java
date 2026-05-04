@@ -487,6 +487,100 @@ public abstract class BaseConcessionnaireResourceTestCase {
 	}
 
 	@Test
+	public void testGetTopConcessionnairesActifs() throws Exception {
+		Page<Concessionnaire> page =
+			concessionnaireResource.getTopConcessionnairesActifs(null, null);
+
+		long totalCount = page.getTotalCount();
+
+		Concessionnaire concessionnaire1 =
+			testGetTopConcessionnairesActifs_addConcessionnaire(
+				randomConcessionnaire());
+
+		Concessionnaire concessionnaire2 =
+			testGetTopConcessionnairesActifs_addConcessionnaire(
+				randomConcessionnaire());
+
+		page = concessionnaireResource.getTopConcessionnairesActifs(null, null);
+
+		Assert.assertEquals(totalCount + 2, page.getTotalCount());
+
+		assertContains(
+			concessionnaire1, (List<Concessionnaire>)page.getItems());
+		assertContains(
+			concessionnaire2, (List<Concessionnaire>)page.getItems());
+		assertValid(page);
+	}
+
+	@Test
+	public void testGetTopConcessionnairesActifsWithFilterDateTimeEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Concessionnaire concessionnaire1 = randomConcessionnaire();
+
+		concessionnaire1 = testGetTopConcessionnairesActifs_addConcessionnaire(
+			concessionnaire1);
+
+		for (EntityField entityField : entityFields) {
+			Page<Concessionnaire> page =
+				concessionnaireResource.getTopConcessionnairesActifs(
+					null,
+					getFilterString(entityField, "between", concessionnaire1));
+
+			assertEquals(
+				Collections.singletonList(concessionnaire1),
+				(List<Concessionnaire>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetTopConcessionnairesActifsWithFilterStringEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Concessionnaire concessionnaire1 =
+			testGetTopConcessionnairesActifs_addConcessionnaire(
+				randomConcessionnaire());
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		Concessionnaire concessionnaire2 =
+			testGetTopConcessionnairesActifs_addConcessionnaire(
+				randomConcessionnaire());
+
+		for (EntityField entityField : entityFields) {
+			Page<Concessionnaire> page =
+				concessionnaireResource.getTopConcessionnairesActifs(
+					null, getFilterString(entityField, "eq", concessionnaire1));
+
+			assertEquals(
+				Collections.singletonList(concessionnaire1),
+				(List<Concessionnaire>)page.getItems());
+		}
+	}
+
+	protected Concessionnaire
+			testGetTopConcessionnairesActifs_addConcessionnaire(
+				Concessionnaire concessionnaire)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	@Test
 	public void testGetConcessionnaireProduits() throws Exception {
 		Long id = testGetConcessionnaireProduits_getId();
 		Long irrelevantId = testGetConcessionnaireProduits_getIrrelevantId();

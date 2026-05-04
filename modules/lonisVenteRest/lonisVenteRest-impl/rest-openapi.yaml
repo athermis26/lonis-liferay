@@ -101,6 +101,37 @@ paths:
                 $ref: "#/components/schemas/Concessionnaire"
           description: "Merci"
 
+  /concessionnaires/top-actifs:
+    get:
+      operationId: getTopConcessionnairesActifs
+      tags: [ "Concessionnaire" ]
+      description: "Top concessionnaires les plus actifs par chiffre d'affaires"
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: filter
+          description: "OData filter sur les chiffres affaires (ex: date ge 2024-01-01T00:00:00Z)"
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/ConcessionnaireActivite"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/ConcessionnaireActivite"
+                type: array
+          description: "Liste des concessionnaires les plus actifs"
+
   /concessionnaires/{id}:
     get:
       operationId: getConcessionnaireById
@@ -487,6 +518,37 @@ paths:
                 format: binary
           description: "Fichier exporte"
 
+  /terminaux/top-actifs:
+    get:
+      operationId: getTopTerminauxActifs
+      tags: [ "Terminal" ]
+      description: "Top terminaux les plus actifs par chiffre d'affaires"
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: filter
+          description: "OData filter sur les chiffres affaires (ex: date ge 2024-01-01T00:00:00Z)"
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/TerminalActivite"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/TerminalActivite"
+                type: array
+          description: "Liste triée par CA décroissant"
+
   /concessionnaires/{id}/terminaux:
     get:
       operationId: getConcessionnaireTerminaux
@@ -726,6 +788,68 @@ components:
           type: string
         email:
           type: string
+
+    ConcessionnaireActivite:
+      properties:
+        concessionnaireId:
+          type: integer
+          format: int64
+        uid:
+          type: string
+        nom:
+          type: string
+        prenoms:
+          type: string
+        telephone:
+          type: string
+        nombreTerminaux:
+          type: integer
+        nombreOperations:
+          type: integer
+          format: int64
+        chiffreAffaires:
+          type: integer
+          format: int64
+        soldeTotal:
+          type: integer
+          format: int64
+        concessionnaireCodes:
+          items:
+            type: string
+          type: array
+
+    TerminalActivite:
+      properties:
+        terminalId:
+          type: integer
+          format: int64
+        codeTerminal:
+          type: string
+        concessionnaireProduitCode:
+          type: string
+        concessionnaireId:
+          type: integer
+          format: int64
+        concessionnaireNomPrenom:
+          type: string
+        produitCode:
+          type: string
+        produitLibelle:
+          type: string
+        siteLibelle:
+          type: string
+        solde:
+          type: integer
+          format: int64
+        nombreOperations:
+          type: integer
+          format: int64
+        nombreRechargements:
+          type: integer
+          format: int64
+        chiffreAffaires:
+          type: integer
+          format: int64
 
     ConcessionnaireDetail:
       properties:

@@ -1,10 +1,12 @@
 package com.df.lonis.ventesrest.client.resource.v1_0;
 
 import com.df.lonis.ventesrest.client.dto.v1_0.Terminal;
+import com.df.lonis.ventesrest.client.dto.v1_0.TerminalActivite;
 import com.df.lonis.ventesrest.client.http.HttpInvoker;
 import com.df.lonis.ventesrest.client.pagination.Page;
 import com.df.lonis.ventesrest.client.pagination.Pagination;
 import com.df.lonis.ventesrest.client.problem.Problem;
+import com.df.lonis.ventesrest.client.serdes.v1_0.TerminalActiviteSerDes;
 import com.df.lonis.ventesrest.client.serdes.v1_0.TerminalSerDes;
 
 import java.util.LinkedHashMap;
@@ -41,6 +43,14 @@ public interface TerminalResource {
 
 	public HttpInvoker.HttpResponse exportTerminauxHttpResponse(
 			String format, String filterString)
+		throws Exception;
+
+	public Page<TerminalActivite> getTopTerminauxActifs(
+			Integer limit, String filterString)
+		throws Exception;
+
+	public HttpInvoker.HttpResponse getTopTerminauxActifsHttpResponse(
+			Integer limit, String filterString)
 		throws Exception;
 
 	public Page<Terminal> getConcessionnaireTerminaux(
@@ -293,6 +303,94 @@ public interface TerminalResource {
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
 					_builder._port + "/o/lonisVenteRest/v1.0/terminaux/export");
+
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
+
+			return httpInvoker.invoke();
+		}
+
+		public Page<TerminalActivite> getTopTerminauxActifs(
+				Integer limit, String filterString)
+			throws Exception {
+
+			HttpInvoker.HttpResponse httpResponse =
+				getTopTerminauxActifsHttpResponse(limit, filterString);
+
+			String content = httpResponse.getContent();
+
+			if ((httpResponse.getStatusCode() / 100) != 2) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response content: " + content);
+				_logger.log(
+					Level.WARNING,
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.log(
+					Level.WARNING,
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+			else {
+				_logger.fine("HTTP response content: " + content);
+				_logger.fine(
+					"HTTP response message: " + httpResponse.getMessage());
+				_logger.fine(
+					"HTTP response status code: " +
+						httpResponse.getStatusCode());
+			}
+
+			try {
+				return Page.of(content, TerminalActiviteSerDes::toDTO);
+			}
+			catch (Exception e) {
+				_logger.log(
+					Level.WARNING,
+					"Unable to process HTTP response: " + content, e);
+
+				throw new Problem.ProblemException(Problem.toDTO(content));
+			}
+		}
+
+		public HttpInvoker.HttpResponse getTopTerminauxActifsHttpResponse(
+				Integer limit, String filterString)
+			throws Exception {
+
+			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
+
+			if (_builder._locale != null) {
+				httpInvoker.header(
+					"Accept-Language", _builder._locale.toLanguageTag());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._headers.entrySet()) {
+
+				httpInvoker.header(entry.getKey(), entry.getValue());
+			}
+
+			for (Map.Entry<String, String> entry :
+					_builder._parameters.entrySet()) {
+
+				httpInvoker.parameter(entry.getKey(), entry.getValue());
+			}
+
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
+
+			if (limit != null) {
+				httpInvoker.parameter("limit", String.valueOf(limit));
+			}
+
+			if (filterString != null) {
+				httpInvoker.parameter("filter", filterString);
+			}
+
+			httpInvoker.path(
+				_builder._scheme + "://" + _builder._host + ":" +
+					_builder._port +
+						"/o/lonisVenteRest/v1.0/terminaux/top-actifs");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);

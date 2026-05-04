@@ -1,6 +1,7 @@
 package com.df.lonis.ventesrest.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Terminal;
+import com.df.lonis.ventesrest.dto.v1_0.TerminalActivite;
 
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
@@ -50,6 +51,10 @@ public interface TerminalResource {
 		throws Exception;
 
 	public Response exportTerminaux(String format, Filter filter)
+		throws Exception;
+
+	public Page<TerminalActivite> getTopTerminauxActifs(
+			Integer limit, Filter filter)
 		throws Exception;
 
 	public Page<Terminal> getConcessionnaireTerminaux(

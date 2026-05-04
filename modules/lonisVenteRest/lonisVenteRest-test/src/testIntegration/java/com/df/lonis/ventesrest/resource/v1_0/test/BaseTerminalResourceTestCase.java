@@ -430,6 +430,88 @@ public abstract class BaseTerminalResourceTestCase {
 	}
 
 	@Test
+	public void testGetTopTerminauxActifs() throws Exception {
+		Page<Terminal> page = terminalResource.getTopTerminauxActifs(
+			null, null);
+
+		long totalCount = page.getTotalCount();
+
+		Terminal terminal1 = testGetTopTerminauxActifs_addTerminal(
+			randomTerminal());
+
+		Terminal terminal2 = testGetTopTerminauxActifs_addTerminal(
+			randomTerminal());
+
+		page = terminalResource.getTopTerminauxActifs(null, null);
+
+		Assert.assertEquals(totalCount + 2, page.getTotalCount());
+
+		assertContains(terminal1, (List<Terminal>)page.getItems());
+		assertContains(terminal2, (List<Terminal>)page.getItems());
+		assertValid(page);
+	}
+
+	@Test
+	public void testGetTopTerminauxActifsWithFilterDateTimeEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Terminal terminal1 = randomTerminal();
+
+		terminal1 = testGetTopTerminauxActifs_addTerminal(terminal1);
+
+		for (EntityField entityField : entityFields) {
+			Page<Terminal> page = terminalResource.getTopTerminauxActifs(
+				null, getFilterString(entityField, "between", terminal1));
+
+			assertEquals(
+				Collections.singletonList(terminal1),
+				(List<Terminal>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetTopTerminauxActifsWithFilterStringEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Terminal terminal1 = testGetTopTerminauxActifs_addTerminal(
+			randomTerminal());
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		Terminal terminal2 = testGetTopTerminauxActifs_addTerminal(
+			randomTerminal());
+
+		for (EntityField entityField : entityFields) {
+			Page<Terminal> page = terminalResource.getTopTerminauxActifs(
+				null, getFilterString(entityField, "eq", terminal1));
+
+			assertEquals(
+				Collections.singletonList(terminal1),
+				(List<Terminal>)page.getItems());
+		}
+	}
+
+	protected Terminal testGetTopTerminauxActifs_addTerminal(Terminal terminal)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	@Test
 	public void testGetConcessionnaireTerminaux() throws Exception {
 		Long id = testGetConcessionnaireTerminaux_getId();
 		Long irrelevantId = testGetConcessionnaireTerminaux_getIrrelevantId();

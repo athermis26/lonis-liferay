@@ -2,6 +2,7 @@ package com.df.lonis.ventesrest.internal.resource.v1_0;
 
 import com.df.lonis.ventesrest.dto.v1_0.Operation;
 import com.df.lonis.ventesrest.dto.v1_0.Terminal;
+import com.df.lonis.ventesrest.dto.v1_0.TerminalActivite;
 import com.df.lonis.ventesrest.resource.v1_0.TerminalResource;
 
 import com.liferay.petra.function.UnsafeFunction;
@@ -144,6 +145,43 @@ public abstract class BaseTerminalResourceImpl
 		Response.ResponseBuilder responseBuilder = Response.ok();
 
 		return responseBuilder.build();
+	}
+
+	/**
+	 * Invoke this method with the command line:
+	 *
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisVenteRest/v1.0/terminaux/top-actifs'  -u 'test@liferay.com:test'
+	 */
+	@io.swagger.v3.oas.annotations.Operation(
+		description = "Top terminaux les plus actifs par chiffre d'affaires"
+	)
+	@io.swagger.v3.oas.annotations.Parameters(
+		value = {
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "limit"
+			),
+			@io.swagger.v3.oas.annotations.Parameter(
+				in = io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY,
+				name = "filter"
+			)
+		}
+	)
+	@io.swagger.v3.oas.annotations.tags.Tags(
+		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Terminal")}
+	)
+	@javax.ws.rs.GET
+	@javax.ws.rs.Path("/terminaux/top-actifs")
+	@javax.ws.rs.Produces({"application/json", "application/xml"})
+	@Override
+	public Page<TerminalActivite> getTopTerminauxActifs(
+			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
+			@javax.ws.rs.DefaultValue("10") @javax.ws.rs.QueryParam("limit")
+			Integer limit,
+			@javax.ws.rs.core.Context Filter filter)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
 	}
 
 	/**
