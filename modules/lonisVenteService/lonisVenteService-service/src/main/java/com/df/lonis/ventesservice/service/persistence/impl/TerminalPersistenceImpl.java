@@ -1154,6 +1154,1039 @@ public class TerminalPersistenceImpl
 		_FINDER_COLUMN_CONCESSIONNAIREID_CONCESSIONNAIREID_2 =
 			"terminal.concessionnaireId = ?";
 
+	private FinderPath _finderPathWithPaginationFindBySiteId;
+	private FinderPath _finderPathWithoutPaginationFindBySiteId;
+	private FinderPath _finderPathCountBySiteId;
+
+	/**
+	 * Returns all the terminals where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @return the matching terminals
+	 */
+	@Override
+	public List<Terminal> findBySiteId(long siteId) {
+		return findBySiteId(siteId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @return the range of matching terminals
+	 */
+	@Override
+	public List<Terminal> findBySiteId(long siteId, int start, int end) {
+		return findBySiteId(siteId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching terminals
+	 */
+	@Override
+	public List<Terminal> findBySiteId(
+		long siteId, int start, int end,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return findBySiteId(siteId, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching terminals
+	 */
+	@Override
+	public List<Terminal> findBySiteId(
+		long siteId, int start, int end,
+		OrderByComparator<Terminal> orderByComparator, boolean useFinderCache) {
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindBySiteId;
+				finderArgs = new Object[] {siteId};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindBySiteId;
+			finderArgs = new Object[] {siteId, start, end, orderByComparator};
+		}
+
+		List<Terminal> list = null;
+
+		if (useFinderCache) {
+			list = (List<Terminal>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (Terminal terminal : list) {
+					if (siteId != terminal.getSiteId()) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					3 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(3);
+			}
+
+			sb.append(_SQL_SELECT_TERMINAL_WHERE);
+
+			sb.append(_FINDER_COLUMN_SITEID_SITEID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(TerminalModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(siteId);
+
+				list = (List<Terminal>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	@Override
+	public Terminal findBySiteId_First(
+			long siteId, OrderByComparator<Terminal> orderByComparator)
+		throws NoSuchTerminalException {
+
+		Terminal terminal = fetchBySiteId_First(siteId, orderByComparator);
+
+		if (terminal != null) {
+			return terminal;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("siteId=");
+		sb.append(siteId);
+
+		sb.append("}");
+
+		throw new NoSuchTerminalException(sb.toString());
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	@Override
+	public Terminal fetchBySiteId_First(
+		long siteId, OrderByComparator<Terminal> orderByComparator) {
+
+		List<Terminal> list = findBySiteId(siteId, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	@Override
+	public Terminal findBySiteId_Last(
+			long siteId, OrderByComparator<Terminal> orderByComparator)
+		throws NoSuchTerminalException {
+
+		Terminal terminal = fetchBySiteId_Last(siteId, orderByComparator);
+
+		if (terminal != null) {
+			return terminal;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("siteId=");
+		sb.append(siteId);
+
+		sb.append("}");
+
+		throw new NoSuchTerminalException(sb.toString());
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	@Override
+	public Terminal fetchBySiteId_Last(
+		long siteId, OrderByComparator<Terminal> orderByComparator) {
+
+		int count = countBySiteId(siteId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<Terminal> list = findBySiteId(
+			siteId, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the terminals before and after the current terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param id the primary key of the current terminal
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next terminal
+	 * @throws NoSuchTerminalException if a terminal with the primary key could not be found
+	 */
+	@Override
+	public Terminal[] findBySiteId_PrevAndNext(
+			long id, long siteId, OrderByComparator<Terminal> orderByComparator)
+		throws NoSuchTerminalException {
+
+		Terminal terminal = findByPrimaryKey(id);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Terminal[] array = new TerminalImpl[3];
+
+			array[0] = getBySiteId_PrevAndNext(
+				session, terminal, siteId, orderByComparator, true);
+
+			array[1] = terminal;
+
+			array[2] = getBySiteId_PrevAndNext(
+				session, terminal, siteId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Terminal getBySiteId_PrevAndNext(
+		Session session, Terminal terminal, long siteId,
+		OrderByComparator<Terminal> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(3);
+		}
+
+		sb.append(_SQL_SELECT_TERMINAL_WHERE);
+
+		sb.append(_FINDER_COLUMN_SITEID_SITEID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(TerminalModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		queryPos.add(siteId);
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(terminal)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<Terminal> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the terminals where siteId = &#63; from the database.
+	 *
+	 * @param siteId the site ID
+	 */
+	@Override
+	public void removeBySiteId(long siteId) {
+		for (Terminal terminal :
+				findBySiteId(
+					siteId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+
+			remove(terminal);
+		}
+	}
+
+	/**
+	 * Returns the number of terminals where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @return the number of matching terminals
+	 */
+	@Override
+	public int countBySiteId(long siteId) {
+		FinderPath finderPath = _finderPathCountBySiteId;
+
+		Object[] finderArgs = new Object[] {siteId};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(_SQL_COUNT_TERMINAL_WHERE);
+
+			sb.append(_FINDER_COLUMN_SITEID_SITEID_2);
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				queryPos.add(siteId);
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_SITEID_SITEID_2 =
+		"terminal.siteId = ?";
+
+	private FinderPath _finderPathWithPaginationFindByStatutValidation;
+	private FinderPath _finderPathWithoutPaginationFindByStatutValidation;
+	private FinderPath _finderPathCountByStatutValidation;
+
+	/**
+	 * Returns all the terminals where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @return the matching terminals
+	 */
+	@Override
+	public List<Terminal> findByStatutValidation(String statutValidation) {
+		return findByStatutValidation(
+			statutValidation, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @return the range of matching terminals
+	 */
+	@Override
+	public List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end) {
+
+		return findByStatutValidation(statutValidation, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching terminals
+	 */
+	@Override
+	public List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return findByStatutValidation(
+			statutValidation, start, end, orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching terminals
+	 */
+	@Override
+	public List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end,
+		OrderByComparator<Terminal> orderByComparator, boolean useFinderCache) {
+
+		statutValidation = Objects.toString(statutValidation, "");
+
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+			(orderByComparator == null)) {
+
+			if (useFinderCache) {
+				finderPath = _finderPathWithoutPaginationFindByStatutValidation;
+				finderArgs = new Object[] {statutValidation};
+			}
+		}
+		else if (useFinderCache) {
+			finderPath = _finderPathWithPaginationFindByStatutValidation;
+			finderArgs = new Object[] {
+				statutValidation, start, end, orderByComparator
+			};
+		}
+
+		List<Terminal> list = null;
+
+		if (useFinderCache) {
+			list = (List<Terminal>)finderCache.getResult(
+				finderPath, finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (Terminal terminal : list) {
+					if (!statutValidation.equals(
+							terminal.getStatutValidation())) {
+
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler sb = null;
+
+			if (orderByComparator != null) {
+				sb = new StringBundler(
+					3 + (orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				sb = new StringBundler(3);
+			}
+
+			sb.append(_SQL_SELECT_TERMINAL_WHERE);
+
+			boolean bindStatutValidation = false;
+
+			if (statutValidation.isEmpty()) {
+				sb.append(_FINDER_COLUMN_STATUTVALIDATION_STATUTVALIDATION_3);
+			}
+			else {
+				bindStatutValidation = true;
+
+				sb.append(_FINDER_COLUMN_STATUTVALIDATION_STATUTVALIDATION_2);
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(
+					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
+			}
+			else {
+				sb.append(TerminalModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindStatutValidation) {
+					queryPos.add(statutValidation);
+				}
+
+				list = (List<Terminal>)QueryUtil.list(
+					query, getDialect(), start, end);
+
+				cacheResult(list);
+
+				if (useFinderCache) {
+					finderCache.putResult(finderPath, finderArgs, list);
+				}
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	@Override
+	public Terminal findByStatutValidation_First(
+			String statutValidation,
+			OrderByComparator<Terminal> orderByComparator)
+		throws NoSuchTerminalException {
+
+		Terminal terminal = fetchByStatutValidation_First(
+			statutValidation, orderByComparator);
+
+		if (terminal != null) {
+			return terminal;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("statutValidation=");
+		sb.append(statutValidation);
+
+		sb.append("}");
+
+		throw new NoSuchTerminalException(sb.toString());
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	@Override
+	public Terminal fetchByStatutValidation_First(
+		String statutValidation,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		List<Terminal> list = findByStatutValidation(
+			statutValidation, 0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	@Override
+	public Terminal findByStatutValidation_Last(
+			String statutValidation,
+			OrderByComparator<Terminal> orderByComparator)
+		throws NoSuchTerminalException {
+
+		Terminal terminal = fetchByStatutValidation_Last(
+			statutValidation, orderByComparator);
+
+		if (terminal != null) {
+			return terminal;
+		}
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		sb.append("statutValidation=");
+		sb.append(statutValidation);
+
+		sb.append("}");
+
+		throw new NoSuchTerminalException(sb.toString());
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	@Override
+	public Terminal fetchByStatutValidation_Last(
+		String statutValidation,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		int count = countByStatutValidation(statutValidation);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<Terminal> list = findByStatutValidation(
+			statutValidation, count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the terminals before and after the current terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param id the primary key of the current terminal
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next terminal
+	 * @throws NoSuchTerminalException if a terminal with the primary key could not be found
+	 */
+	@Override
+	public Terminal[] findByStatutValidation_PrevAndNext(
+			long id, String statutValidation,
+			OrderByComparator<Terminal> orderByComparator)
+		throws NoSuchTerminalException {
+
+		statutValidation = Objects.toString(statutValidation, "");
+
+		Terminal terminal = findByPrimaryKey(id);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			Terminal[] array = new TerminalImpl[3];
+
+			array[0] = getByStatutValidation_PrevAndNext(
+				session, terminal, statutValidation, orderByComparator, true);
+
+			array[1] = terminal;
+
+			array[2] = getByStatutValidation_PrevAndNext(
+				session, terminal, statutValidation, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception exception) {
+			throw processException(exception);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected Terminal getByStatutValidation_PrevAndNext(
+		Session session, Terminal terminal, String statutValidation,
+		OrderByComparator<Terminal> orderByComparator, boolean previous) {
+
+		StringBundler sb = null;
+
+		if (orderByComparator != null) {
+			sb = new StringBundler(
+				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			sb = new StringBundler(3);
+		}
+
+		sb.append(_SQL_SELECT_TERMINAL_WHERE);
+
+		boolean bindStatutValidation = false;
+
+		if (statutValidation.isEmpty()) {
+			sb.append(_FINDER_COLUMN_STATUTVALIDATION_STATUTVALIDATION_3);
+		}
+		else {
+			bindStatutValidation = true;
+
+			sb.append(_FINDER_COLUMN_STATUTVALIDATION_STATUTVALIDATION_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields =
+				orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				sb.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(WHERE_GREATER_THAN);
+					}
+					else {
+						sb.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			sb.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				sb.append(_ORDER_BY_ENTITY_ALIAS);
+				sb.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						sb.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						sb.append(ORDER_BY_ASC);
+					}
+					else {
+						sb.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			sb.append(TerminalModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = sb.toString();
+
+		Query query = session.createQuery(sql);
+
+		query.setFirstResult(0);
+		query.setMaxResults(2);
+
+		QueryPos queryPos = QueryPos.getInstance(query);
+
+		if (bindStatutValidation) {
+			queryPos.add(statutValidation);
+		}
+
+		if (orderByComparator != null) {
+			for (Object orderByConditionValue :
+					orderByComparator.getOrderByConditionValues(terminal)) {
+
+				queryPos.add(orderByConditionValue);
+			}
+		}
+
+		List<Terminal> list = query.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the terminals where statutValidation = &#63; from the database.
+	 *
+	 * @param statutValidation the statut validation
+	 */
+	@Override
+	public void removeByStatutValidation(String statutValidation) {
+		for (Terminal terminal :
+				findByStatutValidation(
+					statutValidation, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					null)) {
+
+			remove(terminal);
+		}
+	}
+
+	/**
+	 * Returns the number of terminals where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @return the number of matching terminals
+	 */
+	@Override
+	public int countByStatutValidation(String statutValidation) {
+		statutValidation = Objects.toString(statutValidation, "");
+
+		FinderPath finderPath = _finderPathCountByStatutValidation;
+
+		Object[] finderArgs = new Object[] {statutValidation};
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(_SQL_COUNT_TERMINAL_WHERE);
+
+			boolean bindStatutValidation = false;
+
+			if (statutValidation.isEmpty()) {
+				sb.append(_FINDER_COLUMN_STATUTVALIDATION_STATUTVALIDATION_3);
+			}
+			else {
+				bindStatutValidation = true;
+
+				sb.append(_FINDER_COLUMN_STATUTVALIDATION_STATUTVALIDATION_2);
+			}
+
+			String sql = sb.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query query = session.createQuery(sql);
+
+				QueryPos queryPos = QueryPos.getInstance(query);
+
+				if (bindStatutValidation) {
+					queryPos.add(statutValidation);
+				}
+
+				count = (Long)query.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception exception) {
+				throw processException(exception);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String
+		_FINDER_COLUMN_STATUTVALIDATION_STATUTVALIDATION_2 =
+			"terminal.statutValidation = ?";
+
+	private static final String
+		_FINDER_COLUMN_STATUTVALIDATION_STATUTVALIDATION_3 =
+			"(terminal.statutValidation IS NULL OR terminal.statutValidation = '')";
+
 	public TerminalPersistenceImpl() {
 		Map<String, String> dbColumnNames = new HashMap<String, String>();
 
@@ -1164,6 +2197,7 @@ public class TerminalPersistenceImpl
 		dbColumnNames.put(
 			"concessionnaireProduitCode", "concessionnaire_produit_code");
 		dbColumnNames.put("siteId", "site_id");
+		dbColumnNames.put("statutValidation", "statut_validation");
 		dbColumnNames.put("createdAt", "created_at");
 		dbColumnNames.put("updatedAt", "updated_at");
 
@@ -1720,6 +2754,42 @@ public class TerminalPersistenceImpl
 			"countByConcessionnaireId", new String[] {Long.class.getName()},
 			new String[] {"concessionnaire_id"}, false);
 
+		_finderPathWithPaginationFindBySiteId = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findBySiteId",
+			new String[] {
+				Long.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			},
+			new String[] {"site_id"}, true);
+
+		_finderPathWithoutPaginationFindBySiteId = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findBySiteId",
+			new String[] {Long.class.getName()}, new String[] {"site_id"},
+			true);
+
+		_finderPathCountBySiteId = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countBySiteId",
+			new String[] {Long.class.getName()}, new String[] {"site_id"},
+			false);
+
+		_finderPathWithPaginationFindByStatutValidation = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByStatutValidation",
+			new String[] {
+				String.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
+			},
+			new String[] {"statut_validation"}, true);
+
+		_finderPathWithoutPaginationFindByStatutValidation = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByStatutValidation",
+			new String[] {String.class.getName()},
+			new String[] {"statut_validation"}, true);
+
+		_finderPathCountByStatutValidation = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByStatutValidation", new String[] {String.class.getName()},
+			new String[] {"statut_validation"}, false);
+
 		TerminalUtil.setPersistence(this);
 	}
 
@@ -1788,8 +2858,8 @@ public class TerminalPersistenceImpl
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(
 		new String[] {
 			"codeTerminal", "concessionnaireId", "concessionnaireCode",
-			"produitId", "concessionnaireProduitCode", "siteId", "createdAt",
-			"updatedAt"
+			"produitId", "concessionnaireProduitCode", "siteId",
+			"statutValidation", "createdAt", "updatedAt"
 		});
 
 	@Override

@@ -52,15 +52,26 @@
 		<column name="produitId" type="long" db-name="produit_id"/>
 		<column name="concessionnaireProduitCode" type="String" db-name="concessionnaire_produit_code"/>
 		<column name="siteId" type="long" db-name="site_id"/>
-		<column name="createdAt" type="Date" db-name="created_at"/>
-		<column name="updatedAt" type="Date" db-name="updated_at"/>
+
+		<!-- Nouveaux champs -->
+		<column name="latitude"          type="Double"  db-name="latitude"/>
+		<column name="longitude"         type="Double"  db-name="longitude"/>
+		<column name="adresse"           type="String"  db-name="adresse"/>
+		<column name="statutValidation"  type="String"  db-name="statut_validation"/>
+		<column name="createdAt"         type="Date"    db-name="created_at"/>
+		<column name="updatedAt"         type="Date"    db-name="updated_at"/>
 
 		<finder name="ConcessionnaireProduitCode" return-type="Collection">
 			<finder-column name="concessionnaireProduitCode"/>
 		</finder>
-
 		<finder name="ConcessionnaireId" return-type="Collection">
 			<finder-column name="concessionnaireId"/>
+		</finder>
+		<finder name="SiteId" return-type="Collection">
+			<finder-column name="siteId"/>
+		</finder>
+		<finder name="StatutValidation" return-type="Collection">
+			<finder-column name="statutValidation"/>
 		</finder>
 	</entity>
 
@@ -184,6 +195,167 @@
 		</finder>
 		<finder name="Statut" return-type="Collection">
 			<finder-column name="statut"/>
+		</finder>
+	</entity>
+
+	<!-- Commerciaux -->
+	<entity local-service="true" name="Commercial" remote-service="false" table="commerciaux">
+		<column name="id"           primary="true" type="long"   id-type="identity" db-name="id"/>
+		<column name="nom"          type="String"  db-name="nom"/>
+		<column name="prenoms"      type="String"  db-name="prenoms"/>
+		<column name="telephone"    type="String"  db-name="telephone"/>
+		<column name="email"        type="String"  db-name="email"/>
+		<column name="matricule"    type="String"  db-name="matricule"/>
+		<column name="statut"       type="String"  db-name="statut"/>
+		<column name="superviseurId" type="long"   db-name="superviseur_id"/>
+		<column name="createdAt"    type="Date"    db-name="created_at"/>
+		<column name="updatedAt"    type="Date"    db-name="updated_at"/>
+
+		<order by="asc">
+			<order-column name="nom"/>
+		</order>
+
+		<finder name="Matricule" return-type="Commercial" unique="true">
+			<finder-column name="matricule"/>
+		</finder>
+		<finder name="SuperviseurId" return-type="Collection">
+			<finder-column name="superviseurId"/>
+		</finder>
+		<finder name="Statut" return-type="Collection">
+			<finder-column name="statut"/>
+		</finder>
+	</entity>
+
+	<!-- Site Commerciaux (Affectation) -->
+	<entity local-service="true" name="SiteCommercial" remote-service="false" table="site_commerciaux">
+		<column name="id"           primary="true" type="long"    id-type="identity" db-name="id"/>
+		<column name="siteId"       type="long"    db-name="site_id"/>
+		<column name="commercialId" type="long"    db-name="commercial_id"/>
+		<column name="dateDebut"    type="Date"    db-name="date_debut"/>
+		<column name="dateFin"      type="Date"    db-name="date_fin"/>
+		<column name="isPrincipal"  type="boolean" db-name="is_principal"/>
+		<column name="createdAt"    type="Date"    db-name="created_at"/>
+
+		<finder name="SiteId" return-type="Collection">
+			<finder-column name="siteId"/>
+		</finder>
+		<finder name="CommercialId" return-type="Collection">
+			<finder-column name="commercialId"/>
+		</finder>
+		<!-- Trouver l'affectation active (dateFin = null) -->
+		<finder name="S_C" return-type="SiteCommercial" unique="true">
+			<finder-column name="siteId"/>
+			<finder-column name="commercialId"/>
+		</finder>
+	</entity>
+
+	<!-- Visites -->
+	<entity local-service="true" name="Visite" remote-service="false" table="visites">
+		<column name="id"           primary="true" type="long"    id-type="identity" db-name="id"/>
+		<column name="commercialId" type="long"    db-name="commercial_id"/>
+		<column name="terminalId"   type="long"    db-name="terminal_id"/>
+		<column name="latitude"     type="Double"  db-name="latitude"/>
+		<column name="longitude"    type="Double"  db-name="longitude"/>
+		<column name="statut"       type="String"  db-name="statut"/>
+		<!-- EFFECTUEE | MANQUEE | PLANIFIEE -->
+		<column name="typeControle" type="String"  db-name="type_controle"/>
+		<!-- GPS | RFID | TAG -->
+		<column name="dateVisite"   type="Date"    db-name="date_visite"/>
+		<column name="compteRendu"  type="String"  db-name="compte_rendu"/>
+		<column name="createdAt"    type="Date"    db-name="created_at"/>
+		<column name="updatedAt"    type="Date"    db-name="updated_at"/>
+
+		<order by="desc">
+			<order-column name="dateVisite"/>
+		</order>
+
+		<finder name="CommercialId" return-type="Collection">
+			<finder-column name="commercialId"/>
+		</finder>
+		<finder name="TerminalId" return-type="Collection">
+			<finder-column name="terminalId"/>
+		</finder>
+		<finder name="Statut" return-type="Collection">
+			<finder-column name="statut"/>
+		</finder>
+		<finder name="C_S" return-type="Collection">
+			<finder-column name="commercialId"/>
+			<finder-column name="statut"/>
+		</finder>
+		<finder name="C_D" return-type="Collection">
+			<finder-column name="commercialId"/>
+			<finder-column name="dateVisite" comparator="&gt;="/>
+		</finder>
+	</entity>
+
+	<!-- Objectifs -->
+	<entity local-service="true" name="Objectif" remote-service="false" table="objectifs">
+		<column name="id"           primary="true" type="long"   id-type="identity" db-name="id"/>
+		<column name="commercialId" type="long"    db-name="commercial_id"/>
+		<column name="type"         type="String"  db-name="type"/>
+		<!-- VISITE | VENTE -->
+		<column name="periode"      type="String"  db-name="periode"/>
+		<!-- MENSUEL | TRIMESTRIEL -->
+		<column name="valeurCible"  type="int"     db-name="valeur_cible"/>
+		<column name="valeurReelle" type="int"     db-name="valeur_reelle"/>
+		<column name="mois"         type="int"     db-name="mois"/>
+		<column name="trimestre"    type="int"     db-name="trimestre"/>
+		<column name="annee"        type="int"     db-name="annee"/>
+		<column name="createdAt"    type="Date"    db-name="created_at"/>
+		<column name="updatedAt"    type="Date"    db-name="updated_at"/>
+
+		<order by="desc">
+			<order-column name="annee"/>
+		</order>
+
+		<finder name="CommercialId" return-type="Collection">
+			<finder-column name="commercialId"/>
+		</finder>
+		<finder name="C_A" return-type="Collection">
+			<finder-column name="commercialId"/>
+			<finder-column name="annee"/>
+		</finder>
+		<finder name="C_A_M" return-type="Objectif" unique="true">
+			<finder-column name="commercialId"/>
+			<finder-column name="annee"/>
+			<finder-column name="mois"/>
+		</finder>
+	</entity>
+
+	<!-- Evaluations -->
+	<entity local-service="true" name="Evaluation" remote-service="false" table="evaluations">
+		<column name="id"                  primary="true" type="long"   id-type="identity" db-name="id"/>
+		<column name="commercialId"        type="long"    db-name="commercial_id"/>
+		<column name="nbVisitesPrevues"    type="int"     db-name="nb_visites_prevues"/>
+		<column name="nbVisitesEffectuees" type="int"     db-name="nb_visites_effectuees"/>
+		<column name="tauxRealisation"     type="double"  db-name="taux_realisation"/>
+		<column name="rang"                type="int"     db-name="rang"/>
+		<column name="periode"             type="String"  db-name="periode"/>
+		<column name="mois"                type="int"     db-name="mois"/>
+		<column name="trimestre"           type="int"     db-name="trimestre"/>
+		<column name="annee"               type="int"     db-name="annee"/>
+		<column name="createdAt"           type="Date"    db-name="created_at"/>
+		<column name="updatedAt"           type="Date"    db-name="updated_at"/>
+
+		<order by="desc">
+			<order-column name="annee"/>
+		</order>
+
+		<finder name="CommercialId" return-type="Collection">
+			<finder-column name="commercialId"/>
+		</finder>
+		<finder name="Annee" return-type="Collection">
+			<finder-column name="annee"/>
+		</finder>
+		<finder name="C_A" return-type="Collection">
+			<finder-column name="commercialId"/>
+			<finder-column name="annee"/>
+		</finder>
+		<finder name="C_A_M_P" return-type="Evaluation" unique="true">
+			<finder-column name="commercialId"/>
+			<finder-column name="annee"/>
+			<finder-column name="mois"/>
+			<finder-column name="periode"/>
 		</finder>
 	</entity>
 </service-builder>

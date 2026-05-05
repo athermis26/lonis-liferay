@@ -149,6 +149,64 @@ public interface TerminalModel extends BaseModel<Terminal> {
 	public void setSiteId(long siteId);
 
 	/**
+	 * Returns the latitude of this terminal.
+	 *
+	 * @return the latitude of this terminal
+	 */
+	public Double getLatitude();
+
+	/**
+	 * Sets the latitude of this terminal.
+	 *
+	 * @param latitude the latitude of this terminal
+	 */
+	public void setLatitude(Double latitude);
+
+	/**
+	 * Returns the longitude of this terminal.
+	 *
+	 * @return the longitude of this terminal
+	 */
+	public Double getLongitude();
+
+	/**
+	 * Sets the longitude of this terminal.
+	 *
+	 * @param longitude the longitude of this terminal
+	 */
+	public void setLongitude(Double longitude);
+
+	/**
+	 * Returns the adresse of this terminal.
+	 *
+	 * @return the adresse of this terminal
+	 */
+	@AutoEscape
+	public String getAdresse();
+
+	/**
+	 * Sets the adresse of this terminal.
+	 *
+	 * @param adresse the adresse of this terminal
+	 */
+	public void setAdresse(String adresse);
+
+	/**
+	 * Returns the statut validation of this terminal.
+	 *
+	 * @return the statut validation of this terminal
+	 */
+	@AutoEscape
+	public String getStatutValidation();
+
+	/**
+	 * Sets the statut validation of this terminal.
+	 *
+	 * @param statutValidation the statut validation of this terminal
+	 */
+	public void setStatutValidation(String statutValidation);
+
+	/**
 	 * Returns the created at of this terminal.
 	 *
 	 * @return the created at of this terminal

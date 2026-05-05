@@ -8,13 +8,18 @@ package com.df.lonis.ventesservice.service.base;
 import com.df.lonis.ventesservice.model.ConcessionnaireProduit;
 import com.df.lonis.ventesservice.service.ConcessionnaireProduitLocalService;
 import com.df.lonis.ventesservice.service.persistence.ChiffreAffairesPersistence;
+import com.df.lonis.ventesservice.service.persistence.CommercialPersistence;
 import com.df.lonis.ventesservice.service.persistence.CommissionPersistence;
 import com.df.lonis.ventesservice.service.persistence.ConcessionnairePersistence;
 import com.df.lonis.ventesservice.service.persistence.ConcessionnaireProduitPersistence;
+import com.df.lonis.ventesservice.service.persistence.EvaluationPersistence;
+import com.df.lonis.ventesservice.service.persistence.ObjectifPersistence;
 import com.df.lonis.ventesservice.service.persistence.OperationPersistence;
 import com.df.lonis.ventesservice.service.persistence.ProduitPersistence;
+import com.df.lonis.ventesservice.service.persistence.SiteCommercialPersistence;
 import com.df.lonis.ventesservice.service.persistence.SitePersistence;
 import com.df.lonis.ventesservice.service.persistence.TerminalPersistence;
+import com.df.lonis.ventesservice.service.persistence.VisitePersistence;
 
 import com.liferay.petra.sql.dsl.query.DSLQuery;
 import com.liferay.portal.aop.AopService;
@@ -466,6 +471,9 @@ public abstract class ConcessionnaireProduitLocalServiceBaseImpl
 	protected ChiffreAffairesPersistence chiffreAffairesPersistence;
 
 	@Reference
+	protected CommercialPersistence commercialPersistence;
+
+	@Reference
 	protected CommissionPersistence commissionPersistence;
 
 	@Reference
@@ -479,6 +487,12 @@ public abstract class ConcessionnaireProduitLocalServiceBaseImpl
 		concessionnaireProduitPersistence;
 
 	@Reference
+	protected EvaluationPersistence evaluationPersistence;
+
+	@Reference
+	protected ObjectifPersistence objectifPersistence;
+
+	@Reference
 	protected OperationPersistence operationPersistence;
 
 	@Reference
@@ -488,7 +502,13 @@ public abstract class ConcessionnaireProduitLocalServiceBaseImpl
 	protected SitePersistence sitePersistence;
 
 	@Reference
+	protected SiteCommercialPersistence siteCommercialPersistence;
+
+	@Reference
 	protected TerminalPersistence terminalPersistence;
+
+	@Reference
+	protected VisitePersistence visitePersistence;
 
 	@Reference
 	protected com.liferay.counter.kernel.service.CounterLocalService

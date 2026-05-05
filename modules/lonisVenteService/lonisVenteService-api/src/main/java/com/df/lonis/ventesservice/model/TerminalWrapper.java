@@ -41,6 +41,10 @@ public class TerminalWrapper
 		attributes.put(
 			"concessionnaireProduitCode", getConcessionnaireProduitCode());
 		attributes.put("siteId", getSiteId());
+		attributes.put("latitude", getLatitude());
+		attributes.put("longitude", getLongitude());
+		attributes.put("adresse", getAdresse());
+		attributes.put("statutValidation", getStatutValidation());
 		attributes.put("createdAt", getCreatedAt());
 		attributes.put("updatedAt", getUpdatedAt());
 
@@ -93,6 +97,30 @@ public class TerminalWrapper
 			setSiteId(siteId);
 		}
 
+		Double latitude = (Double)attributes.get("latitude");
+
+		if (latitude != null) {
+			setLatitude(latitude);
+		}
+
+		Double longitude = (Double)attributes.get("longitude");
+
+		if (longitude != null) {
+			setLongitude(longitude);
+		}
+
+		String adresse = (String)attributes.get("adresse");
+
+		if (adresse != null) {
+			setAdresse(adresse);
+		}
+
+		String statutValidation = (String)attributes.get("statutValidation");
+
+		if (statutValidation != null) {
+			setStatutValidation(statutValidation);
+		}
+
 		Date createdAt = (Date)attributes.get("createdAt");
 
 		if (createdAt != null) {
@@ -109,6 +137,16 @@ public class TerminalWrapper
 	@Override
 	public Terminal cloneWithOriginalValues() {
 		return wrap(model.cloneWithOriginalValues());
+	}
+
+	/**
+	 * Returns the adresse of this terminal.
+	 *
+	 * @return the adresse of this terminal
+	 */
+	@Override
+	public String getAdresse() {
+		return model.getAdresse();
 	}
 
 	/**
@@ -172,6 +210,26 @@ public class TerminalWrapper
 	}
 
 	/**
+	 * Returns the latitude of this terminal.
+	 *
+	 * @return the latitude of this terminal
+	 */
+	@Override
+	public Double getLatitude() {
+		return model.getLatitude();
+	}
+
+	/**
+	 * Returns the longitude of this terminal.
+	 *
+	 * @return the longitude of this terminal
+	 */
+	@Override
+	public Double getLongitude() {
+		return model.getLongitude();
+	}
+
+	/**
 	 * Returns the primary key of this terminal.
 	 *
 	 * @return the primary key of this terminal
@@ -202,6 +260,16 @@ public class TerminalWrapper
 	}
 
 	/**
+	 * Returns the statut validation of this terminal.
+	 *
+	 * @return the statut validation of this terminal
+	 */
+	@Override
+	public String getStatutValidation() {
+		return model.getStatutValidation();
+	}
+
+	/**
 	 * Returns the updated at of this terminal.
 	 *
 	 * @return the updated at of this terminal
@@ -214,6 +282,16 @@ public class TerminalWrapper
 	@Override
 	public void persist() {
 		model.persist();
+	}
+
+	/**
+	 * Sets the adresse of this terminal.
+	 *
+	 * @param adresse the adresse of this terminal
+	 */
+	@Override
+	public void setAdresse(String adresse) {
+		model.setAdresse(adresse);
 	}
 
 	/**
@@ -279,6 +357,26 @@ public class TerminalWrapper
 	}
 
 	/**
+	 * Sets the latitude of this terminal.
+	 *
+	 * @param latitude the latitude of this terminal
+	 */
+	@Override
+	public void setLatitude(Double latitude) {
+		model.setLatitude(latitude);
+	}
+
+	/**
+	 * Sets the longitude of this terminal.
+	 *
+	 * @param longitude the longitude of this terminal
+	 */
+	@Override
+	public void setLongitude(Double longitude) {
+		model.setLongitude(longitude);
+	}
+
+	/**
 	 * Sets the primary key of this terminal.
 	 *
 	 * @param primaryKey the primary key of this terminal
@@ -306,6 +404,16 @@ public class TerminalWrapper
 	@Override
 	public void setSiteId(long siteId) {
 		model.setSiteId(siteId);
+	}
+
+	/**
+	 * Sets the statut validation of this terminal.
+	 *
+	 * @param statutValidation the statut validation of this terminal
+	 */
+	@Override
+	public void setStatutValidation(String statutValidation) {
+		model.setStatutValidation(statutValidation);
 	}
 
 	/**

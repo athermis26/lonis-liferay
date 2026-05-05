@@ -1,0 +1,6 @@
+Bundle-Name: lonisReseauRest-api
+Bundle-SymbolicName: com.df.lonis.reseaurest.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.df.lonis.reseaurest.dto.v1_0,\
+	com.df.lonis.reseaurest.resource.v1_0

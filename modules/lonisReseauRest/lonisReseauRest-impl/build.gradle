@@ -1,0 +1,9 @@
+dependencies {
+	api project(":modules:lonisReseauRest:lonisReseauRest-api")
+
+	compileOnly group: "com.liferay.portal", name: "release.dxp.api"
+
+	compileOnly project(":modules:lonisVenteService:lonisVenteService-api")
+}
+
+group = "com.df.lonis.reseaurest"

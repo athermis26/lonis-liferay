@@ -41,6 +41,14 @@ public class TerminalTable extends BaseTable<TerminalTable> {
 			Column.FLAG_DEFAULT);
 	public final Column<TerminalTable, Long> siteId = createColumn(
 		"site_id", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<TerminalTable, Double> latitude = createColumn(
+		"latitude", Double.class, Types.DOUBLE, Column.FLAG_DEFAULT);
+	public final Column<TerminalTable, Double> longitude = createColumn(
+		"longitude", Double.class, Types.DOUBLE, Column.FLAG_DEFAULT);
+	public final Column<TerminalTable, String> adresse = createColumn(
+		"adresse", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<TerminalTable, String> statutValidation = createColumn(
+		"statut_validation", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<TerminalTable, Date> createdAt = createColumn(
 		"created_at", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
 	public final Column<TerminalTable, Date> updatedAt = createColumn(

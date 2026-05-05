@@ -3,13 +3,18 @@
 
 <hibernate-mapping auto-import="false" default-lazy="false">
 	<import class="com.df.lonis.ventesservice.model.ChiffreAffaires" />
+	<import class="com.df.lonis.ventesservice.model.Commercial" />
 	<import class="com.df.lonis.ventesservice.model.Commission" />
 	<import class="com.df.lonis.ventesservice.model.Concessionnaire" />
 	<import class="com.df.lonis.ventesservice.model.ConcessionnaireProduit" />
+	<import class="com.df.lonis.ventesservice.model.Evaluation" />
+	<import class="com.df.lonis.ventesservice.model.Objectif" />
 	<import class="com.df.lonis.ventesservice.model.Operation" />
 	<import class="com.df.lonis.ventesservice.model.Produit" />
 	<import class="com.df.lonis.ventesservice.model.Site" />
+	<import class="com.df.lonis.ventesservice.model.SiteCommercial" />
 	<import class="com.df.lonis.ventesservice.model.Terminal" />
+	<import class="com.df.lonis.ventesservice.model.Visite" />
 	<class name="com.df.lonis.ventesservice.model.impl.ChiffreAffairesImpl" table="chiffre_affaires">
 		<id access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="id" type="long">
 			<generator class="identity" />
@@ -23,6 +28,20 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="balance" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="deposit" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="date" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="updated_at" name="updatedAt" type="org.hibernate.type.TimestampType" />
+	</class>
+	<class name="com.df.lonis.ventesservice.model.impl.CommercialImpl" table="commerciaux">
+		<id access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="id" type="long">
+			<generator class="identity" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="nom" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="prenoms" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="telephone" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="email" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="matricule" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="statut" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="superviseur_id" name="superviseurId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="updated_at" name="updatedAt" type="org.hibernate.type.TimestampType" />
 	</class>
@@ -59,6 +78,37 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="code" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="concessionnaire_code" name="concessionnaireCode" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="active" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="updated_at" name="updatedAt" type="org.hibernate.type.TimestampType" />
+	</class>
+	<class name="com.df.lonis.ventesservice.model.impl.EvaluationImpl" table="evaluations">
+		<id access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="id" type="long">
+			<generator class="identity" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="commercial_id" name="commercialId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="nb_visites_prevues" name="nbVisitesPrevues" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="nb_visites_effectuees" name="nbVisitesEffectuees" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="taux_realisation" name="tauxRealisation" type="com.liferay.portal.dao.orm.hibernate.DoubleType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="rang" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="periode" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="mois" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="trimestre" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="annee" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="updated_at" name="updatedAt" type="org.hibernate.type.TimestampType" />
+	</class>
+	<class name="com.df.lonis.ventesservice.model.impl.ObjectifImpl" table="objectifs">
+		<id access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="id" type="long">
+			<generator class="identity" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="commercial_id" name="commercialId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="type" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="periode" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="valeur_cible" name="valeurCible" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="valeur_reelle" name="valeurReelle" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="mois" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="trimestre" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="annee" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="updated_at" name="updatedAt" type="org.hibernate.type.TimestampType" />
 	</class>
@@ -102,6 +152,17 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="updated_at" name="updatedAt" type="org.hibernate.type.TimestampType" />
 	</class>
+	<class name="com.df.lonis.ventesservice.model.impl.SiteCommercialImpl" table="site_commerciaux">
+		<id access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="id" type="long">
+			<generator class="identity" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="site_id" name="siteId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="commercial_id" name="commercialId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="date_debut" name="dateDebut" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="date_fin" name="dateFin" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="is_principal" name="isPrincipal" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
+	</class>
 	<class name="com.df.lonis.ventesservice.model.impl.TerminalImpl" table="terminals">
 		<id access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="id" type="long">
 			<generator class="identity" />
@@ -112,6 +173,25 @@
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="produit_id" name="produitId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="concessionnaire_produit_code" name="concessionnaireProduitCode" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="site_id" name="siteId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="latitude" type="com.liferay.portal.dao.orm.hibernate.DoubleType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="longitude" type="com.liferay.portal.dao.orm.hibernate.DoubleType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="adresse" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="statut_validation" name="statutValidation" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="updated_at" name="updatedAt" type="org.hibernate.type.TimestampType" />
+	</class>
+	<class name="com.df.lonis.ventesservice.model.impl.VisiteImpl" table="visites">
+		<id access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="id" type="long">
+			<generator class="identity" />
+		</id>
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="commercial_id" name="commercialId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="terminal_id" name="terminalId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="latitude" type="com.liferay.portal.dao.orm.hibernate.DoubleType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="longitude" type="com.liferay.portal.dao.orm.hibernate.DoubleType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" name="statut" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="type_controle" name="typeControle" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="date_visite" name="dateVisite" type="org.hibernate.type.TimestampType" />
+		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="compte_rendu" name="compteRendu" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="created_at" name="createdAt" type="org.hibernate.type.TimestampType" />
 		<property access="com.liferay.portal.dao.orm.hibernate.MethodPropertyAccessor" column="updated_at" name="updatedAt" type="org.hibernate.type.TimestampType" />
 	</class>

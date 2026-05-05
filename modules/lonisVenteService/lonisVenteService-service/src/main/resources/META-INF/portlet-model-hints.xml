@@ -15,6 +15,18 @@
 		<field name="createdAt" type="Date" />
 		<field name="updatedAt" type="Date" />
 	</model>
+	<model name="com.df.lonis.ventesservice.model.Commercial">
+		<field name="id" type="long" />
+		<field name="nom" type="String" />
+		<field name="prenoms" type="String" />
+		<field name="telephone" type="String" />
+		<field name="email" type="String" />
+		<field name="matricule" type="String" />
+		<field name="statut" type="String" />
+		<field name="superviseurId" type="long" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
 	<model name="com.df.lonis.ventesservice.model.Commission">
 		<field name="id" type="long" />
 		<field name="code" type="String" />
@@ -42,6 +54,33 @@
 		<field name="code" type="String" />
 		<field name="concessionnaireCode" type="String" />
 		<field name="active" type="boolean" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Evaluation">
+		<field name="id" type="long" />
+		<field name="commercialId" type="long" />
+		<field name="nbVisitesPrevues" type="int" />
+		<field name="nbVisitesEffectuees" type="int" />
+		<field name="tauxRealisation" type="double" />
+		<field name="rang" type="int" />
+		<field name="periode" type="String" />
+		<field name="mois" type="int" />
+		<field name="trimestre" type="int" />
+		<field name="annee" type="int" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Objectif">
+		<field name="id" type="long" />
+		<field name="commercialId" type="long" />
+		<field name="type" type="String" />
+		<field name="periode" type="String" />
+		<field name="valeurCible" type="int" />
+		<field name="valeurReelle" type="int" />
+		<field name="mois" type="int" />
+		<field name="trimestre" type="int" />
+		<field name="annee" type="int" />
 		<field name="createdAt" type="Date" />
 		<field name="updatedAt" type="Date" />
 	</model>
@@ -79,6 +118,15 @@
 		<field name="createdAt" type="Date" />
 		<field name="updatedAt" type="Date" />
 	</model>
+	<model name="com.df.lonis.ventesservice.model.SiteCommercial">
+		<field name="id" type="long" />
+		<field name="siteId" type="long" />
+		<field name="commercialId" type="long" />
+		<field name="dateDebut" type="Date" />
+		<field name="dateFin" type="Date" />
+		<field name="isPrincipal" type="boolean" />
+		<field name="createdAt" type="Date" />
+	</model>
 	<model name="com.df.lonis.ventesservice.model.Terminal">
 		<field name="id" type="long" />
 		<field name="codeTerminal" type="String" />
@@ -87,6 +135,23 @@
 		<field name="produitId" type="long" />
 		<field name="concessionnaireProduitCode" type="String" />
 		<field name="siteId" type="long" />
+		<field name="latitude" type="Double" />
+		<field name="longitude" type="Double" />
+		<field name="adresse" type="String" />
+		<field name="statutValidation" type="String" />
+		<field name="createdAt" type="Date" />
+		<field name="updatedAt" type="Date" />
+	</model>
+	<model name="com.df.lonis.ventesservice.model.Visite">
+		<field name="id" type="long" />
+		<field name="commercialId" type="long" />
+		<field name="terminalId" type="long" />
+		<field name="latitude" type="Double" />
+		<field name="longitude" type="Double" />
+		<field name="statut" type="String" />
+		<field name="typeControle" type="String" />
+		<field name="dateVisite" type="Date" />
+		<field name="compteRendu" type="String" />
 		<field name="createdAt" type="Date" />
 		<field name="updatedAt" type="Date" />
 	</model>

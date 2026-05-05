@@ -468,6 +468,342 @@ public class TerminalUtil {
 	}
 
 	/**
+	 * Returns all the terminals where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @return the matching terminals
+	 */
+	public static List<Terminal> findBySiteId(long siteId) {
+		return getPersistence().findBySiteId(siteId);
+	}
+
+	/**
+	 * Returns a range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @return the range of matching terminals
+	 */
+	public static List<Terminal> findBySiteId(long siteId, int start, int end) {
+		return getPersistence().findBySiteId(siteId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching terminals
+	 */
+	public static List<Terminal> findBySiteId(
+		long siteId, int start, int end,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().findBySiteId(
+			siteId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching terminals
+	 */
+	public static List<Terminal> findBySiteId(
+		long siteId, int start, int end,
+		OrderByComparator<Terminal> orderByComparator, boolean useFinderCache) {
+
+		return getPersistence().findBySiteId(
+			siteId, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public static Terminal findBySiteId_First(
+			long siteId, OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findBySiteId_First(siteId, orderByComparator);
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public static Terminal fetchBySiteId_First(
+		long siteId, OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().fetchBySiteId_First(siteId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public static Terminal findBySiteId_Last(
+			long siteId, OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findBySiteId_Last(siteId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public static Terminal fetchBySiteId_Last(
+		long siteId, OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().fetchBySiteId_Last(siteId, orderByComparator);
+	}
+
+	/**
+	 * Returns the terminals before and after the current terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param id the primary key of the current terminal
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next terminal
+	 * @throws NoSuchTerminalException if a terminal with the primary key could not be found
+	 */
+	public static Terminal[] findBySiteId_PrevAndNext(
+			long id, long siteId, OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findBySiteId_PrevAndNext(
+			id, siteId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the terminals where siteId = &#63; from the database.
+	 *
+	 * @param siteId the site ID
+	 */
+	public static void removeBySiteId(long siteId) {
+		getPersistence().removeBySiteId(siteId);
+	}
+
+	/**
+	 * Returns the number of terminals where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @return the number of matching terminals
+	 */
+	public static int countBySiteId(long siteId) {
+		return getPersistence().countBySiteId(siteId);
+	}
+
+	/**
+	 * Returns all the terminals where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @return the matching terminals
+	 */
+	public static List<Terminal> findByStatutValidation(
+		String statutValidation) {
+
+		return getPersistence().findByStatutValidation(statutValidation);
+	}
+
+	/**
+	 * Returns a range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @return the range of matching terminals
+	 */
+	public static List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end) {
+
+		return getPersistence().findByStatutValidation(
+			statutValidation, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching terminals
+	 */
+	public static List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().findByStatutValidation(
+			statutValidation, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching terminals
+	 */
+	public static List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end,
+		OrderByComparator<Terminal> orderByComparator, boolean useFinderCache) {
+
+		return getPersistence().findByStatutValidation(
+			statutValidation, start, end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public static Terminal findByStatutValidation_First(
+			String statutValidation,
+			OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findByStatutValidation_First(
+			statutValidation, orderByComparator);
+	}
+
+	/**
+	 * Returns the first terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public static Terminal fetchByStatutValidation_First(
+		String statutValidation,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().fetchByStatutValidation_First(
+			statutValidation, orderByComparator);
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public static Terminal findByStatutValidation_Last(
+			String statutValidation,
+			OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findByStatutValidation_Last(
+			statutValidation, orderByComparator);
+	}
+
+	/**
+	 * Returns the last terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public static Terminal fetchByStatutValidation_Last(
+		String statutValidation,
+		OrderByComparator<Terminal> orderByComparator) {
+
+		return getPersistence().fetchByStatutValidation_Last(
+			statutValidation, orderByComparator);
+	}
+
+	/**
+	 * Returns the terminals before and after the current terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param id the primary key of the current terminal
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next terminal
+	 * @throws NoSuchTerminalException if a terminal with the primary key could not be found
+	 */
+	public static Terminal[] findByStatutValidation_PrevAndNext(
+			long id, String statutValidation,
+			OrderByComparator<Terminal> orderByComparator)
+		throws com.df.lonis.ventesservice.exception.NoSuchTerminalException {
+
+		return getPersistence().findByStatutValidation_PrevAndNext(
+			id, statutValidation, orderByComparator);
+	}
+
+	/**
+	 * Removes all the terminals where statutValidation = &#63; from the database.
+	 *
+	 * @param statutValidation the statut validation
+	 */
+	public static void removeByStatutValidation(String statutValidation) {
+		getPersistence().removeByStatutValidation(statutValidation);
+	}
+
+	/**
+	 * Returns the number of terminals where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @return the number of matching terminals
+	 */
+	public static int countByStatutValidation(String statutValidation) {
+		return getPersistence().countByStatutValidation(statutValidation);
+	}
+
+	/**
 	 * Caches the terminal in the entity cache if it is enabled.
 	 *
 	 * @param terminal the terminal

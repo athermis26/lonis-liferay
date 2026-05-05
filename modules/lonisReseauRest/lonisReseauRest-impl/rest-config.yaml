@@ -1,0 +1,9 @@
+apiDir: "../lonisReseauRest-api/src/main/java"
+apiPackagePath: "com.df.lonis.reseaurest"
+application:
+    baseURI: "/lonisReseauRest"
+    className: "LonisReseauRestApplication"
+    name: "LonisReseauRest"
+author: "HP"
+clientDir: "../lonisReseauRest-client/src/main/java"
+testDir: "../lonisReseauRest-test/src/testIntegration/java"

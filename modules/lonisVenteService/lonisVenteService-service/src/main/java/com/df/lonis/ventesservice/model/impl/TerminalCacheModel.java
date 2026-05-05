@@ -53,7 +53,7 @@ public class TerminalCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{id=");
 		sb.append(id);
@@ -69,6 +69,14 @@ public class TerminalCacheModel
 		sb.append(concessionnaireProduitCode);
 		sb.append(", siteId=");
 		sb.append(siteId);
+		sb.append(", latitude=");
+		sb.append(latitude);
+		sb.append(", longitude=");
+		sb.append(longitude);
+		sb.append(", adresse=");
+		sb.append(adresse);
+		sb.append(", statutValidation=");
+		sb.append(statutValidation);
 		sb.append(", createdAt=");
 		sb.append(createdAt);
 		sb.append(", updatedAt=");
@@ -111,6 +119,22 @@ public class TerminalCacheModel
 		}
 
 		terminalImpl.setSiteId(siteId);
+		terminalImpl.setLatitude(latitude);
+		terminalImpl.setLongitude(longitude);
+
+		if (adresse == null) {
+			terminalImpl.setAdresse("");
+		}
+		else {
+			terminalImpl.setAdresse(adresse);
+		}
+
+		if (statutValidation == null) {
+			terminalImpl.setStatutValidation("");
+		}
+		else {
+			terminalImpl.setStatutValidation(statutValidation);
+		}
 
 		if (createdAt == Long.MIN_VALUE) {
 			terminalImpl.setCreatedAt(null);
@@ -143,6 +167,12 @@ public class TerminalCacheModel
 		concessionnaireProduitCode = objectInput.readUTF();
 
 		siteId = objectInput.readLong();
+
+		latitude = objectInput.readDouble();
+
+		longitude = objectInput.readDouble();
+		adresse = objectInput.readUTF();
+		statutValidation = objectInput.readUTF();
 		createdAt = objectInput.readLong();
 		updatedAt = objectInput.readLong();
 	}
@@ -177,6 +207,25 @@ public class TerminalCacheModel
 		}
 
 		objectOutput.writeLong(siteId);
+
+		objectOutput.writeDouble(latitude);
+
+		objectOutput.writeDouble(longitude);
+
+		if (adresse == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(adresse);
+		}
+
+		if (statutValidation == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(statutValidation);
+		}
+
 		objectOutput.writeLong(createdAt);
 		objectOutput.writeLong(updatedAt);
 	}
@@ -188,6 +237,10 @@ public class TerminalCacheModel
 	public long produitId;
 	public String concessionnaireProduitCode;
 	public long siteId;
+	public double latitude;
+	public double longitude;
+	public String adresse;
+	public String statutValidation;
 	public long createdAt;
 	public long updatedAt;
 

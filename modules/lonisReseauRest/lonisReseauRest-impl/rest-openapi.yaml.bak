@@ -1,0 +1,1255 @@
+info:
+  description: "LonisReseauRest REST API"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  title: "LonisReseauRest"
+  version: v1.0
+openapi: 3.0.1
+
+paths:
+  # ─────────────────────────────────────────
+  # TERMINAUX (Points de Vente)
+  # ─────────────────────────────────────────
+  /terminals:
+    get:
+      operationId: getTerminalsPage
+      tags: ["Terminal"]
+      description: "Liste des Terminaux (PDV)"
+      parameters:
+        - in: query
+          name: siteId
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: statutValidation
+          schema:
+            type: string
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Terminal'
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Terminal'
+                type: array
+          description: "Liste des Terminaux (PDV)"
+    post:
+      operationId: postTerminal
+      tags: ["Terminal"]
+      description: "Ajouter un Terminal (PDV)"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminalRequestBody'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/TerminalRequestBody'
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Terminal'
+          description: "Terminal (PDV) ajouté avec succès"
+
+  /terminals/{terminalId}:
+    get:
+      operationId: getTerminal
+      tags: [ "Terminal" ]
+      description: "Récupérer un Terminal (PDV) par son ID"
+      parameters:
+        - in: path
+          name: terminalId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Terminal"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Terminal"
+          description: "Récupérer un Terminal (PDV) par son ID"
+    put:
+      operationId: putTerminal
+      tags: [ "Terminal" ]
+      description: "Modifier un Terminal (PDV) par son ID"
+      parameters:
+        - in: path
+          name: terminalId
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TerminalPutRequestBody"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/TerminalPutRequestBody"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Terminal"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Terminal"
+          description: "Modifier un Terminal (PDV) par son ID"
+
+  /terminals/a-valider:
+    get:
+      operationId: getTerminalsAValiderPage
+      tags: [ "Terminal" ]
+      description: "Les points de ventes à valider"
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
+          description: "Liste des points de ventes à valider"
+
+  /terminals/{terminalId}valider:
+    patch:
+      operationId: patchTerminalValider
+      tags: [ "Terminal" ]
+      description: "valider l'enrôlement du Terminal (PDV)"
+      parameters:
+        - in: path
+          name: terminalId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Terminal"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Terminal"
+          description: "Terminal (PDV) valider avec succès"
+
+  /terminals/{terminalId}/rejeter:
+    patch:
+      operationId: patchTerminalRejeter
+      tags: [ "Terminal" ]
+      description: "Rejeter un terminal (PDV)"
+      parameters:
+        - in: path
+          name: terminalId
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                motif:
+                  type: string
+              type: object
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Terminal"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Terminal"
+          description: "Rejeter un terminal (PDV)"
+
+  /terminals/cartographie:
+    get:
+      operationId: getTerminalsCartographie
+      tags: [ "Terminal" ]
+      description: ""
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
+          description: ""
+
+  /terminals/cartographie/top20:
+    get:
+      operationId: getTerminalsCartographieTop20
+      tags: [ "Terminal" ]
+      description: ""
+      parameters:
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Terminal"
+                type: array
+          description: ""
+
+  /terminals/{terminalId}/visites:
+    get:
+      operationId: getTerminalVisitesPage
+      tags: [ "Terminal" ]
+      description: ""
+      parameters:
+        - in: path
+          name: terminalId
+          required: true
+          schema: { type: integer, format: int64 }
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+          description: ""
+
+
+  # ─────────────────────────────────────────
+  # COMMERCIAUX
+  # ─────────────────────────────────────────
+  /commerciaux:
+    get:
+      operationId: getCommerciauxPage
+      tags: [ "Commercial" ]
+      description: "Liste des commerciaux"
+      parameters:
+        - in: query
+          name: superviseurId
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Commercial"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Commercial"
+                type: array
+          description: "Liste des commerciaux"
+    post:
+      operationId: postCommercial
+      tags: [ "Commercial" ]
+      description: "Ajouter un commercial"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommercialRequestBody"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/CommercialRequestBody"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Commercial"
+          description: "Commercial ajouté avec succès"
+
+  /commerciaux/{commercialId}:
+    get:
+      operationId: getCommercial
+      tags: [ "Commercial" ]
+      description: "Récupérer un commercial par sont ID"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Commercial"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Commercial"
+          description: "Récupérer un commercial par sont ID"
+    put:
+      operationId: putCommercial
+      tags: [ "Commercial" ]
+      description: "Modifier un commercial"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Commercial"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Commercial"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Commercial"
+          description: "Commercial modifié avec succès"
+    delete:
+      operationId: deleteCommercial
+      tags: [ "Commercial" ]
+      description: "Supprimer un commercial"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        204:
+          description: "Supprimé avec succès"
+
+  # ─────────────────────────────────────────
+  # AFFECTATIONS (Site ↔ Commercial)
+  # ─────────────────────────────────────────
+  /commerciaux/{commercialId}/sites:
+    get:
+      operationId: getCommercialSitesPage
+      tags: ["SiteCommercial"]
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SiteCommercial"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SiteCommercial"
+                type: array
+          description: ""
+    post:
+      operationId: postCommercialSite
+      tags: ["SiteCommercial"]
+      description: "Association Commercial zones"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SiteCommercial"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteCommercial"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/SiteCommercial"
+          description: "Assignation éffectuée avec succès"
+
+  /commerciaux/{commercialId}/sites/{siteId}:
+    delete:
+      operationId: deleteCommercialSite
+      tags: [ "SiteCommercial" ]
+      description: "Rétirer une affectation"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+        - in: path
+          name: siteId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        204:
+          description: "Affectation retirée"
+
+  /sites/{siteId}/commerciaux:
+    get:
+      operationId: getSiteCommerciauxPage
+      tags: [ "SiteCommercial" ]
+      description: "Liste des commerciaux affectés à un site"
+      parameters:
+        - in: path
+          name: siteId
+          required: true
+          schema: { type: integer, format: int64 }
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SiteCommercial"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SiteCommercial"
+                type: array
+          description: "Liste des commerciaux affectés à un site"
+
+  # ─────────────────────────────────────────
+  # VISITES
+  # ─────────────────────────────────────────
+  /visites:
+    get:
+      operationId: getVisitesPage
+      tags: [ "Visite" ]
+      description: "Liste des visites"
+      parameters:
+        - in: query
+          name: commercialId
+          schema: { type: integer, format: int64 }
+        - in: query
+          name: terminalId
+          schema: { type: integer, format: int64 }
+        - in: query
+          name: statut
+          schema: { type: string }
+        - in: query
+          name: dateDebut
+          schema: { type: string, format: date }
+        - in: query
+          name: dateFin
+          schema: { type: string, format: date }
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+          description: "Liste des visites"
+    post:
+      operationId: postVisite
+      tags: [ "Visite" ]
+      description: "Marquer une visite (GPS + contrôle proximité terminal)"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VisiteRequestBody"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Visite"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Visite"
+          description: "Viste effectuée avec succès"
+
+  /visites/{visiteId}:
+    get:
+      operationId: getVisite
+      tags: [ "Visite" ]
+      description: "Détail d'une visite"
+      parameters:
+        - in: path
+          name: visiteId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Visite"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Visite"
+          description: "Détail d'une viste"
+
+  /visites/temps-reel:
+    get:
+      operationId: getVisitesTempsReel
+      tags: [ "Visite" ]
+      description: "positions actuelles des commerciaux"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+          description: "positions actuelles des commerciaux"
+
+  /commerciaux/{commercialId}/visites:
+    get:
+      operationId: getCommercialVisitesPage
+      tags: [ "Visite" ]
+      description: "historique d'un commercial"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+          description: "historique d'un commercial"
+
+  /commerciaux/{commercialId}/visites/planning:
+    get:
+      operationId: getCommercialVisitesPlanningPage
+      tags: [ "Visite" ]
+      description: "planning prévu vs réalisé"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Visite"
+                type: array
+          description: "planning prévu vs réalisé"
+
+  # ─────────────────────────────────────────
+  # OBJECTIFS
+  # ─────────────────────────────────────────
+  /objectifs:
+    get:
+      operationId: getObjectifsPage
+      tags: [ "Objectif" ]
+      description: "liste (filtre: commercial, période)"
+      parameters:
+        - in: query
+          name: commercialId
+          schema: { type: integer, format: int64 }
+        - in: query
+          name: annee
+          schema: { type: integer }
+        - in: query
+          name: mois
+          schema: { type: integer }
+        - in: query
+          name: filter
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Objectif"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Objectif"
+                type: array
+          description: "liste (filtre: commercial, période)"
+    post:
+      operationId: postObjectif
+      tags: [ "Objectif" ]
+      description: "créer (superviseur)"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Objectif"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Objectif"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Objectif"
+          description: "Objectif créé avec succès"
+
+  /objectifs/{objectifId}:
+    put:
+      operationId: putObjectif
+      tags: [ "Objectif" ]
+      description: "Modifier un objectif"
+      parameters:
+        - in: path
+          name: objectifId
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Objectif"
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Objectif"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Objectif"
+          description: "Objectif modifié avec succès"
+
+  /commerciaux/{commercialId}/objectifs:
+    get:
+      operationId: getCommercialObjectifsPage
+      tags: [ "Objectif" ]
+      description: "objectifs d'un commercial"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Objectif"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Objectif"
+                type: array
+          description: "objectifs d'un commercial"
+
+  # ─────────────────────────────────────────
+  # EVALUATIONS
+  # ─────────────────────────────────────────
+
+  /evaluations/classement:
+    get:
+      operationId: getEvaluationsClassementPage
+      tags: [ "Evaluation" ]
+      description: "classement des commerciaux"
+      parameters:
+        - in: query
+          name: annee
+          required: true
+          schema: { type: integer }
+        - in: query
+          name: mois
+          schema: { type: integer }
+        - in: query
+          name: trimestre
+          schema: { type: integer }
+        - in: query
+          name: periode
+          schema: { type: string, enum: [ MENSUEL, TRIMESTRIEL ] }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Evaluation"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Evaluation"
+                type: array
+          description: "classement des commerciaux"
+
+  /commerciaux/{commercialId}/evaluations:
+    get:
+      operationId: getCommercialEvaluationsPage
+      tags: [ "Evaluation" ]
+      description: "évaluations d'un commercial"
+      parameters:
+        - in: path
+          name: commercialId
+          required: true
+          schema: { type: integer, format: int64 }
+        - in: query
+          name: annee
+          schema: { type: integer }
+        - in: query
+          name: mois
+          schema: { type: integer }
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Evaluation"
+                type: array
+            application/xml:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Evaluation"
+                type: array
+          description: "évaluations d'un commercial"
+
+  /evaluations/generer:
+    post:
+      operationId: postEvaluationsGenerer
+      tags: [ "Evaluation" ]
+      description: "déclencher le calcul (batch)"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                annee:
+                  type: integer
+                mois:
+                  type: integer
+                trimestre:
+                  type: integer
+                periode:
+                  type: string
+                  enum: [ MENSUEL, TRIMESTRIEL ]
+              required: [ annee, periode ]
+              type: object
+          application/xml:
+            schema:
+              properties:
+                annee:
+                  type: integer
+                mois:
+                  type: integer
+                trimestre:
+                  type: integer
+                periode:
+                  type: string
+                  enum: [ MENSUEL, TRIMESTRIEL ]
+              required: [ annee, periode ]
+              type: object
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                  nbEvaluationsGenerees:
+                    type: integer
+                type: object
+            application/xml:
+              schema:
+                properties:
+                  message:
+                    type: string
+                  nbEvaluationsGenerees:
+                    type: integer
+                type: object
+          description: "déclencher le calcul (batch)"
+
+components:
+  schemas:
+
+    Terminal:
+      properties:
+        id:
+          type: integer
+          format: int64
+        codeTerminal:
+          type: string
+        concessionnaireId:
+          type: integer
+          format: int64
+        siteId:
+          type: integer
+          format: int64
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        adresse:
+          type: string
+          nullable: true
+        statutValidation:
+          type: string
+          enum: [ EN_ATTENTE, VALIDE, REJETE ]
+
+    TerminalRequestBody:
+      properties:
+        concessionnaireId:
+          type: integer
+          format: int64
+        siteId:
+          type: integer
+          format: int64
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        adresse:
+          type: string
+          nullable: true
+
+    TerminalPutRequestBody:
+      properties:
+        concessionnaireId:
+          type: integer
+          format: int64
+        siteId:
+          type: integer
+          format: int64
+        latitude:
+          type: number
+          format: double
+          nullable: true
+        longitude:
+          type: number
+          format: double
+          nullable: true
+        adresse:
+          type: string
+          nullable: true
+
+    Commercial:
+      properties:
+        id:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        prenoms:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        matricule:
+          type: string
+        statut:
+          type: string
+        superviseurId:
+          type: integer
+          format: int64
+        agenceId:
+          type: integer
+          format: int64
+
+    CommercialRequestBody:
+      properties:
+        nom:
+          type: string
+        prenoms:
+          type: string
+        telephone:
+          type: string
+        email:
+          type: string
+        matricule:
+          type: string
+        statut:
+          type: string
+        agenceId:
+          type: integer
+          format: int64
+
+    SiteCommercial:
+      properties:
+        id:
+          type: integer
+          format: int64
+        siteId:
+          type: integer
+          format: int64
+        commercialId:
+          type: integer
+          format: int64
+        dateDebut:
+          type: string
+          format: date
+        dateFin:
+          type: string
+          format: date
+          nullable: true
+        isPrincipal:
+          type: boolean
+
+    Visite:
+      properties:
+        id:
+          type: integer
+          format: int64
+        commercialId:
+          type: integer
+          format: int64
+        terminalId:
+          type: integer
+          format: int64
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        statut:
+          type: string
+          enum: [ PLANIFIEE, EFFECTUEE, MANQUEE ]
+        typeControle:
+          type: string
+          enum: [ GPS, RFID, TAG ]
+        dateVisite:
+          type: string
+          format: date-time
+        compteRendu:
+          type: string
+
+    VisiteRequestBody:
+      properties:
+        commercialId:
+          type: integer
+          format: int64
+        terminalId:
+          type: integer
+          format: int64
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        statut:
+          type: string
+          enum: [ PLANIFIEE, EFFECTUEE, MANQUEE ]
+        typeControle:
+          type: string
+          enum: [ GPS, RFID, TAG ]
+        dateVisite:
+          type: string
+          format: date-time
+        compteRendu:
+          type: string
+
+    Objectif:
+      properties:
+        id:
+          type: integer
+          format: int64
+        commercialId:
+          type: integer
+          format: int64
+        type:
+          type: string
+          enum: [ VISITE, VENTE ]
+        periode:
+          type: string
+          enum: [ MENSUEL, TRIMESTRIEL ]
+        valeurCible:
+          type: integer
+        valeurReelle:
+          type: integer
+        mois:
+          type: integer
+        trimestre:
+          type: integer
+        annee:
+          type: integer
+
+    Evaluation:
+      properties:
+        id:
+          type: integer
+          format: int64
+        commercialId:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        prenoms:
+          type: string
+        nbVisitesPrevues:
+          type: integer
+        nbVisitesEffectuees:
+          type: integer
+        tauxRealisation:
+          type: number
+          format: double
+        rang:
+          type: integer
+        periode:
+          type: string
+          enum: [MENSUEL, TRIMESTRIEL]
+        mois:
+          type: integer
+        trimestre:
+          type: integer
+        annee:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time

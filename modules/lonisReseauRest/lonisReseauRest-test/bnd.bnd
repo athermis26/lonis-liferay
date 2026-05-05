@@ -1,0 +1,5 @@
+Bundle-Name: lonisReseauRest-test
+Bundle-SymbolicName: com.df.lonis.reseaurest.test
+Bundle-Version: 1.0.0
+-includeresource: com.df.lonis.reseaurest.client.jar=../lonisReseauRest-client/build/libs/com.df.lonis.reseaurest.client-1.0.0.jar;lib:=true
+-provider-policy: ${replacestring;${range;[==,==]};.*,(.*)];$1}

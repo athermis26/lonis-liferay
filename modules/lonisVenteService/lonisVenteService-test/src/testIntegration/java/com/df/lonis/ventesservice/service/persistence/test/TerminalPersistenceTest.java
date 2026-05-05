@@ -127,6 +127,14 @@ public class TerminalPersistenceTest {
 
 		newTerminal.setSiteId(RandomTestUtil.nextLong());
 
+		newTerminal.setLatitude();
+
+		newTerminal.setLongitude();
+
+		newTerminal.setAdresse(RandomTestUtil.randomString());
+
+		newTerminal.setStatutValidation(RandomTestUtil.randomString());
+
 		newTerminal.setCreatedAt(RandomTestUtil.nextDate());
 
 		newTerminal.setUpdatedAt(RandomTestUtil.nextDate());
@@ -153,6 +161,15 @@ public class TerminalPersistenceTest {
 		Assert.assertEquals(
 			existingTerminal.getSiteId(), newTerminal.getSiteId());
 		Assert.assertEquals(
+			existingTerminal.getLatitude(), newTerminal.getLatitude());
+		Assert.assertEquals(
+			existingTerminal.getLongitude(), newTerminal.getLongitude());
+		Assert.assertEquals(
+			existingTerminal.getAdresse(), newTerminal.getAdresse());
+		Assert.assertEquals(
+			existingTerminal.getStatutValidation(),
+			newTerminal.getStatutValidation());
+		Assert.assertEquals(
 			Time.getShortTimestamp(existingTerminal.getCreatedAt()),
 			Time.getShortTimestamp(newTerminal.getCreatedAt()));
 		Assert.assertEquals(
@@ -174,6 +191,22 @@ public class TerminalPersistenceTest {
 		_persistence.countByConcessionnaireId(RandomTestUtil.nextLong());
 
 		_persistence.countByConcessionnaireId(0L);
+	}
+
+	@Test
+	public void testCountBySiteId() throws Exception {
+		_persistence.countBySiteId(RandomTestUtil.nextLong());
+
+		_persistence.countBySiteId(0L);
+	}
+
+	@Test
+	public void testCountByStatutValidation() throws Exception {
+		_persistence.countByStatutValidation("");
+
+		_persistence.countByStatutValidation("null");
+
+		_persistence.countByStatutValidation((String)null);
 	}
 
 	@Test
@@ -203,8 +236,9 @@ public class TerminalPersistenceTest {
 		return OrderByComparatorFactoryUtil.create(
 			"terminals", "id", true, "codeTerminal", true, "concessionnaireId",
 			true, "concessionnaireCode", true, "produitId", true,
-			"concessionnaireProduitCode", true, "siteId", true, "createdAt",
-			true, "updatedAt", true);
+			"concessionnaireProduitCode", true, "siteId", true, "latitude",
+			true, "longitude", true, "adresse", true, "statutValidation", true,
+			"createdAt", true, "updatedAt", true);
 	}
 
 	@Test
@@ -424,6 +458,14 @@ public class TerminalPersistenceTest {
 		terminal.setConcessionnaireProduitCode(RandomTestUtil.randomString());
 
 		terminal.setSiteId(RandomTestUtil.nextLong());
+
+		terminal.setLatitude();
+
+		terminal.setLongitude();
+
+		terminal.setAdresse(RandomTestUtil.randomString());
+
+		terminal.setStatutValidation(RandomTestUtil.randomString());
 
 		terminal.setCreatedAt(RandomTestUtil.nextDate());
 

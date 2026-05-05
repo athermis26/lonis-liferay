@@ -62,7 +62,9 @@ public class TerminalModelImpl
 		{"concessionnaire_id", Types.BIGINT},
 		{"concessionnaire_code", Types.VARCHAR}, {"produit_id", Types.BIGINT},
 		{"concessionnaire_produit_code", Types.VARCHAR},
-		{"site_id", Types.BIGINT}, {"created_at", Types.TIMESTAMP},
+		{"site_id", Types.BIGINT}, {"latitude", Types.DOUBLE},
+		{"longitude", Types.DOUBLE}, {"adresse", Types.VARCHAR},
+		{"statut_validation", Types.VARCHAR}, {"created_at", Types.TIMESTAMP},
 		{"updated_at", Types.TIMESTAMP}
 	};
 
@@ -77,12 +79,16 @@ public class TerminalModelImpl
 		TABLE_COLUMNS_MAP.put("produit_id", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("concessionnaire_produit_code", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("site_id", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("latitude", Types.DOUBLE);
+		TABLE_COLUMNS_MAP.put("longitude", Types.DOUBLE);
+		TABLE_COLUMNS_MAP.put("adresse", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("statut_validation", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("created_at", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("updated_at", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table terminals (id LONG not null primary key IDENTITY,code_terminal VARCHAR(75) null,concessionnaire_id LONG,concessionnaire_code VARCHAR(75) null,produit_id LONG,concessionnaire_produit_code VARCHAR(75) null,site_id LONG,created_at DATE null,updated_at DATE null)";
+		"create table terminals (id LONG not null primary key IDENTITY,code_terminal VARCHAR(75) null,concessionnaire_id LONG,concessionnaire_code VARCHAR(75) null,produit_id LONG,concessionnaire_produit_code VARCHAR(75) null,site_id LONG,latitude DOUBLE,longitude DOUBLE,adresse VARCHAR(75) null,statut_validation VARCHAR(75) null,created_at DATE null,updated_at DATE null)";
 
 	public static final String TABLE_SQL_DROP = "drop table terminals";
 
@@ -109,11 +115,23 @@ public class TerminalModelImpl
 	public static final long CONCESSIONNAIREPRODUITCODE_COLUMN_BITMASK = 2L;
 
 	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long SITEID_COLUMN_BITMASK = 4L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long STATUTVALIDATION_COLUMN_BITMASK = 8L;
+
+	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long ID_COLUMN_BITMASK = 4L;
+	public static final long ID_COLUMN_BITMASK = 16L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -234,6 +252,11 @@ public class TerminalModelImpl
 				"concessionnaireProduitCode",
 				Terminal::getConcessionnaireProduitCode);
 			attributeGetterFunctions.put("siteId", Terminal::getSiteId);
+			attributeGetterFunctions.put("latitude", Terminal::getLatitude);
+			attributeGetterFunctions.put("longitude", Terminal::getLongitude);
+			attributeGetterFunctions.put("adresse", Terminal::getAdresse);
+			attributeGetterFunctions.put(
+				"statutValidation", Terminal::getStatutValidation);
 			attributeGetterFunctions.put("createdAt", Terminal::getCreatedAt);
 			attributeGetterFunctions.put("updatedAt", Terminal::getUpdatedAt);
 
@@ -272,6 +295,17 @@ public class TerminalModelImpl
 					Terminal::setConcessionnaireProduitCode);
 			attributeSetterBiConsumers.put(
 				"siteId", (BiConsumer<Terminal, Long>)Terminal::setSiteId);
+			attributeSetterBiConsumers.put(
+				"latitude",
+				(BiConsumer<Terminal, Double>)Terminal::setLatitude);
+			attributeSetterBiConsumers.put(
+				"longitude",
+				(BiConsumer<Terminal, Double>)Terminal::setLongitude);
+			attributeSetterBiConsumers.put(
+				"adresse", (BiConsumer<Terminal, String>)Terminal::setAdresse);
+			attributeSetterBiConsumers.put(
+				"statutValidation",
+				(BiConsumer<Terminal, String>)Terminal::setStatutValidation);
 			attributeSetterBiConsumers.put(
 				"createdAt",
 				(BiConsumer<Terminal, Date>)Terminal::setCreatedAt);
@@ -419,6 +453,90 @@ public class TerminalModelImpl
 		_siteId = siteId;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalSiteId() {
+		return GetterUtil.getLong(this.<Long>getColumnOriginalValue("site_id"));
+	}
+
+	@Override
+	public Double getLatitude() {
+		return _latitude;
+	}
+
+	@Override
+	public void setLatitude(Double latitude) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_latitude = latitude;
+	}
+
+	@Override
+	public Double getLongitude() {
+		return _longitude;
+	}
+
+	@Override
+	public void setLongitude(Double longitude) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_longitude = longitude;
+	}
+
+	@Override
+	public String getAdresse() {
+		if (_adresse == null) {
+			return "";
+		}
+		else {
+			return _adresse;
+		}
+	}
+
+	@Override
+	public void setAdresse(String adresse) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_adresse = adresse;
+	}
+
+	@Override
+	public String getStatutValidation() {
+		if (_statutValidation == null) {
+			return "";
+		}
+		else {
+			return _statutValidation;
+		}
+	}
+
+	@Override
+	public void setStatutValidation(String statutValidation) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_statutValidation = statutValidation;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public String getOriginalStatutValidation() {
+		return getColumnOriginalValue("statut_validation");
+	}
+
 	@Override
 	public Date getCreatedAt() {
 		return _createdAt;
@@ -511,6 +629,10 @@ public class TerminalModelImpl
 		terminalImpl.setConcessionnaireProduitCode(
 			getConcessionnaireProduitCode());
 		terminalImpl.setSiteId(getSiteId());
+		terminalImpl.setLatitude(getLatitude());
+		terminalImpl.setLongitude(getLongitude());
+		terminalImpl.setAdresse(getAdresse());
+		terminalImpl.setStatutValidation(getStatutValidation());
 		terminalImpl.setCreatedAt(getCreatedAt());
 		terminalImpl.setUpdatedAt(getUpdatedAt());
 
@@ -536,6 +658,13 @@ public class TerminalModelImpl
 			this.<String>getColumnOriginalValue(
 				"concessionnaire_produit_code"));
 		terminalImpl.setSiteId(this.<Long>getColumnOriginalValue("site_id"));
+		terminalImpl.setLatitude(
+			this.<Double>getColumnOriginalValue("latitude"));
+		terminalImpl.setLongitude(
+			this.<Double>getColumnOriginalValue("longitude"));
+		terminalImpl.setAdresse(this.<String>getColumnOriginalValue("adresse"));
+		terminalImpl.setStatutValidation(
+			this.<String>getColumnOriginalValue("statut_validation"));
 		terminalImpl.setCreatedAt(
 			this.<Date>getColumnOriginalValue("created_at"));
 		terminalImpl.setUpdatedAt(
@@ -653,6 +782,34 @@ public class TerminalModelImpl
 
 		terminalCacheModel.siteId = getSiteId();
 
+		Double latitude = getLatitude();
+
+		if (latitude != null) {
+			terminalCacheModel.latitude = latitude;
+		}
+
+		Double longitude = getLongitude();
+
+		if (longitude != null) {
+			terminalCacheModel.longitude = longitude;
+		}
+
+		terminalCacheModel.adresse = getAdresse();
+
+		String adresse = terminalCacheModel.adresse;
+
+		if ((adresse != null) && (adresse.length() == 0)) {
+			terminalCacheModel.adresse = null;
+		}
+
+		terminalCacheModel.statutValidation = getStatutValidation();
+
+		String statutValidation = terminalCacheModel.statutValidation;
+
+		if ((statutValidation != null) && (statutValidation.length() == 0)) {
+			terminalCacheModel.statutValidation = null;
+		}
+
 		Date createdAt = getCreatedAt();
 
 		if (createdAt != null) {
@@ -739,6 +896,10 @@ public class TerminalModelImpl
 	private long _produitId;
 	private String _concessionnaireProduitCode;
 	private long _siteId;
+	private Double _latitude;
+	private Double _longitude;
+	private String _adresse;
+	private String _statutValidation;
 	private Date _createdAt;
 	private Date _updatedAt;
 
@@ -780,6 +941,10 @@ public class TerminalModelImpl
 		_columnOriginalValues.put(
 			"concessionnaire_produit_code", _concessionnaireProduitCode);
 		_columnOriginalValues.put("site_id", _siteId);
+		_columnOriginalValues.put("latitude", _latitude);
+		_columnOriginalValues.put("longitude", _longitude);
+		_columnOriginalValues.put("adresse", _adresse);
+		_columnOriginalValues.put("statut_validation", _statutValidation);
 		_columnOriginalValues.put("created_at", _createdAt);
 		_columnOriginalValues.put("updated_at", _updatedAt);
 	}
@@ -796,6 +961,7 @@ public class TerminalModelImpl
 		attributeNames.put(
 			"concessionnaire_produit_code", "concessionnaireProduitCode");
 		attributeNames.put("site_id", "siteId");
+		attributeNames.put("statut_validation", "statutValidation");
 		attributeNames.put("created_at", "createdAt");
 		attributeNames.put("updated_at", "updatedAt");
 
@@ -827,9 +993,17 @@ public class TerminalModelImpl
 
 		columnBitmasks.put("site_id", 64L);
 
-		columnBitmasks.put("created_at", 128L);
+		columnBitmasks.put("latitude", 128L);
 
-		columnBitmasks.put("updated_at", 256L);
+		columnBitmasks.put("longitude", 256L);
+
+		columnBitmasks.put("adresse", 512L);
+
+		columnBitmasks.put("statut_validation", 1024L);
+
+		columnBitmasks.put("created_at", 2048L);
+
+		columnBitmasks.put("updated_at", 4096L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

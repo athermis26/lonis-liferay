@@ -323,6 +323,293 @@ public interface TerminalPersistence extends BasePersistence<Terminal> {
 	public int countByConcessionnaireId(long concessionnaireId);
 
 	/**
+	 * Returns all the terminals where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @return the matching terminals
+	 */
+	public java.util.List<Terminal> findBySiteId(long siteId);
+
+	/**
+	 * Returns a range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @return the range of matching terminals
+	 */
+	public java.util.List<Terminal> findBySiteId(
+		long siteId, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching terminals
+	 */
+	public java.util.List<Terminal> findBySiteId(
+		long siteId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the terminals where siteId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param siteId the site ID
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching terminals
+	 */
+	public java.util.List<Terminal> findBySiteId(
+		long siteId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Returns the first terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public Terminal findBySiteId_First(
+			long siteId,
+			com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+				orderByComparator)
+		throws NoSuchTerminalException;
+
+	/**
+	 * Returns the first terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public Terminal fetchBySiteId_First(
+		long siteId,
+		com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+			orderByComparator);
+
+	/**
+	 * Returns the last terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public Terminal findBySiteId_Last(
+			long siteId,
+			com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+				orderByComparator)
+		throws NoSuchTerminalException;
+
+	/**
+	 * Returns the last terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public Terminal fetchBySiteId_Last(
+		long siteId,
+		com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+			orderByComparator);
+
+	/**
+	 * Returns the terminals before and after the current terminal in the ordered set where siteId = &#63;.
+	 *
+	 * @param id the primary key of the current terminal
+	 * @param siteId the site ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next terminal
+	 * @throws NoSuchTerminalException if a terminal with the primary key could not be found
+	 */
+	public Terminal[] findBySiteId_PrevAndNext(
+			long id, long siteId,
+			com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+				orderByComparator)
+		throws NoSuchTerminalException;
+
+	/**
+	 * Removes all the terminals where siteId = &#63; from the database.
+	 *
+	 * @param siteId the site ID
+	 */
+	public void removeBySiteId(long siteId);
+
+	/**
+	 * Returns the number of terminals where siteId = &#63;.
+	 *
+	 * @param siteId the site ID
+	 * @return the number of matching terminals
+	 */
+	public int countBySiteId(long siteId);
+
+	/**
+	 * Returns all the terminals where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @return the matching terminals
+	 */
+	public java.util.List<Terminal> findByStatutValidation(
+		String statutValidation);
+
+	/**
+	 * Returns a range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @return the range of matching terminals
+	 */
+	public java.util.List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching terminals
+	 */
+	public java.util.List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+			orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the terminals where statutValidation = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>TerminalModelImpl</code>.
+	 * </p>
+	 *
+	 * @param statutValidation the statut validation
+	 * @param start the lower bound of the range of terminals
+	 * @param end the upper bound of the range of terminals (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching terminals
+	 */
+	public java.util.List<Terminal> findByStatutValidation(
+		String statutValidation, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+			orderByComparator,
+		boolean useFinderCache);
+
+	/**
+	 * Returns the first terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public Terminal findByStatutValidation_First(
+			String statutValidation,
+			com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+				orderByComparator)
+		throws NoSuchTerminalException;
+
+	/**
+	 * Returns the first terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public Terminal fetchByStatutValidation_First(
+		String statutValidation,
+		com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+			orderByComparator);
+
+	/**
+	 * Returns the last terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal
+	 * @throws NoSuchTerminalException if a matching terminal could not be found
+	 */
+	public Terminal findByStatutValidation_Last(
+			String statutValidation,
+			com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+				orderByComparator)
+		throws NoSuchTerminalException;
+
+	/**
+	 * Returns the last terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching terminal, or <code>null</code> if a matching terminal could not be found
+	 */
+	public Terminal fetchByStatutValidation_Last(
+		String statutValidation,
+		com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+			orderByComparator);
+
+	/**
+	 * Returns the terminals before and after the current terminal in the ordered set where statutValidation = &#63;.
+	 *
+	 * @param id the primary key of the current terminal
+	 * @param statutValidation the statut validation
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next terminal
+	 * @throws NoSuchTerminalException if a terminal with the primary key could not be found
+	 */
+	public Terminal[] findByStatutValidation_PrevAndNext(
+			long id, String statutValidation,
+			com.liferay.portal.kernel.util.OrderByComparator<Terminal>
+				orderByComparator)
+		throws NoSuchTerminalException;
+
+	/**
+	 * Removes all the terminals where statutValidation = &#63; from the database.
+	 *
+	 * @param statutValidation the statut validation
+	 */
+	public void removeByStatutValidation(String statutValidation);
+
+	/**
+	 * Returns the number of terminals where statutValidation = &#63;.
+	 *
+	 * @param statutValidation the statut validation
+	 * @return the number of matching terminals
+	 */
+	public int countByStatutValidation(String statutValidation);
+
+	/**
 	 * Caches the terminal in the entity cache if it is enabled.
 	 *
 	 * @param terminal the terminal
