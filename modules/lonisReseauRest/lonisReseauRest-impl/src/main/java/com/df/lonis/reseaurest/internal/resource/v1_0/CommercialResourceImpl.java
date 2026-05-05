@@ -116,6 +116,10 @@ public class CommercialResourceImpl extends BaseCommercialResourceImpl {
 		return _commercialMapper.toDto(entry);
 	}
 
+	/**
+	 * Soft delete: passe simplement le statut a INACTIF.
+	 * Conserve l'historique (visites, objectifs, evaluations).
+	 */
 	@Override
 	public Response deleteCommercial(Long commercialId) throws Exception {
 		com.df.lonis.ventesservice.model.Commercial entry =
@@ -126,7 +130,9 @@ public class CommercialResourceImpl extends BaseCommercialResourceImpl {
 				"Commercial introuvable: " + commercialId);
 		}
 
-		_commercialLocalService.deleteCommercial(entry);
+		entry.setStatut("INACTIF");
+		entry.setUpdatedAt(new Date());
+		_commercialLocalService.updateCommercial(entry);
 
 		return Response.noContent().build();
 	}

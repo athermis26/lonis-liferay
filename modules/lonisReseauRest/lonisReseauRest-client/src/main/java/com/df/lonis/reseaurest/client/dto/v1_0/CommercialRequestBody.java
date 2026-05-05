@@ -20,27 +20,6 @@ public class CommercialRequestBody implements Cloneable, Serializable {
 		return CommercialRequestBodySerDes.toDTO(json);
 	}
 
-	public Long getAgenceId() {
-		return agenceId;
-	}
-
-	public void setAgenceId(Long agenceId) {
-		this.agenceId = agenceId;
-	}
-
-	public void setAgenceId(
-		UnsafeSupplier<Long, Exception> agenceIdUnsafeSupplier) {
-
-		try {
-			agenceId = agenceIdUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Long agenceId;
-
 	public String getEmail() {
 		return email;
 	}
@@ -143,6 +122,27 @@ public class CommercialRequestBody implements Cloneable, Serializable {
 	}
 
 	protected String statut;
+
+	public Long getSuperviseurId() {
+		return superviseurId;
+	}
+
+	public void setSuperviseurId(Long superviseurId) {
+		this.superviseurId = superviseurId;
+	}
+
+	public void setSuperviseurId(
+		UnsafeSupplier<Long, Exception> superviseurIdUnsafeSupplier) {
+
+		try {
+			superviseurId = superviseurIdUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Long superviseurId;
 
 	public String getTelephone() {
 		return telephone;

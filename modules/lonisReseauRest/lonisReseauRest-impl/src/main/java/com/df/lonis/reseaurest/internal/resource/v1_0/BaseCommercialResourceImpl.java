@@ -117,7 +117,7 @@ public abstract class BaseCommercialResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'POST' 'http://localhost:8080/o/lonisReseauRest/v1.0/commerciaux' -d $'{"agenceId": ___, "email": ___, "matricule": ___, "nom": ___, "prenoms": ___, "statut": ___, "telephone": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 * curl -X 'POST' 'http://localhost:8080/o/lonisReseauRest/v1.0/commerciaux' -d $'{"email": ___, "matricule": ___, "nom": ___, "prenoms": ___, "statut": ___, "superviseurId": ___, "telephone": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Ajouter un commercial"
@@ -140,7 +140,7 @@ public abstract class BaseCommercialResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'POST' 'http://localhost:8080/o/lonisReseauRest/v1.0/commerciaux/batch' -d $'{"agenceId": ___, "email": ___, "matricule": ___, "nom": ___, "prenoms": ___, "statut": ___, "telephone": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 * curl -X 'POST' 'http://localhost:8080/o/lonisReseauRest/v1.0/commerciaux/batch' -d $'{"email": ___, "matricule": ___, "nom": ___, "prenoms": ___, "statut": ___, "superviseurId": ___, "telephone": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Parameters(
 		value = {

@@ -55,6 +55,9 @@ public class CommercialMapper {
 		if (body.getStatut() != null) {
 			entry.setStatut(body.getStatut());
 		}
+		if (body.getSuperviseurId() != null) {
+			entry.setSuperviseurId(body.getSuperviseurId());
+		}
 	}
 
 	public void applyDto(

@@ -44,34 +44,6 @@ public class CommercialRequestBody implements Serializable {
 	}
 
 	@Schema
-	public Long getAgenceId() {
-		return agenceId;
-	}
-
-	public void setAgenceId(Long agenceId) {
-		this.agenceId = agenceId;
-	}
-
-	@JsonIgnore
-	public void setAgenceId(
-		UnsafeSupplier<Long, Exception> agenceIdUnsafeSupplier) {
-
-		try {
-			agenceId = agenceIdUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long agenceId;
-
-	@Schema
 	public String getEmail() {
 		return email;
 	}
@@ -210,6 +182,34 @@ public class CommercialRequestBody implements Serializable {
 	protected String statut;
 
 	@Schema
+	public Long getSuperviseurId() {
+		return superviseurId;
+	}
+
+	public void setSuperviseurId(Long superviseurId) {
+		this.superviseurId = superviseurId;
+	}
+
+	@JsonIgnore
+	public void setSuperviseurId(
+		UnsafeSupplier<Long, Exception> superviseurIdUnsafeSupplier) {
+
+		try {
+			superviseurId = superviseurIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long superviseurId;
+
+	@Schema
 	public String getTelephone() {
 		return telephone;
 	}
@@ -264,16 +264,6 @@ public class CommercialRequestBody implements Serializable {
 		StringBundler sb = new StringBundler();
 
 		sb.append("{");
-
-		if (agenceId != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"agenceId\": ");
-
-			sb.append(agenceId);
-		}
 
 		if (email != null) {
 			if (sb.length() > 1) {
@@ -343,6 +333,16 @@ public class CommercialRequestBody implements Serializable {
 			sb.append(_escape(statut));
 
 			sb.append("\"");
+		}
+
+		if (superviseurId != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"superviseurId\": ");
+
+			sb.append(superviseurId);
 		}
 
 		if (telephone != null) {

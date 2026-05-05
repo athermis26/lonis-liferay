@@ -41,16 +41,6 @@ public class CommercialRequestBodySerDes {
 
 		sb.append("{");
 
-		if (commercialRequestBody.getAgenceId() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"agenceId\": ");
-
-			sb.append(commercialRequestBody.getAgenceId());
-		}
-
 		if (commercialRequestBody.getEmail() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -121,6 +111,16 @@ public class CommercialRequestBodySerDes {
 			sb.append("\"");
 		}
 
+		if (commercialRequestBody.getSuperviseurId() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"superviseurId\": ");
+
+			sb.append(commercialRequestBody.getSuperviseurId());
+		}
+
 		if (commercialRequestBody.getTelephone() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -155,15 +155,6 @@ public class CommercialRequestBodySerDes {
 		}
 
 		Map<String, String> map = new TreeMap<>();
-
-		if (commercialRequestBody.getAgenceId() == null) {
-			map.put("agenceId", null);
-		}
-		else {
-			map.put(
-				"agenceId",
-				String.valueOf(commercialRequestBody.getAgenceId()));
-		}
 
 		if (commercialRequestBody.getEmail() == null) {
 			map.put("email", null);
@@ -204,6 +195,15 @@ public class CommercialRequestBodySerDes {
 				"statut", String.valueOf(commercialRequestBody.getStatut()));
 		}
 
+		if (commercialRequestBody.getSuperviseurId() == null) {
+			map.put("superviseurId", null);
+		}
+		else {
+			map.put(
+				"superviseurId",
+				String.valueOf(commercialRequestBody.getSuperviseurId()));
+		}
+
 		if (commercialRequestBody.getTelephone() == null) {
 			map.put("telephone", null);
 		}
@@ -234,13 +234,7 @@ public class CommercialRequestBodySerDes {
 			CommercialRequestBody commercialRequestBody,
 			String jsonParserFieldName, Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "agenceId")) {
-				if (jsonParserFieldValue != null) {
-					commercialRequestBody.setAgenceId(
-						Long.valueOf((String)jsonParserFieldValue));
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "email")) {
+			if (Objects.equals(jsonParserFieldName, "email")) {
 				if (jsonParserFieldValue != null) {
 					commercialRequestBody.setEmail(
 						(String)jsonParserFieldValue);
@@ -267,6 +261,12 @@ public class CommercialRequestBodySerDes {
 				if (jsonParserFieldValue != null) {
 					commercialRequestBody.setStatut(
 						(String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "superviseurId")) {
+				if (jsonParserFieldValue != null) {
+					commercialRequestBody.setSuperviseurId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "telephone")) {

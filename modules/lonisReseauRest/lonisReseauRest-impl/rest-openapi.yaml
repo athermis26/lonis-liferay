@@ -607,7 +607,7 @@ paths:
   # ─────────────────────────────────────────
   # VISITES
   # ─────────────────────────────────────────
-  /ventes:
+  /visites:
     get:
       operationId: getVisitesPage
       tags: [ "Visite" ]
@@ -1138,7 +1138,10 @@ components:
           type: string
         statut:
           type: string
-        agenceId:
+#        agenceId:
+#          type: integer
+#          format: int64
+        superviseurId:
           type: integer
           format: int64
 

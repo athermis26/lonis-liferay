@@ -59,7 +59,7 @@ public abstract class BaseVisiteResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'GET' 'http://localhost:8080/o/lonisReseauRest/v1.0/ventes'  -u 'test@liferay.com:test'
+	 * curl -X 'GET' 'http://localhost:8080/o/lonisReseauRest/v1.0/visites'  -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(description = "Liste des visites")
 	@io.swagger.v3.oas.annotations.Parameters(
@@ -110,7 +110,7 @@ public abstract class BaseVisiteResourceImpl
 		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Visite")}
 	)
 	@javax.ws.rs.GET
-	@javax.ws.rs.Path("/ventes")
+	@javax.ws.rs.Path("/visites")
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
 	public Page<Visite> getVisitesPage(
@@ -143,7 +143,7 @@ public abstract class BaseVisiteResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'POST' 'http://localhost:8080/o/lonisReseauRest/v1.0/ventes' -d $'{"commercialId": ___, "compteRendu": ___, "dateVisite": ___, "latitude": ___, "longitude": ___, "statut": ___, "terminalId": ___, "typeControle": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 * curl -X 'POST' 'http://localhost:8080/o/lonisReseauRest/v1.0/visites' -d $'{"commercialId": ___, "compteRendu": ___, "dateVisite": ___, "latitude": ___, "longitude": ___, "statut": ___, "terminalId": ___, "typeControle": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Operation(
 		description = "Marquer une visite (GPS + contrôle proximité terminal)"
@@ -152,7 +152,7 @@ public abstract class BaseVisiteResourceImpl
 		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Visite")}
 	)
 	@javax.ws.rs.Consumes({"application/json", "application/xml"})
-	@javax.ws.rs.Path("/ventes")
+	@javax.ws.rs.Path("/visites")
 	@javax.ws.rs.POST
 	@javax.ws.rs.Produces({"application/json", "application/xml"})
 	@Override
@@ -165,7 +165,7 @@ public abstract class BaseVisiteResourceImpl
 	/**
 	 * Invoke this method with the command line:
 	 *
-	 * curl -X 'POST' 'http://localhost:8080/o/lonisReseauRest/v1.0/ventes/batch' -d $'{"commercialId": ___, "compteRendu": ___, "dateVisite": ___, "latitude": ___, "longitude": ___, "statut": ___, "terminalId": ___, "typeControle": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
+	 * curl -X 'POST' 'http://localhost:8080/o/lonisReseauRest/v1.0/visites/batch' -d $'{"commercialId": ___, "compteRendu": ___, "dateVisite": ___, "latitude": ___, "longitude": ___, "statut": ___, "terminalId": ___, "typeControle": ___}' --header 'Content-Type: application/json' -u 'test@liferay.com:test'
 	 */
 	@io.swagger.v3.oas.annotations.Parameters(
 		value = {
@@ -179,7 +179,7 @@ public abstract class BaseVisiteResourceImpl
 		value = {@io.swagger.v3.oas.annotations.tags.Tag(name = "Visite")}
 	)
 	@javax.ws.rs.Consumes("application/json")
-	@javax.ws.rs.Path("/ventes/batch")
+	@javax.ws.rs.Path("/visites/batch")
 	@javax.ws.rs.POST
 	@javax.ws.rs.Produces("application/json")
 	@Override

@@ -275,7 +275,7 @@ public interface VisiteResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/lonisReseauRest/v1.0/ventes");
+					_builder._port + "/o/lonisReseauRest/v1.0/visites");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -355,7 +355,7 @@ public interface VisiteResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/lonisReseauRest/v1.0/ventes");
+					_builder._port + "/o/lonisReseauRest/v1.0/visites");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
@@ -432,7 +432,7 @@ public interface VisiteResource {
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +
-					_builder._port + "/o/lonisReseauRest/v1.0/ventes/batch");
+					_builder._port + "/o/lonisReseauRest/v1.0/visites/batch");
 
 			httpInvoker.userNameAndPassword(
 				_builder._login + ":" + _builder._password);
