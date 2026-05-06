@@ -33,14 +33,13 @@ public class BackendHttpClient {
 
 	private static final Log _log = LogFactoryUtil.getLog(BackendHttpClient.class);
 
-	private volatile BackendClientConfiguration _configuration;
-	private volatile HttpClient _httpClient;
+		private volatile BackendClientConfiguration _configuration;
+		private volatile HttpClient _httpClient;
 
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		_configuration = ConfigurableUtil.createConfigurable(
-				BackendClientConfiguration.class, properties);
+		_configuration = ConfigurableUtil.createConfigurable(BackendClientConfiguration.class, properties);
 
 		_httpClient = HttpClient.newBuilder()
 				.connectTimeout(Duration.ofMillis(_configuration.connectTimeoutMs()))
@@ -100,6 +99,11 @@ public class BackendHttpClient {
 			String body = response.body();
 
 			if (status >= 200 && status < 300) {
+
+				System.out.println(
+						"Backend " + request.method() + " " + request.uri() + " a répondu " + status + " : " + body
+				);
+
 				return body;
 			}
 
