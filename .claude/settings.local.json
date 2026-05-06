@@ -20,7 +20,10 @@
       "Bash(./mvnw -q -DskipTests compile)",
       "Bash(./mvnw -DskipTests compile)",
       "Bash(./mvnw -DskipTests clean compile)",
-      "Bash(grep -E \"ResourceImpl\\\\.java$\")"
+      "Bash(grep -E \"ResourceImpl\\\\.java$\")",
+      "Bash(./gradlew :modules:lonisVenteRest:lonisVenteRest-impl:compileJava)",
+      "Bash(./gradlew :modules:lonisReseauRest:lonisReseauRest-impl:compileJava)",
+      "Bash(./gradlew :modules:lonisVenteRest:lonisVenteRest-impl:compileJava :modules:lonisReseauRest:lonisReseauRest-impl:compileJava)"
     ]
   }
 }

@@ -12,7 +12,7 @@ public final class ProduitDtos {
 			String code,
 			String libelle,
 			String abreviation,
-			Boolean active,
+			boolean active,
 			Instant createdAt,
 			Instant updatedAt
 	) {

@@ -1,12 +1,12 @@
 package com.df.lonis.lonisbackendapplication.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 
-/**
- * Parse les paramètres de tri sous forme {@code "champ,asc"} / {@code "champ,desc"}.
- * Supporte plusieurs critères séparés par {@code ;} (ex : {@code "nom,asc;date,desc"}).
- */
 public final class SortParser {
+
+	private static final Logger log = LoggerFactory.getLogger(SortParser.class);
 
 	private SortParser() {}
 
@@ -21,8 +21,12 @@ public final class SortParser {
 			if (field.isEmpty()) continue;
 			Sort.Direction dir = (parts.length > 1 && "desc".equalsIgnoreCase(parts[1].trim()))
 					? Sort.Direction.DESC : Sort.Direction.ASC;
-			Sort piece = Sort.by(dir, field);
-			result = (result == null) ? piece : result.and(piece);
+			try {
+				Sort piece = Sort.by(dir, field);
+				result = (result == null) ? piece : result.and(piece);
+			} catch (Exception e) {
+				log.warn("Champ de tri ignoré: {}", field);
+			}
 		}
 		return result == null ? Sort.unsorted() : result;
 	}
