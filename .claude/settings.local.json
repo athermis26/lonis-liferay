@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:learn.liferay.com)",
+      "Bash(blade gw *)",
+      "Bash(jar tf *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(awk '/^2026-05-05 17:5[6-9]/,/^$/' C:/dev/liferay/liferay-dxp-dxp-7.4-u112/logs/companies/0/liferay-0.2026-05-05.log)",
+      "Bash(awk '/2026-05-05 17:56:27\\\\.85/,/^2026-05-05 1[78]:[0-9]/' C:/dev/liferay/liferay-dxp-dxp-7.4-u112/logs/companies/0/liferay-0.2026-05-05.log)",
+      "Bash(awk '/2026-05-05 17:56:27\\\\.85/{flag=1} flag{print; if\\(/^2026-05-05/ && !/17:56:27\\\\.85/\\) {n++; if\\(n>30\\) exit}}' C:/dev/liferay/liferay-dxp-dxp-7.4-u112/logs/companies/0/liferay-0.2026-05-05.log)",
+      "Bash(awk '/2026-05-05 18:[345]/' C:/dev/liferay/liferay-dxp-dxp-7.4-u112/logs/companies/0/liferay-0.2026-05-05.log)",
+      "Read(//tmp/**)",
+      "Bash(javap -c -p com/liferay/portal/spring/extender/internal/context/ModuleApplicationContext.class)",
+      "Bash(awk '/2026-05-05 18:[0-9][0-9]/' C:/dev/liferay/liferay-dxp-dxp-7.4-u112/logs/companies/0/liferay-0.2026-05-05.log)",
+      "Bash(awk '/2026-05-05 1[78]:[345]/' C:/dev/liferay/liferay-dxp-dxp-7.4-u112/logs/companies/0/liferay-0.2026-05-05.log)",
+      "Bash(grep -nE \"^\\\\s{2,4}/[a-zA-Z][^:]*:\" C:/Users/HP/OneDrive/Documents/Cours/Formation/lonis/modules/lonisVenteRest/lonisVenteRest-impl/rest-openapi.yaml)",
+      "Bash(grep -nE \"^\\\\s{2,4}/[a-zA-Z][^:]*:\" C:/Users/HP/OneDrive/Documents/Cours/Formation/lonis/modules/lonisReseauRest/lonisReseauRest-impl/rest-openapi.yaml)",
+      "Bash(./mvnw -q -DskipTests compile)",
+      "Bash(./mvnw -DskipTests compile)",
+      "Bash(./mvnw -DskipTests clean compile)",
+      "Bash(grep -E \"ResourceImpl\\\\.java$\")"
+    ]
+  }
+}
