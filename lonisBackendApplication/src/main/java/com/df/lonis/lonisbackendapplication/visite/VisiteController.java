@@ -40,7 +40,7 @@ public class VisiteController {
 			@RequestParam(required = false) String dateFin,
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "20") int pageSize,
-			@RequestParam(defaultValue = "dateVisite,desc") String sort) {
+			@RequestParam(defaultValue = "date_visite,desc") String sort) {
 
 		Page<Visite> result = repository.search(
 				commercialId, terminalId, statut,
@@ -72,7 +72,7 @@ public class VisiteController {
 	public List<VisiteResponse> tempsReel() {
 		Instant since = Instant.now().minusSeconds(24 * 3600);
 		return repository.search(null, null, "EFFECTUEE", since, null,
-						PageRequest.of(0, 500, SortParser.parse("dateVisite,desc")))
+						PageRequest.of(0, 500, SortParser.parse("date_visite,desc")))
 				.getContent().stream().map(VisiteResponse::from).toList();
 	}
 

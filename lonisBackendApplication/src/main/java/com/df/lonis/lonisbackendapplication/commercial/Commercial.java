@@ -31,6 +31,6 @@ public class Commercial extends Auditable {
 	@Column(name = "superviseur_id")
 	private Long superviseurId;
 
-	@Column(name = "agence_id")
+	@Column(name = "site_id")
 	private Long agenceId;
 }

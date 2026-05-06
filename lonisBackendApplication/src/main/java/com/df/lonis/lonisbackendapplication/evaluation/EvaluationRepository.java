@@ -16,14 +16,27 @@ public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
 
 	List<Evaluation> findByCommercialIdOrderByAnneeDescMoisDesc(Long commercialId);
 
-	@Query("""
-			SELECT e FROM Evaluation e
-			WHERE e.annee = :annee
-			  AND (:periode IS NULL OR e.periode = :periode)
-			  AND (:mois IS NULL OR e.mois = :mois)
-			  AND (:trimestre IS NULL OR e.trimestre = :trimestre)
-			ORDER BY e.tauxRealisation DESC
-			""")
+	/**
+	 * Classement annuel — annee est obligatoire. Les autres params nullable utilisent
+	 * du SQL natif avec {@code CAST(? AS …)} pour éviter Postgres 42P18.
+	 */
+	@Query(
+			value = """
+					SELECT * FROM evaluations
+					WHERE annee = :annee
+					  AND (CAST(:periode AS varchar) IS NULL OR periode = :periode)
+					  AND (CAST(:mois    AS integer) IS NULL OR mois    = :mois)
+					  AND (CAST(:trimestre AS integer) IS NULL OR trimestre = :trimestre)
+					ORDER BY taux_realisation DESC
+					""",
+			countQuery = """
+					SELECT count(*) FROM evaluations
+					WHERE annee = :annee
+					  AND (CAST(:periode AS varchar) IS NULL OR periode = :periode)
+					  AND (CAST(:mois    AS integer) IS NULL OR mois    = :mois)
+					  AND (CAST(:trimestre AS integer) IS NULL OR trimestre = :trimestre)
+					""",
+			nativeQuery = true)
 	Page<Evaluation> classement(
 			@Param("annee") int annee,
 			@Param("periode") String periode,

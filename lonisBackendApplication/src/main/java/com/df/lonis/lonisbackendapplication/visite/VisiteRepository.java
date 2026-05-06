@@ -17,14 +17,29 @@ public interface VisiteRepository extends JpaRepository<Visite, Long> {
 
 	List<Visite> findByTerminalId(Long terminalId);
 
-	@Query("""
-			SELECT v FROM Visite v
-			WHERE (:commercialId IS NULL OR v.commercialId = :commercialId)
-			  AND (:terminalId   IS NULL OR v.terminalId   = :terminalId)
-			  AND (:statut       IS NULL OR v.statut       = :statut)
-			  AND (:dateDebut    IS NULL OR v.dateVisite   >= :dateDebut)
-			  AND (:dateFin      IS NULL OR v.dateVisite   <= :dateFin)
-			""")
+	/**
+	 * Recherche multi-critères. Tous les paramètres sont nullable et utilisent
+	 * du SQL natif avec {@code CAST(? AS …)} pour éviter le bug Postgres 42P18
+	 * sur la déduction de type quand le paramètre est null.
+	 */
+	@Query(
+			value = """
+					SELECT * FROM visites
+					WHERE (CAST(:commercialId AS bigint)  IS NULL OR commercial_id = :commercialId)
+					  AND (CAST(:terminalId   AS bigint)  IS NULL OR terminal_id   = :terminalId)
+					  AND (CAST(:statut       AS varchar) IS NULL OR statut        = :statut)
+					  AND (CAST(:dateDebut    AS timestamp) IS NULL OR date_visite >= :dateDebut)
+					  AND (CAST(:dateFin      AS timestamp) IS NULL OR date_visite <= :dateFin)
+					""",
+			countQuery = """
+					SELECT count(*) FROM visites
+					WHERE (CAST(:commercialId AS bigint)  IS NULL OR commercial_id = :commercialId)
+					  AND (CAST(:terminalId   AS bigint)  IS NULL OR terminal_id   = :terminalId)
+					  AND (CAST(:statut       AS varchar) IS NULL OR statut        = :statut)
+					  AND (CAST(:dateDebut    AS timestamp) IS NULL OR date_visite >= :dateDebut)
+					  AND (CAST(:dateFin      AS timestamp) IS NULL OR date_visite <= :dateFin)
+					""",
+			nativeQuery = true)
 	Page<Visite> search(
 			@Param("commercialId") Long commercialId,
 			@Param("terminalId") Long terminalId,

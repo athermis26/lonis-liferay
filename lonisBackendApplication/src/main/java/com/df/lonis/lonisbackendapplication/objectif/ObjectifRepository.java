@@ -14,12 +14,24 @@ public interface ObjectifRepository extends JpaRepository<Objectif, Long> {
 
 	List<Objectif> findByCommercialId(Long commercialId);
 
-	@Query("""
-			SELECT o FROM Objectif o
-			WHERE (:commercialId IS NULL OR o.commercialId = :commercialId)
-			  AND (:annee IS NULL OR o.annee = :annee)
-			  AND (:mois  IS NULL OR o.mois  = :mois)
-			""")
+	/**
+	 * SQL natif avec {@code CAST(? AS …)} pour éviter Postgres 42P18 quand un
+	 * paramètre est null.
+	 */
+	@Query(
+			value = """
+					SELECT * FROM objectifs
+					WHERE (CAST(:commercialId AS bigint)  IS NULL OR commercial_id = :commercialId)
+					  AND (CAST(:annee        AS integer) IS NULL OR annee = :annee)
+					  AND (CAST(:mois         AS integer) IS NULL OR mois  = :mois)
+					""",
+			countQuery = """
+					SELECT count(*) FROM objectifs
+					WHERE (CAST(:commercialId AS bigint)  IS NULL OR commercial_id = :commercialId)
+					  AND (CAST(:annee        AS integer) IS NULL OR annee = :annee)
+					  AND (CAST(:mois         AS integer) IS NULL OR mois  = :mois)
+					""",
+			nativeQuery = true)
 	Page<Objectif> search(
 			@Param("commercialId") Long commercialId,
 			@Param("annee") Integer annee,
