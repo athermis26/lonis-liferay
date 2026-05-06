@@ -568,7 +568,9 @@ paths:
         - in: path
           name: siteId
           required: true
-          schema: { type: integer, format: int64 }
+          schema:
+            type: integer
+            format: int64
         - in: query
           name: filter
           schema:

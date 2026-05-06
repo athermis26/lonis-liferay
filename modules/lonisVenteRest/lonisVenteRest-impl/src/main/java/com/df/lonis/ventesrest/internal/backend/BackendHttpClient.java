@@ -106,7 +106,8 @@ public class BackendHttpClient {
 			throw new BackendException(
 					status,
 					"Backend " + request.method() + " " + request.uri()
-							+ " a répondu " + status + " : " + body);
+							+ " a répondu " + status + " : " + body,
+					body, null);
 		}
 		catch (BackendException be) {
 			throw be;
