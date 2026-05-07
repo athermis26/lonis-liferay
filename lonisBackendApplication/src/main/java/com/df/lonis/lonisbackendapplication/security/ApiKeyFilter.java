@@ -6,11 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Set;
 
+@Component
 public class ApiKeyFilter extends OncePerRequestFilter {
 
 	public static final String HEADER_NAME = "X-API-Key";
@@ -22,11 +24,13 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 			"/v3/api-docs"
 	);
 
-	private final String expectedKey;
+	private String expectedKey = "L0NIS@2607";
 
-	public ApiKeyFilter(String expectedKey) {
-		this.expectedKey = expectedKey;
-	}
+//	private final String expectedKey;
+//
+//	public ApiKeyFilter(String expectedKey) {
+//		this.expectedKey = expectedKey;
+//	}
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) {

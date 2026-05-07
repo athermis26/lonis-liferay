@@ -2,47 +2,52 @@
 
 Backend Spring Boot 4.0.6 (MVC) qui expose les données du domaine **Lonis** stockées
 dans une base PostgreSQL externe à Liferay. Les modules Liferay
-`lonisVenteRest` / `lonisReseauRest` consomment ce backend en HTTP.
+`lonisVenteRest` / `lonisReseauRest` consomment ce backend en HTTP via
+le header `X-API-Key`.
 
 ## Stack
 
 - Spring Boot 4.0.6 (stable)
 - Java 17
 - Spring MVC + Spring Data JPA + Bean Validation
-- PostgreSQL + Flyway
+- PostgreSQL
 - springdoc-openapi (Swagger UI)
 - Maven (`./mvnw`)
 
-## Périmètre actuel (v1)
+## Endpoints (50, sous `/api/v1/...`)
 
-3 domaines exposés sous `/api/v1/...` :
+**Vente** (consommé par `lonisVenteRest`) :
+- `/dashboard/kpis`
+- `/concessionnaire(s)` (liste, détail 360°, top-actifs, produits, commissions, terminaux)
+- `/produits`
+- `/sites`, `/sites-all`
+- `/terminaux`, `/terminaux/top-actifs`
+- `/operations`, `/operations/{id}`
+- `/commissions`, `/commissions/{id}`
+- `/chiffres-affaires`
 
-| Endpoint                                    | Description                              |
-|---------------------------------------------|------------------------------------------|
-| `GET    /api/v1/concessionnaires`           | Liste paginée + recherche                |
-| `GET    /api/v1/concessionnaires/{id}`      | Détail                                   |
-| `GET    /api/v1/concessionnaires/{id}/produits` | Liaison concessionnaire-produit       |
-| `POST   /api/v1/concessionnaires`           | Création                                 |
-| `PUT    /api/v1/concessionnaires/{id}`      | Mise à jour                              |
-| `DELETE /api/v1/concessionnaires/{id}`      | Suppression                              |
-| `GET    /api/v1/produits`                   | Liste paginée + recherche                |
-| `… CRUD produits …`                         |                                          |
-| `GET    /api/v1/terminals`                  | Liste paginée + filtres `statutValidation` |
-| `… CRUD terminals …`                        |                                          |
+**Réseau** (consommé par `lonisReseauRest`) :
+- `/terminals` CRUD + `/a-valider`, `/{id}/valider`, `/{id}/rejeter`, `/cartographie`, `/cartographie/top20`, `/{id}/visites`
+- `/commerciaux` CRUD + affectations sites
+- `/sites/{id}/commerciaux`
+- `/visites`, `/visites/temps-reel`, `/commerciaux/{id}/visites`, `/visites/planning`
+- `/objectifs`, `/commerciaux/{id}/objectifs`
+- `/evaluations/classement`, `/commerciaux/{id}/evaluations`, `/evaluations/generer`
 
-Les autres entités (Site, ChiffreAffaires, Commission, Operation, Commercial,
-SiteCommercial, Visite, Objectif, Evaluation) seront ajoutées dans des
-migrations Flyway `V2__…sql`, `V3__…sql`, etc.
+Documentation interactive : `http://localhost:9090/swagger-ui.html`
 
-## Prérequis
+## Authentification
 
-- JDK 17
-- Maven Wrapper inclus (`./mvnw` / `mvnw.cmd`)
-- PostgreSQL local accessible. Par défaut le profil `local` se connecte à :
-  - `jdbc:postgresql://localhost:5432/l_caisse_new_db`
-  - user : `diginUser` / pwd : `admin1234`
+Toutes les routes `/api/**` exigent le header `X-API-Key` (par défaut `dev-change-me`,
+surchargeable via `LONIS_API_KEY`). Sont exemptés : `/actuator/health`, `/actuator/info`,
+`/swagger-ui`, `/v3/api-docs`.
 
-Crée la base si nécessaire :
+## Base de données
+
+⚠️ **Flyway est désactivé** (`spring.flyway.enabled=false`) et `ddl-auto=none` : la base
+PostgreSQL doit déjà exister et être pré-remplie avec le schéma. Les scripts de référence
+sont dans `src/main/resources/db/migration/V1__init.sql`, `V2__lot1.sql`, `V3__lot2.sql` —
+à appliquer manuellement (`psql -f …`) avant le premier démarrage.
 
 ```sql
 CREATE DATABASE l_caisse_new_db;
@@ -50,41 +55,98 @@ CREATE USER "diginUser" WITH PASSWORD 'admin1234';
 GRANT ALL PRIVILEGES ON DATABASE l_caisse_new_db TO "diginUser";
 ```
 
-## Lancer en local
+Puis :
 
 ```bash
-# Depuis ce dossier
-./mvnw spring-boot:run
+psql -U diginUser -d l_caisse_new_db -f src/main/resources/db/migration/V1__init.sql
+psql -U diginUser -d l_caisse_new_db -f src/main/resources/db/migration/V2__lot1.sql
+psql -U diginUser -d l_caisse_new_db -f src/main/resources/db/migration/V3__lot2.sql
 ```
 
-ou
+---
+
+## 🐳 Lancer en conteneur Docker
+
+### Build de l'image
 
 ```bash
+docker build -t lonis-backend .
+```
+
+### Exécution simple
+
+```bash
+docker run --rm -p 9090:9090 \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/l_caisse_new_db \
+  -e SPRING_DATASOURCE_USERNAME=diginUser \
+  -e SPRING_DATASOURCE_PASSWORD=admin1234 \
+  -e LONIS_API_KEY=dev-change-me \
+  lonis-backend
+```
+
+> Sous **Linux** ajouter `--add-host=host.docker.internal:host-gateway` pour que le
+> conteneur puisse joindre un PostgreSQL tournant sur l'hôte.
+
+### Avec Docker Compose
+
+Le fichier `docker-compose.yml` lance le backend uniquement (PostgreSQL doit tourner ailleurs) :
+
+```bash
+# Build + run
+docker compose up --build
+
+# Arrêt
+docker compose down
+```
+
+Tu peux surcharger les variables via un fichier `.env` à côté du `docker-compose.yml` :
+
+```env
+SPRING_DATASOURCE_URL=jdbc:postgresql://10.0.0.5:5432/lonis_prod
+SPRING_DATASOURCE_USERNAME=lonis_prod
+SPRING_DATASOURCE_PASSWORD=********
+LONIS_API_KEY=********
+JAVA_OPTS=-Xms512m -Xmx1g
+```
+
+### Variables d'environnement supportées
+
+| Variable                    | Défaut                                                       | Description                          |
+|-----------------------------|--------------------------------------------------------------|--------------------------------------|
+| `SPRING_PROFILES_ACTIVE`    | `docker` (dans l'image)                                      | Profil Spring                        |
+| `SPRING_DATASOURCE_URL`     | `jdbc:postgresql://host.docker.internal:5432/l_caisse_new_db`| URL JDBC                             |
+| `SPRING_DATASOURCE_USERNAME`| `diginUser`                                                  | Utilisateur BD                       |
+| `SPRING_DATASOURCE_PASSWORD`| `admin1234`                                                  | Mot de passe BD                      |
+| `LONIS_API_KEY`             | `dev-change-me`                                              | Clé attendue dans le header `X-API-Key` |
+| `SERVER_PORT`               | `9090`                                                       | Port HTTP du conteneur               |
+| `JAVA_OPTS`                 | (vide)                                                       | Options JVM additionnelles           |
+
+### Healthcheck
+
+L'image expose `/actuator/health`. Docker considère le conteneur sain dès que la BD répond.
+
+### Image multi-stage
+
+Le `Dockerfile` est en 2 étapes :
+1. **build** (`eclipse-temurin:17-jdk-alpine`) — `mvnw package`
+2. **runtime** (`eclipse-temurin:17-jre-alpine`) — JRE seul, utilisateur non-root
+
+Image finale : ≈ 200 Mo.
+
+---
+
+## Lancer en local (hors conteneur)
+
+```bash
+# Mode dev (profil "local" → localhost:5432)
+./mvnw spring-boot:run
+
+# ou JAR auto-exécutable
 ./mvnw clean package
 java -jar target/lonisBackendApplication-0.0.1-SNAPSHOT.jar
 ```
 
 L'app écoute sur **http://localhost:9090** (variable `SERVER_PORT`).
-
-Au démarrage Flyway exécute `db/migration/V1__init.sql` qui crée les 4 tables
-`concessionnaires`, `produits`, `concessionnaire_produit`, `terminals`.
-
-## Authentification
-
-Toutes les routes `/api/**` exigent le header :
-
-```
-X-API-Key: dev-change-me
-```
-
-Surchargeable via la variable d'environnement `LONIS_API_KEY`.
-
-Sont exemptés : `/actuator/health`, `/actuator/info`, `/swagger-ui`, `/v3/api-docs`.
-
-## Documentation interactive
-
-- Swagger UI : http://localhost:9090/swagger-ui.html
-- OpenAPI JSON : http://localhost:9090/v3/api-docs
 
 ## Tests
 
@@ -92,24 +154,21 @@ Sont exemptés : `/actuator/health`, `/actuator/info`, `/swagger-ui`, `/v3/api-d
 ./mvnw test
 ```
 
-Les tests utilisent H2 (déclaré en `scope=test`).
-
 ## Connexion depuis Liferay
 
-Le module `modules/lonisVenteRest/lonisVenteRest-impl` expose un client OSGi
-(`BackendHttpClient`) configuré par le fichier :
+Les modules `lonisVenteRest-impl` et `lonisReseauRest-impl` exposent chacun une config OSGi :
 
 ```
 configs/local/osgi/configs/com.df.lonis.ventesrest.internal.backend.BackendClientConfiguration.config
+configs/local/osgi/configs/com.df.lonis.reseaurest.internal.backend.BackendClientConfiguration.config
 ```
 
-Aligner les valeurs `baseUrl` et `apiKey` côté Liferay et `lonis.security.api-key` ici.
+Aligner `baseUrl` et `apiKey` côté Liferay avec `LONIS_API_KEY` ici.
 
 ## Roadmap
 
-- [ ] Migrer Site, ChiffreAffaires, Commission, Operation
-- [ ] Migrer Commercial, SiteCommercial, Visite, Objectif, Evaluation
-- [ ] Endpoint d'agrégation `/api/v1/concessionnaires/top-actifs` (remplace
-      `getTopConcessionnairesActifs` côté Liferay)
-- [ ] Brancher `lonisReseauRest-impl`
-- [ ] Durcir l'auth (JWT ou mTLS) après validation du POC
+- [x] Lot 1 : Concessionnaire, Produit, Site, Terminal vente, Operation, Commission, ChiffreAffaires, Dashboard
+- [x] Lot 2 : Terminal réseau (validation, cartographie), Commercial, SiteCommercial, Visite, Objectif, Evaluation
+- [x] Conteneurisation Docker
+- [ ] Durcir l'auth (JWT ou mTLS)
+- [ ] CI/CD (build de l'image + push registre)

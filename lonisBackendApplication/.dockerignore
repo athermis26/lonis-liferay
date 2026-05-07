@@ -1,0 +1,25 @@
+# Build output
+target/
+*.jar
+*.war
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Git / VCS
+.git/
+.gitignore
+.gitattributes
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar.lck
+
+# Docs (pas nécessaires pour le build)
+README.md
+HELP.md

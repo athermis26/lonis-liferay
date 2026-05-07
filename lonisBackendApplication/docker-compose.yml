@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+
+  # =========================
+  # DATABASE — PostgreSQL
+  # =========================
+  postgres:
+    image: postgres:15
+    container_name: lonis-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: l_caisse_new_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+
+    networks:
+      - lonis-network
+
+  # =========================
+  # BACKEND — Spring Boot
+  # =========================
+  backend:
+    build: .
+    container_name: lonis-backend
+    restart: unless-stopped
+
+    depends_on:
+      - postgres
+
+    env_file:
+      - .env
+
+    ports:
+      - "9090:9090"
+
+    networks:
+      - lonis-network
+
+  # =========================
+  # PGADMIN — UI DB
+  # =========================
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: lonis-pgadmin
+    restart: unless-stopped
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@lonis.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+    ports:
+      - "5050:80"
+
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+    depends_on:
+      - postgres
+
+    networks:
+      - lonis-network
+
+# =========================
+# VOLUMES
+# =========================
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+# =========================
+# NETWORK
+# =========================
+networks:
+  lonis-network:
+    driver: bridge
